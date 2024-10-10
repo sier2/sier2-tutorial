@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "sier2-tutorial"
+version = "0.1"
+description = "Black and dag examples"
+authors = ["algol60 <algol60@users.noreply.github.com>"]
+readme = "README.rst"
+packages = [{include = "sier2_tutorial", from = "src"}]
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries"
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+sier2 = ">=0.16"
+
+[tool.poetry.plugins."sier2.library"]
+export = "sier2_tutorial.shelf"
+
+[[tool.mypy.overrides]]
+module = [
+    "holoviews",
+    "param"
+]
+ignore_missing_imports = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
