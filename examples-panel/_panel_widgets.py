@@ -35,6 +35,11 @@ class QueryWidget(Query):
     Moving the slider causes `Query.query()` to be called with the value of the slider.
     """
 
+    def execute(self):
+        """This is only here to demonstrate that execute() is called."""
+
+        print(f'execute() in {self}')
+
     def __panel__(self):
         def query_value(max_height):
             """A function that returns self.df.

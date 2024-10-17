@@ -27,7 +27,7 @@ pn.extension('floatpanel', nthreads=NTHREADS, loading_spinner='bar', inline=True
 def main():
     # Build a dag.
     #
-    q = QueryWidget(name='Run a query', user_input=True)
+    q = QueryWidget(name='Run a query', user_input=True, continue_label='Draw chart')
     b = BarchartWidget(name='Results bars')
     bi = BarchartWidget(inverted=True, name='Results bars (inverted)')
 
