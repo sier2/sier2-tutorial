@@ -27,13 +27,19 @@ pn.extension('floatpanel', nthreads=NTHREADS, loading_spinner='bar', inline=True
 def main():
     # Build a dag.
     #
-    q = QueryWidget(name='Run a query', user_input=True, continue_label='Draw chart')
+    q = QueryWidget(name='Run a query', continue_label='Draw chart')
     b = BarchartWidget(name='Results bars')
     bi = BarchartWidget(inverted=True, name='Results bars (inverted)')
 
     dag = PanelDag(doc=DOC, site='Example', title='Bars')
-    dag.connect(q, b, Connection('out_df', 'in_df'))
-    dag.connect(q, bi, Connection('out_df', 'in_df'))
+    dag.connect(q, b,
+        Connection('out_df', 'in_df'),
+        Connection('out_max_height', 'in_max_height')
+    )
+    dag.connect(q, bi,
+        Connection('out_df', 'in_df'),
+        Connection('out_max_height', 'in_max_height')
+    )
 
     title = 'Random weighted barcharts'
 

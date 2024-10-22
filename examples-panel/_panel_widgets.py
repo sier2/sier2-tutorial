@@ -3,7 +3,7 @@ import panel as pn
 import pandas as pd
 import random
 
-from sier2 import Block#, Dag, Connection
+from sier2 import Block, InputBlock, BlockValidateError
 import param
 
 MAX_HEIGHT = 10
@@ -19,14 +19,16 @@ def _make_df(max_height=MAX_HEIGHT) -> pd.DataFrame:
         columns=['Colors', 'Counts']
     )
 
-class Query(Block):
+class Query(InputBlock):
     """A plain Python block that accepts a "query" (a maximum count value) and outputs a dataframe."""
 
+    out_max_height = param.Number(doc='The maximum value. All values are less than this')
     out_df = param.DataFrame(default=None, doc='A dataframe with columns `Colors` and `Counts`. The counts are a random number between 0 and the slider value.')
 
     def query(self, max_height):
         """Output a dataframe with a maximum counts value."""
 
+        self.out_max_height = max_height
         self.out_df = _make_df(max_height)
 
 class QueryWidget(Query):
@@ -34,6 +36,8 @@ class QueryWidget(Query):
 
     Moving the slider causes `Query.query()` to be called with the value of the slider.
     """
+
+    MIN = 1
 
     def execute(self):
         """This is only here to demonstrate that execute() is called."""
@@ -55,7 +59,7 @@ class QueryWidget(Query):
             self.query(max_height)
             return self.out_df
 
-        height = pn.widgets.FloatSlider(value=10, start=1, end=10, name='Maximum height')
+        height = pn.widgets.FloatSlider(value=MAX_HEIGHT, start=self.MIN, end=MAX_HEIGHT+1, name='Maximum height')
         df2 = pn.bind(query_value, max_height=height)
         df_pane = pn.pane.DataFrame(df2, index=False, sizing_mode='stretch_width')
         text = '''
@@ -68,7 +72,7 @@ class QueryWidget(Query):
 
         return pn.Row(pn.Column(height, text), df_pane)
 
-class BarchartWidget(Block):#, Viewer):
+class BarchartWidget(Block):
     """A barchart widget.
 
     This could have been written as separate "text-only" `Block` class,
@@ -76,6 +80,7 @@ class BarchartWidget(Block):#, Viewer):
     but since the only thing this does is display a HoloViews Chart, why bother.
     """
 
+    in_max_height = param.Number(doc='The maximum height.')
     in_df = param.DataFrame(default=None, doc='A dataframe with columns `Colors` and `Counts`.')
 
     def __init__(self, inverted=False, *args, **kwargs):
@@ -85,6 +90,11 @@ class BarchartWidget(Block):#, Viewer):
         self.hv_pane = pn.pane.HoloViews(sizing_mode='stretch_width')
 
     def execute(self):
+        print(f'{self.in_max_height=}')
+        if self.in_max_height>=MAX_HEIGHT:
+            print(f'EXEX {self.in_max_height=} > {MAX_HEIGHT=}')
+            raise BlockValidateError(f'Max height must be less than {MAX_HEIGHT}')
+
         if self.in_df is not None:
             df = self.in_df
             if self.inverted:
