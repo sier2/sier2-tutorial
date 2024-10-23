@@ -28,8 +28,8 @@ class Query(InputBlock):
     def query(self, max_height):
         """Output a dataframe with a maximum counts value."""
 
-        self.out_max_height = max_height
-        self.out_df = _make_df(max_height)
+        self.max_height = max_height
+        self.df = _make_df(max_height)
 
 class QueryWidget(Query):
     """An example block widget.
@@ -43,6 +43,11 @@ class QueryWidget(Query):
         """This is only here to demonstrate that execute() is called."""
 
         print(f'execute() in {self}')
+        if self.max_height==self.MIN:
+            raise BlockValidateError(self.name, f'Min height must be > {self.MIN}')
+
+        self.out_max_height = self.max_height
+        self.out_df = self.df
 
     def __panel__(self):
         def query_value(max_height):
@@ -57,7 +62,7 @@ class QueryWidget(Query):
             """
 
             self.query(max_height)
-            return self.out_df
+            return self.df
 
         height = pn.widgets.FloatSlider(value=MAX_HEIGHT, start=self.MIN, end=MAX_HEIGHT+1, name='Maximum height')
         df2 = pn.bind(query_value, max_height=height)
@@ -91,9 +96,8 @@ class BarchartWidget(Block):
 
     def execute(self):
         print(f'{self.in_max_height=}')
-        if self.in_max_height>=MAX_HEIGHT:
-            print(f'EXEX {self.in_max_height=} > {MAX_HEIGHT=}')
-            raise BlockValidateError(f'Max height must be less than {MAX_HEIGHT}')
+        if self.in_max_height>MAX_HEIGHT:
+            raise BlockValidateError(self.name, f'Max height must be <= than {MAX_HEIGHT}')
 
         if self.in_df is not None:
             df = self.in_df
