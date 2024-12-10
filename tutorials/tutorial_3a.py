@@ -11,12 +11,12 @@ pn.extension(inline=True)
 class UserInput(Block):
     """A block that provides user input."""
 
-    out_text = param.String(label='Input text', doc='Text to be translated')
-    out_flag = param.Boolean(label='Capitalise', doc='Changes how text is transformed')
+    out_text = param.String(label='Input text', doc='Text to be transformed')
+    out_flag = param.Boolean(label='Transform flag', doc='Changes how text is transformed')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.out_text = 'The quick brown\nfox jumps over the lazy\ndog.\n\nThe end.'
+        self.out_text = 'The quick brown fox jumps over the lazy dog.\n\nThe end.'
 
     def __panel__(self):
         text_widget = pn.widgets.TextAreaInput.from_param(

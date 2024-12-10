@@ -16,7 +16,7 @@ we use ``module_name.class_name``.
 
 The main part of the code is the same as the previous tutorial, except
 instead of using the classes directly, we get them from the library using
-``Library,get()`` and their unique keys.
+``Library.get()`` and their unique keys.
 
 .. note::
 

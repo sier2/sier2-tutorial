@@ -4,60 +4,67 @@
 #
 from sier2 import Block, Dag, Connection
 import param
+import sys
 
-import random
-import re
+UPPER_VOWELS = str.maketrans('abcde', 'ABCDE')
+LOWER_VOWELS = str.maketrans('ABCDE', 'abcde')
 
-class UserInput(Block):
-    """A block that provides user input."""
+class ExternalInput(Block):
+    """A block that provides data to the dag."""
 
-    out_text = param.String(label='User input', doc='Text to be translated')
-    out_flag = param.Boolean(label='Transform flag', doc='Changes how text is transformed')
+    out_text = param.String(label='Output text', doc='Output text')
+    out_flag = param.Boolean(label='Transform flag', doc='How text is transformed')
 
-class Translate(Block):
+class Invert(Block):
     """A block that transforms text.
 
-    The text is split into paragraphs, then each word has its letters shuffled.
-    If flag is set, capitalise each word.
+    The text is converted to upper or lower case, depending on the flag.
+    Then vowels are converted to lower or upper case,depending on the flag.
     """
 
+    # Inputs.
+    #
     in_text = param.String(label='Input text', doc='Text to be transformed')
-    in_flag = param.Boolean(label='Transform flag', doc='Changes how text is transformed')
+    in_flag = param.Boolean(label='Transform flag', doc='Upper case if True, else lower case.')
+
+    # Outputs.
+    #
     out_text = param.String(label='Output text', doc='Transformed text')
+    out_flag = param.Boolean(label='Inverse transform flag', doc='The opposite of the input flag')
 
     def execute(self):
-        paras = re.split(r'\n{2,}', self.in_text)
-        para_words = [para.split() for para in paras]
-        para_words = [[''.join(random.sample(word, k=len(word))) for word in para] for para in para_words]
+        text = self.in_text.upper() if self.in_flag else self.in_text.lower()
 
-        if self.in_flag:
-            para_words = [[word.capitalize() for word in para] for para in para_words]
-
-        text = '\n'.join(' '.join(word for word in para) for para in para_words)
+        t = UPPER_VOWELS if not self.in_flag else LOWER_VOWELS
+        text = text.translate(t)
 
         self.out_text = text
+        self.out_flag = not self.in_flag
 
 class Display(Block):
     """A block that displays text."""
 
     in_text = param.String(label='Text', doc='Display text')
 
-def main():
-    ui = UserInput()
-    tr = Translate()
+def main(flag: bool):
+    ei = ExternalInput()
+    tr = Invert()
     di = Display()
 
-    dag = Dag(doc='Translation', title='tutorial_2a')
-    dag.connect(ui, tr, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
+    dag = Dag(doc='Transform', title='tutorial_1a')
+    dag.connect(ei, tr, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
     dag.connect(tr, di, Connection('out_text', 'in_text'))
 
-    user_text = 'Hello world.'
+    text = 'Hello world.'
     print('Input text:')
-    print(user_text)
+    print(text)
     print()
 
-    ui.out_text = user_text
-    ui.out_flag = True
+    # Set output params of the Primer block.
+    #
+    ei.out_text = text
+    ei.out_flag = flag
+
     dag.execute()
 
     print('Output text:')
@@ -65,4 +72,11 @@ def main():
     print()
 
 if __name__=='__main__':
-    main()
+    if len(sys.argv)>1:
+        if (arg:=sys.argv[1].upper()[:1]) not in 'UL':
+            print('Command line argument must be U or L')
+        else:
+            flag = arg=='U'
+            main(flag)
+    else:
+        print('Specify U or L as a command line argument')

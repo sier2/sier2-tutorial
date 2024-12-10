@@ -2,7 +2,7 @@
 
 # Tutorial: blocks with panel widgets.
 #
-from sier2 import Block, Dag, Connection
+from sier2 import Block, InputBlock, Dag, Connection
 import param
 
 import random
@@ -12,15 +12,18 @@ import time
 import panel as pn
 pn.extension(inline=True)
 
-class UserInput(Block):
+UPPER_VOWELS = str.maketrans('abcde', 'ABCDE')
+LOWER_VOWELS = str.maketrans('ABCDE', 'abcde')
+
+class UserInput(InputBlock):
     """A block that provides user input."""
 
     out_text = param.String(label='Input text', doc='Text to be translated')
-    out_flag = param.Boolean(label='Capitalise', doc='Changes how text is transformed')
+    out_flag = param.Boolean(label='Upper case', doc='Changes how text is transformed')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.out_text = 'The quick brown\nfox jumps over the lazy\ndog.\n\nThe end.'
+        self.out_text = 'The quick brown fox jumps over the lazy dog.'
 
     def __panel__(self):
         text_widget = pn.widgets.TextAreaInput.from_param(
@@ -39,16 +42,22 @@ class UserInput(Block):
             sizing_mode='stretch_width'
         )
 
-class Translate(Block):
+class Invert(Block):
     """A block that transforms text.
 
-    The text is split into paragraphs, then each word has its letters shuffled.
-    If flag is set, capitalize each word.
+    The text is converted to upper or lower case, depending on the flag.
+    Then vowels are converted to lower or upper case,depending on the flag.
     """
 
+    # Inputs.
+    #
     in_text = param.String(label='Input text', doc='Text to be transformed')
-    in_flag = param.Boolean(label='Transform flag', doc='Changes how text is transformed')
+    in_flag = param.Boolean(label='Transform flag', doc='Upper case if True, else lower case.')
+
+    # Outputs.
+    #
     out_text = param.String(label='Output text', doc='Transformed text')
+    out_flag = param.Boolean(label='Inverse transform flag', doc='The opposite of the input flag')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -62,27 +71,20 @@ class Translate(Block):
 
     def execute(self):
         self.progress.active = True
-        try:
-            if not self.in_text:
-                raise ValueError('Empty text not valid')
 
-            paras = re.split(r'\n', self.in_text)
-            para_words = [para.split() for para in paras]
-            para_words = [[''.join(random.sample(word, k=len(word))) for word in para] for para in para_words]
+        text = self.in_text.upper() if self.in_flag else self.in_text.lower()
 
-            if self.in_flag:
-                para_words = [[word.capitalize() for word in para] for para in para_words]
+        t = UPPER_VOWELS if not self.in_flag else LOWER_VOWELS
+        text = text.translate(t)
 
-            text = '\n'.join(' '.join(word for word in para) for para in para_words)
+        # Emulate work being done.
+        #
+        time.sleep(random.random() * 2.0)
 
-            # Emulate work being done.
-            #
-            time.sleep(random.random() * 2.0)
+        self.out_text = text
+        self.out_flag = not self.in_flag
 
-            self.out_text = text
-
-        finally:
-            self.progress.active = False
+        self.progress.active = False
 
     def __panel__(self):
         return self.progress
@@ -114,10 +116,10 @@ class Display(Block):
 
 if __name__=='__main__':
     ui = UserInput(name='User input')
-    tr = Translate(name='Translate')
+    tr = Invert(name='Transform')
     di = Display(name='Display output')
 
-    dag = Dag(doc='Translation', title='translate text')
+    dag = Dag(doc='Transformation', title='Transform text')
     dag.connect(ui, tr, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
     dag.connect(tr, di, Connection('out_text', 'in_text'))
 

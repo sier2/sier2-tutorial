@@ -1,8 +1,8 @@
-from sier2 import Block
+from sier2 import Block, InputBlock
 import param
 import random
 
-class ProvideInteger(Block):
+class ProvideInteger(InputBlock):
     """Provide an integer output.
 
     Note that there is no execute() method; this is a user-input block.

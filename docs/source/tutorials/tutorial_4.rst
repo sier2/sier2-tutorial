@@ -4,6 +4,16 @@ Tutorial part 4 - themed application
 In this tutorial, we'll use the blocks we built in the previous tutorial
 to create a themed block application. We'll import them and build a dag.
 
+Remember that in the previous tutorial, we made ``UserInput``
+an :class:`sier2.InputBlock`. This has three effects.
+
+* When the block is displayed, it has a "Continue" button added. When selected, it calls ``dag.execute()``.
+* When the dag executes, it will stop executing when it reaches an ``InputBlock``. This allows the user to provide input, and continue executing the dag.
+* If the the block has pending input, the block's ``prepare()`` method will be called before stopping.
+
+Note that when the dag is first displayed, it is not executed, so an ``InputBlock``
+must be part of the dag.
+
 This time, we'll use the :class:`sier2.panel.PanelDag` class to display the dag.
 A ``PanelDag`` is just like a normal "text-only" ``Dag``, but it adds the
 necessary plumbing to provide a graphical user interface using the ``panel``
@@ -22,12 +32,6 @@ where the edges between nodes have directions, and there are no cycles
 block (a block with no inputs) and at least one "end" block (a block with
 no outputs). The blocks are displayed in *topological* sort order: blocks
 closer to the start are shown above blocks further from the start.
-
-We also have to find a way to execute the dag. We do this by telling the dag
-the the ``UserInput`` block requires user input: when input is complete, the dag
-can be executed. Specifically, we pass ``user_input=True`` when creating the block.
-This adds a ``Continue`` button to this block's card - pressing the button
-calls ``dag.execute()``.
 
 .. note::
 

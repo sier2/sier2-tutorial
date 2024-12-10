@@ -4,51 +4,75 @@
 #
 from sier2 import Block, Dag, Connection
 import param
+import sys
 
-class UserInput(Block):
-    """A block that provides user input."""
+UPPER_VOWELS = str.maketrans('abcde', 'ABCDE')
+LOWER_VOWELS = str.maketrans('ABCDE', 'abcde')
 
-    # Outputs.
-    #
-    out_text = param.String(label='User input', doc='Text to be translated')
-    out_flag = param.Boolean(label='Transform flag', doc='Changes how text is translated')
+class ExternalInput(Block):
+    """A block that provides data to the dag."""
 
-class Translate(Block):
+    out_text = param.String(label='Output text', doc='Output text')
+    out_flag = param.Boolean(label='Transform flag', doc='How text is transformed')
+
+class InvertLetters(Block):
     """A block that transforms text.
 
-    The text is split into paragraphs, then each word has its letters shuffled.
-    If flag is set, capitalize each word.
+    The text is converted to upper or lower case, depending on the flag.
     """
 
     # Inputs.
     #
     in_text = param.String(label='Input text', doc='Text to be transformed')
-    in_flag = param.Boolean(label='Transform flag', doc='Changes how text is transformed')
+    in_flag = param.Boolean(label='Transform flag', doc='Upper case if True, else lower case.')
 
     # Outputs.
     #
     out_text = param.String(label='Output text', doc='Transformed text')
+    out_flag = param.Boolean(label='Inverse transform flag', doc='The opposite of the input flag')
 
     def execute(self):
         print(f'in execute: {self.in_flag=} {self.in_text=}')
-        text = self.in_text.upper() # Translate.
-        if self.in_flag:
-            text = f'[{text}]' # Optional transform.
+        text = self.in_text.upper() if self.in_flag else self.in_text.lower()
 
         self.out_text = text
+        self.out_flag = not self.in_flag
 
-def main():
-    ui = UserInput()
-    tr = Translate()
+class InvertVowels(Block):
+    """A block that inverts the case of vowels."""
 
-    dag = Dag(doc='Translation', title='tutorial_1a')
-    dag.connect(ui, tr, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
+    in_text = param.String(label='Input text', doc='Text that will have its vowels mangled')
+    in_flag = param.Boolean(label='Transform flag', doc='Upper case if True, else lower case.')
+    out_text = param.String(label='Output text', doc='Transformed text')
 
-    ui.out_text = 'Hello world.'
-    ui.out_flag = True
+    def execute(self):
+        t = UPPER_VOWELS if self.in_flag else LOWER_VOWELS
+        self.out_text = self.in_text.translate(t)
+
+def main(flag: bool):
+    ei = ExternalInput()
+    il = InvertLetters()
+    iv = InvertVowels()
+
+    dag = Dag(doc='Transform', title='tutorial_1a')
+    dag.connect(ei, il, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
+    dag.connect(il, iv, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
+
+    # Set output params of the Primer block.
+    #
+    ei.out_text = 'Hello world.'
+    ei.out_flag = flag
+
     dag.execute()
 
-    print(f'{tr.out_text=}')
+    print(f'{iv.out_text=}')
 
 if __name__=='__main__':
-    main()
+    if len(sys.argv)>1:
+        if (arg:=sys.argv[1].upper()[:1]) not in 'UL':
+            print('Command line argument must be U or L')
+        else:
+            flag = arg=='U'
+            main(flag)
+    else:
+        print('Specify U or L as a command line argument')

@@ -36,14 +36,14 @@ The ``execute()`` method defines what the block does. In this case, the output
 param (``self.out_a``) is set to the input param plus one (``self.in_a + 1``).
 
 We can test our block by creating an instance of ``AddOne``, setting the
-value of the input param, calling ``execute()``, and displaying the value of
+value of the input param, calling ``execute()``, and printing the value of
 the output param.
 
 The output is:
 
 .. code-block:: text
 
-    4
+    a1_block.out_a=4
 
 Blocks provide a short cut that does the same thing. A ``Block`` instance
 is callable: calling the instance with keyword parameters corresponding
@@ -77,3 +77,9 @@ to an input parameter, ``param`` will raise an error.
 
 See `Parameter types <https://param.holoviz.org/user_guide/Parameter_Types.html>`_
 for a list of pre-defined parameter types.
+
+Input blocks
+------------
+
+Input blocks are a kind of block that waits for user input. Typically we'd see this
+in a GUI (which we'll get to later).

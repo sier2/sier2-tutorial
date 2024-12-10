@@ -15,10 +15,19 @@ if __name__=='__main__':
 
     # Test the block.
     #
+
+    # Prime the block with some input, then execute it.
+    #
     a1_block.in_a = 3
     a1_block.execute()
+
     print(f'{a1_block.out_a=}')
 
     # Use the short cut.
     #
     print(a1_block(in_a=3))
+
+    # Another way of using the short cut: using Python's kwargs.
+    #
+    arguments = {'in_a': 3}
+    print(a1_block(**arguments))

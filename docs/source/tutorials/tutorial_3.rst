@@ -19,6 +19,10 @@ here, see the `panel web site <https://panel.holoviz.org>`_ for more information
 
 The ``__panel__()`` method creates a text area and a checkbox.
 
+We've made another change to the ``UserInput`` block. Because this block will
+be waiting for user input, it inherits from the :class:`sier2.InputBlock`.
+This won't have any effect in this tutorial, but it will in the next one.
+
 We can test this panel by displaying it. In the directory above the ``tutorials``
 directory, run python to get a REPL prompt and enter these commands.
 
@@ -27,17 +31,17 @@ directory, run python to get a REPL prompt and enter these commands.
     >>> import tutorials.tutorial_3a as t3a
     >>> ui = t3a.UserInput()
     >>> ui
-    UserInput(_block_state=<BlockState.READY: 2>, name='UserInput00882', out_flag=False, out_text='The quick brown\nfox jumps over the lazy\ndog.\n\nThe end.')
+    UserInput(_block_state=<BlockState.READY: 2>, name='UserInput00882', out_flag=False, out_text='The quick brown fox jumps over the lazy dog.\n\nThe end.')
     >>> ui.__panel__().show(threaded=True)
 
 This instantiates a ``UserInput`` block and displays its default value,
 including the params. It then calls the ``__panel__()``
 method to get a panel component, and calls ``show()``. The input component
 is displayed in your browser. The ``panel`` library is aware of ``param`` parameters;
-we make use of this to create ``panel`` widgets tnat automatically update
+we make use of this to create ``panel`` widgets that automatically update
 their corresponding params.
 
-Change the text and set the flag, then look at the value of ``ui`` again.
+Change the text and set the flag, then go back to the Python REPL and Ctrl-C the Panel server, and look at the value of ``ui`` again.
 
 .. code-block:: python
 
@@ -48,25 +52,13 @@ Because the panel widgets automatically update the param values, we can see the 
 values of ``out_text`` and ``out_flag``.
 
 We've set the out params, but instead of setting them in Python like
-the previous tutorials, we've presented a UI to the user. However, if you'd
+the previous tutorials, we've presented a UI to the user and let the UI set
+the params depending on what the user does. However, if you'd
 like to test your block in a Python script, or in a ``pytest`` unit test,
 you can still just set the out params as before.
 
 After adding ``__panel__()`` methods to the other blocks, we can
 test our dag.
-
-.. code-block:: python
-
-    if __name__=='__main__':
-        ui = UserInput(name='User input')
-        tr = Translate(name='Translate')
-        di = Display(name='Display output')
-
-        dag = Dag(doc='Translation')
-        dag.connect(ui, tr, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
-        dag.connect(tr, di, Connection('out_text', 'in_text'))
-
-        pn.Column(ui, tr, di).show()
 
 As before, we create instances of our blocks and build a dag.
 This time, we create a ``pn.Column()`` containing the blocks and
