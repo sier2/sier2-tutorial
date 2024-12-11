@@ -60,6 +60,9 @@ you can still just set the out params as before.
 After adding ``__panel__()`` methods to the other blocks, we can
 test our dag.
 
+* The ``Invert`` block is a "work only" block - it doesn't interact with the user, so its ``__panel__()`` method returns a progress bar, which is activated and deactivated in  ``execute()``.
+* The ``Display`` block's ``__panel__()`` method returns a ``TextAreaInput`` widget, which has been disabled to make it read-only. (Some stylesheet modifications are used to make it look enabled.) Rather than use ``from_param()`` to link the widget to the param, we use the block's ``execute()`` method to set the widget's value.
+
 As before, we create instances of our blocks and build a dag.
 This time, we create a ``pn.Column()`` containing the blocks and
 ``show()`` it.

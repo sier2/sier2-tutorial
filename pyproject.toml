@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "sier2-tutorial"
-version = "0.1.1"
-description = "Black and dag examples"
+version = "0.2"
+description = "Block and dag examples"
 authors = ["algol60 <algol60@users.noreply.github.com>"]
 readme = "README.rst"
 packages = [{include = "sier2_tutorial", from = "src"}]
@@ -17,7 +17,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.11"
 
-sier2 = ">=0.16"
+sier2 = ">=0.26"
 
 [tool.poetry.plugins."sier2.library"]
 export = "sier2_tutorial.shelf"
