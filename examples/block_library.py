@@ -15,8 +15,8 @@ def main():
     n2 = random.randint(1, 100)
     print(f'Adding {n1} and {n2}.')
 
-    cn_block = Library.get_block('sier2_tutorial.blocks.ConstantNumberBlock')
-    a2_block = Library.get_block('sier2_tutorial.blocks.AddBlock')
+    cn_block = Library.get_block('sier2_tutorial.blocks:ConstantNumberBlock')
+    a2_block = Library.get_block('sier2_tutorial.blocks:AddBlock')
 
     r1 = cn_block(n1)
     r2 = cn_block(n2)
