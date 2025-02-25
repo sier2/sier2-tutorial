@@ -2,7 +2,7 @@
 
 # Demonstrate input validation in a block executing in a dag.
 #
-from sier2 import Block, InputBlock, BlockValidateError, Dag, Connection
+from sier2 import Block, BlockValidateError, Dag, Connection
 import param
 
 class Prime(Block):
@@ -10,14 +10,17 @@ class Prime(Block):
 
     out_p = param.Number()
 
-class Validate(InputBlock):
+class Validate(Block):
     """A validation example."""
 
     in_p = param.Number()
 
+    def __init__(self):
+        super().__init__(block_pause_execution=True)
+
     def prepare(self):
         if self.in_p<1:
-            raise BlockValidateError('Input must be >= 1')
+            raise BlockValidateError(block_name=self.name, error='Input must be >= 1')
 
 def main():
     p = Prime()

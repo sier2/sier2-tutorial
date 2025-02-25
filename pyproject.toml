@@ -1,8 +1,10 @@
-[tool.poetry]
+[project]
 name = "sier2-tutorial"
-version = "0.3"
+version = "0.4"
 description = "Block and dag examples"
-authors = ["algol60 <algol60@users.noreply.github.com>"]
+authors = [
+    {name="Algol60", email="algol60 <algol60@users.noreply.github.com>"}
+]
 readme = "README.rst"
 packages = [{include = "sier2_tutorial", from = "src"}]
 classifiers = [
@@ -14,10 +16,10 @@ classifiers = [
     "Topic :: Software Development :: Libraries"
 ]
 
-[tool.poetry.dependencies]
+[dependencies]
 python = "^3.11"
 
-sier2 = ">=0.27"
+sier2 = ">=0.28"
 
 [tool.poetry.plugins."sier2.library"]
 export = "sier2_tutorial.shelf"
@@ -30,5 +32,5 @@ module = [
 ignore_missing_imports = true
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.1.1"]
 build-backend = "poetry.core.masonry.api"

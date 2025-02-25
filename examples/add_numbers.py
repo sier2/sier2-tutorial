@@ -66,10 +66,10 @@ def main():
     dag.connect(ngb, addg, Connection('out_n', 'in_b'))
 
     print(f'\nSet block {nga}')
-    nga.go()
+    nga.prime()
 
     print(f'\nSet block {ngb}')
-    ngb.go()
+    ngb.prime()
 
     print()
     dag.execute()

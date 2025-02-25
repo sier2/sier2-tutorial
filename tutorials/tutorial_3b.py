@@ -2,7 +2,7 @@
 
 # Tutorial: blocks with panel widgets.
 #
-from sier2 import Block, InputBlock, Dag, Connection
+from sier2 import Block, Dag, Connection
 import param
 
 import random
@@ -15,14 +15,14 @@ pn.extension(inline=True)
 UPPER_VOWELS = str.maketrans('abcde', 'ABCDE')
 LOWER_VOWELS = str.maketrans('ABCDE', 'abcde')
 
-class UserInput(InputBlock):
+class UserInput(Block):
     """A block that provides user input."""
 
     out_text = param.String(label='Input text', doc='Text to be translated')
     out_flag = param.Boolean(label='Upper case', doc='Changes how text is transformed')
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, block_pause_execution=True, **kwargs)
         self.out_text = 'The quick brown fox jumps over the lazy dog.'
 
     def __panel__(self):

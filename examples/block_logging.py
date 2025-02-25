@@ -18,6 +18,9 @@ import logging
 class NumberBlock(Block):
     """Take user input and output it."""
 
+    def __init__(self, block_pause_execution=False):
+        super().__init__(block_pause_execution=block_pause_execution)
+
     out_number = param.Number(label='Output number', default=None, doc='Output number')
 
 class AddBlock(Block):
@@ -56,7 +59,7 @@ class Display(Block):
 if __name__=='__main__':
     n1 = NumberBlock()
     n2 = NumberBlock()
-    n3 = NumberBlock(user_input=True)
+    n3 = NumberBlock(block_pause_execution=True)
     aa = AddBlock(name='First add')
     ab = AddBlock(name='Second add')
     display = Display()

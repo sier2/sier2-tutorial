@@ -3,7 +3,7 @@ import panel as pn
 import pandas as pd
 import random
 
-from sier2 import Block, InputBlock, BlockValidateError
+from sier2 import Block, BlockValidateError
 import param
 
 MAX_HEIGHT = 10
@@ -19,8 +19,11 @@ def _make_df(max_height=MAX_HEIGHT) -> pd.DataFrame:
         columns=['Colors', 'Counts']
     )
 
-class Query(InputBlock):
+class Query(Block):
     """A plain Python block that accepts a "query" (a maximum count value) and outputs a dataframe."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, block_pause_execution=True, **kwargs)
 
     out_max_height = param.Number(doc='The maximum value. All values are less than this')
     out_df = param.DataFrame(default=None, doc='A dataframe with columns `Colors` and `Counts`. The counts are a random number between 0 and the slider value.')
