@@ -6,7 +6,15 @@ a GUI interface. We'll be using ``panel``, an open-source Python library
 designed to streamline the development of robust tools, dashboards,
 and complex applications entirely within Python.
 
-There are a couple of ways of adding a ``panel`` user interface.
+To add a panel GUI to your block, you don't need to do anything.
+When you start a dag using Panel, the dag will automatically turn your
+`in_` params into Panel widgets using
+`panel.Param <https://panel.holoviz.org/reference/panes/Param.html>`_.
+However, this will be done using defaults set by Panel, which may be perfectly
+acceptable for your application.
+
+You can override the default widgets by providing your own ``Panel`` user interface.
+There are a couple of ways of doing this.
 One is to subclass ``UserInput`` and add the ``panel`` code in the subclass.
 This has the advantage of keeping the functionality and the user interface
 separated from each other, and makes unit testing of the functionality simpler.
@@ -20,7 +28,7 @@ here, see the `panel web site <https://panel.holoviz.org>`_ for more information
 The ``__panel__()`` method creates a text area and a checkbox.
 
 We've made another change to the ``UserInput`` block. Because this block will
-be waiting for user input, it inherits from the :class:`sier2.InputBlock`.
+be waiting for user input, we pass ``block_pause_execution=True`` to ``super().__init__()``.
 This won't have any effect in this tutorial, but it will in the next one.
 
 We can test this panel by displaying it. In the directory above the ``tutorials``

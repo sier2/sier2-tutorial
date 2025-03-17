@@ -22,6 +22,11 @@ class Data(Block):
     out_age = param.Integer()
     out_birth = param.Selector(objects=['', 'ACT', 'NSW', 'NT', 'Qld', 'SA', 'Tas', 'Vic', 'WA'])
 
+    def prepare(self):
+        self.in_nick = 'In Prepare'
+        self.in_age = 99
+        self.in_birth = 'ACT'
+
     def execute(self):
         self.out_nick = self.in_nick
         self.out_age = self.in_age
