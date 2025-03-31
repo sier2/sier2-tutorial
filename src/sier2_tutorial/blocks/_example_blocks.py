@@ -76,3 +76,14 @@ class AddBlock(Block):
 
         self.out_result = self.in_a+self.in_b
         # print(f'{self.in_a} + {self.in_b} = {self.out_result}')
+
+class ConfigurableBlock(Block):
+    """The output of this block is the value of the key ``output`` in its config."""
+
+    out_output = param.String(label='Output', doc='Output from config file', allow_None=True)
+
+    def __init__(self):
+        super().__init__(block_pause_execution=True)
+
+    def execute(self):
+        self.out_output = self.get_config_value('output')

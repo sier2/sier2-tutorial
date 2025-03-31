@@ -10,7 +10,10 @@ def blocks():
 
         Info(f'{pkg}.blocks:UserInput', 'A text area and flag for input.'),
         Info(f'{pkg}.blocks:Invert', 'Transform text.'),
-        Info(f'{pkg}.blocks:Display', 'Display text.')
+        Info(f'{pkg}.blocks:Display', 'Display text'),
+
+        Info(f'{pkg}.blocks:ConfigurableBlock', 'An example configurable block'),
+        Info(f'{pkg}.blocks:ExampleConfig', 'An example configuration block')
     ]
 
     return info
