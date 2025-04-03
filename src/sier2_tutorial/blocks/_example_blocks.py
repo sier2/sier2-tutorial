@@ -14,6 +14,12 @@ class RandomNumberBlock(Block):
     Uses random.randint() to produce an integer in 1 .. 100 inclusive.
     """
 
+    in_upper = param.Integer(
+        label='Upper limit',
+        doc='The upper limit of the generated random number',
+        default=10
+    )
+
     out_n = param.Integer(
         label='An integer',
         doc='A random number between 1 and 100 inclusive',
@@ -23,11 +29,13 @@ class RandomNumberBlock(Block):
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
 
-    def prime(self):
+    def prime(self, limit:int = 10):
         """A convenience method to prime the dag."""
 
-        n = random.randint(1, 100)
-        print(f'Random: {n}')
+        self.in_upper = limit
+
+        n = random.randint(1, self.in_upper)
+        print(f'Random (1 .. {self.in_upper}): {n}')
         self.out_n = n
 
 class ConstantNumberBlock(Block):

@@ -20,7 +20,7 @@ def blocks():
 
 def dags():
     info = [
-        Info(f'{pkg}.dags:example_dag', 'Example dag'),
+        Info(f'{pkg}.dags:example_add_dag', 'Example adding dag'),
         Info(f'{pkg}.dags:transform_dag', 'Transformation app')
     ]
 
