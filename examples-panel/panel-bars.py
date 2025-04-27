@@ -12,13 +12,14 @@ from _panel_widgets import QueryWidget, BarchartWidget
 NTHREADS = 2
 DOC = """Generate barcharts
 
-This dag contains an input block that takes a number and generates
-a `pandas` dataframe containing random numbers in the range 1 .. number.
+This dag contains an input block that takes a number and generates a `pandas` dataframe containing random numbers in the range 1 .. number.
 
-The dataframe is then passed to *two* instances of a **barchart** block,
-one displaying the dataframe, the other displaying the "inverse"
-of the dataframe.
+The dataframe is then passed to *two* instances of a **barchart** block, one displaying the dataframe, the other displaying the "inverse" of the dataframe.
 """
+
+QUERY_DOC = """Generate random numbers with maximum specified by the slider."""
+CHART_DOC = """This bar chart visualises the data from the previous block."""
+CHARTI_DOC = """This chart is the same as the previous one, except the bars are inverted."""
 
 hv.extension('bokeh', inline=True)
 pn.extension('floatpanel', nthreads=NTHREADS, loading_spinner='bar', inline=True)
@@ -27,9 +28,9 @@ pn.extension('floatpanel', nthreads=NTHREADS, loading_spinner='bar', inline=True
 def main():
     # Build a dag.
     #
-    q = QueryWidget(name='Run a query', continue_label='Draw chart')
-    b = BarchartWidget(name='Results bars')
-    bi = BarchartWidget(inverted=True, name='Results bars (inverted)')
+    q = QueryWidget(name='Run a query', continue_label='Draw chart', block_doc=QUERY_DOC)
+    b = BarchartWidget(name='Results bars', block_doc=CHART_DOC)
+    bi = BarchartWidget(inverted=True, name='Results bars (inverted)', block_doc=CHARTI_DOC)
 
     dag = PanelDag(doc=DOC, site='Example', title='Bars')
     dag.connect(q, b,
