@@ -20,7 +20,7 @@ class Inputs(Block):
     out_string = param.String(doc='Output')
 
     def __init__(self):
-        super().__init__(name='params with labels', block_pause_execution=True)
+        super().__init__(name='params with labels', block_pause_execution=True, continue_label='Execute')
 
     def execute(self):
         print(f'{self.in_favourite_country}')
