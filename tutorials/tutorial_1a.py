@@ -18,7 +18,7 @@ class ExternalInput(Block):
     out_text = param.String(label='Output text', doc='Output text')
     out_flag = param.Boolean(label='Transform flag', doc='How text is transformed')
 
-    def execute(self):
+    def prime(self):
         self.out_text = self.in_text
         self.out_flag = self.in_flag
 
@@ -74,7 +74,7 @@ def main(flag: bool):
     # running execute in this block will populate the `out_*` parameters, at lest
     # one of which needs to be populated for the dag to run
     #
-    external_input.execute()
+    external_input.prime()
     
     # then we can run the rest of the dag 
     #
