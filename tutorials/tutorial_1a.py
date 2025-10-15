@@ -12,15 +12,9 @@ LOWER_VOWELS = str.maketrans('ABCDE', 'abcde')
 class ExternalInput(Block):
     """A block that provides data to the dag."""
     
-    in_text = param.String(label='Input text', doc='Input text')
-    in_flag = param.Boolean(label='Transform flag', doc='How text is transformed')
-    
     out_text = param.String(label='Output text', doc='Output text')
     out_flag = param.Boolean(label='Transform flag', doc='How text is transformed')
 
-    def prime(self):
-        self.out_text = self.in_text
-        self.out_flag = self.in_flag
 
 class InvertLetters(Block):
     """A block that transforms text.
@@ -56,6 +50,7 @@ class InvertVowels(Block):
         t = UPPER_VOWELS if self.in_flag else LOWER_VOWELS
         self.out_text = self.in_text.translate(t)
 
+
 def main(flag: bool):
     external_input = ExternalInput()
     invert_letters = InvertLetters()
@@ -67,17 +62,9 @@ def main(flag: bool):
 
     # Set output params of the Primer block.
     #
-    external_input.in_text = 'Hello world.'
-    external_input.in_flag = flag
-    
-    # We need to run the input block first to prime the overall dag for execution
-    # running execute in this block will populate the `out_*` parameters, at lest
-    # one of which needs to be populated for the dag to run
-    #
-    external_input.prime()
-    
-    # then we can run the rest of the dag 
-    #
+    external_input.out_text = 'Hello world.'
+    external_input.out_flag = flag
+
     dag.execute()
 
     print(f'{invert_vowels.out_text=}')
