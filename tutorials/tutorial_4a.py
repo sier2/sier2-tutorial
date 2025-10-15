@@ -8,7 +8,7 @@ def transform_dag():
     tr = Invert(name='Transform')
     di = Display(name='Display output')
 
-    dag = PanelDag(doc='Transform', title='Transform text')
+    dag = PanelDag(doc='Tutorial 4a\nTransform text.', title='Transform text')
     dag.connect(ui, tr, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
     dag.connect(tr, di, Connection('out_text', 'in_text'))
 
