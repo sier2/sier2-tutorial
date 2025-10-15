@@ -50,7 +50,7 @@ class InvertVowels(Block):
         t = UPPER_VOWELS if self.in_flag else LOWER_VOWELS
         self.out_text = self.in_text.translate(t)
 
-
+input
 def main(flag: bool):
     external_input = ExternalInput()
     invert_letters = InvertLetters()
