@@ -11,9 +11,16 @@ LOWER_VOWELS = str.maketrans('ABCDE', 'abcde')
 
 class ExternalInput(Block):
     """A block that provides data to the dag."""
-
+    
+    in_text = param.String(label='Input text', doc='Input text')
+    in_flag = param.Boolean(label='Transform flag', doc='How text is transformed')
+    
     out_text = param.String(label='Output text', doc='Output text')
     out_flag = param.Boolean(label='Transform flag', doc='How text is transformed')
+
+    def execute(self):
+        self.out_text = self.in_text
+        self.out_flag = self.in_flag
 
 class InvertLetters(Block):
     """A block that transforms text.
@@ -50,22 +57,30 @@ class InvertVowels(Block):
         self.out_text = self.in_text.translate(t)
 
 def main(flag: bool):
-    ei = ExternalInput()
-    il = InvertLetters()
-    iv = InvertVowels()
+    external_input = ExternalInput()
+    invert_letters = InvertLetters()
+    invert_vowels = InvertVowels()
 
     dag = Dag(doc='Transform', title='tutorial_1a')
-    dag.connect(ei, il, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
-    dag.connect(il, iv, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
+    dag.connect(external_input, invert_letters, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
+    dag.connect(invert_letters, invert_vowels, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
 
     # Set output params of the Primer block.
     #
-    ei.out_text = 'Hello world.'
-    ei.out_flag = flag
-
+    external_input.in_text = 'Hello world.'
+    external_input.in_flag = flag
+    
+    # We need to run the input block first to prime the overall dag for execution
+    # running execute in this block will populate the `out_*` parameters, at lest
+    # one of which needs to be populated for the dag to run
+    #
+    external_input.execute()
+    
+    # then we can run the rest of the dag 
+    #
     dag.execute()
 
-    print(f'{iv.out_text=}')
+    print(f'{invert_vowels.out_text=}')
 
 if __name__=='__main__':
     if len(sys.argv)>1:
