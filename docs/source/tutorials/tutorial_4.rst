@@ -4,15 +4,15 @@ Tutorial part 4 - themed application
 In this tutorial, we'll use the blocks we built in the previous tutorial
 to create a themed block application. We'll import them and build a dag.
 
-Remember that in the previous tutorial, we made ``UserInput``
-an :class:`sier2.InputBlock`. This has three effects.
+Remember that in the previous tutorial, set the ``UserInput`` ``block_pause_execution``
+parameter to ``True`` when we overrode the ``__init__`` function. This will mean that:
 
 * When the block is displayed, it has a "Continue" button added. When selected, it calls ``dag.execute()``.
-* When the dag executes, it will stop executing when it reaches an ``InputBlock``. This allows the user to provide input, and continue executing the dag (by pressing the "Continue" button).
+* When the dag executes, it will stop executing when it reaches another block that has ``block_pause_execution`` set to ``True``. This allows the user to provide input, and continue executing the dag (by pressing the "Continue" button).
 * If the the block has pending input, the block's ``prepare()`` method will be called before stopping.
 
 Note that when a panel dag is first displayed, it is not executed, so an
-``InputBlock`` must be part of the dag.
+Block with ``block_pause_execution`` set to ``True`` must be part of the dag.
 
 This time, we'll use the :class:`sier2.panel.PanelDag` class to display the dag.
 A ``PanelDag`` is just like a normal "text-only" ``Dag``, but it adds the
