@@ -27,6 +27,20 @@ Blocks are implemented as Python classes. A block:
 
 The module ``tutorial_0a.py`` contains a simple block that adds one to its input.
 
+.. code-block:: python
+    
+    from sier2 import Block
+    import param
+
+    class AddOne(Block):
+        """A block that adds one to its input."""
+
+        in_a = param.Integer()
+        out_a = param.Integer()
+
+        def execute(self):
+            self.out_a = self.in_a + 1
+
 The class ``AddOne`` is a subclass of ``Block``. It has two params:
 an input param called ``in_a`` and an output param called ``out_a``.
 Both of these params are declared as type ``param.Integer``; we'll see why this
@@ -39,9 +53,18 @@ We can test our block by creating an instance of ``AddOne``, setting the
 value of the input param, calling ``execute()``, and printing the value of
 the output param.
 
+.. code-block:: python
+
+    a1_block = AddOne()
+
+    # Prime the block with some input, then execute it.
+    #
+    a1_block.in_a = 3
+    a1_block.execute()
+
 The output is:
 
-.. code-block:: text
+.. code-block:: python
 
     a1_block.out_a=4
 
@@ -49,6 +72,10 @@ Blocks provide a short cut that does the same thing. A ``Block`` instance
 is callable: calling the instance with keyword parameters corresponding
 to the input params will set the input params, call ``execute()``, and return
 a dictionary containing the output params and their values.
+
+.. code-block:: python
+
+    print(f'{a1_block(in_a=3)=}')
 
 The output is:
 
@@ -64,7 +91,7 @@ Param types
 -----------
 
 An advantage of using ``param`` to define parameters is that they can be
-specified with specific types. If you attempt to assign a non-integer value
+specified with types. If you attempt to assign a non-integer value
 to an input parameter, ``param`` will raise an error.
 
 .. code-block:: python
@@ -78,8 +105,8 @@ to an input parameter, ``param`` will raise an error.
 See `Parameter types <https://param.holoviz.org/user_guide/Parameter_Types.html>`_
 for a list of pre-defined parameter types.
 
-Input blocks
-------------
+Input blocks:
+--------------
 
-Input blocks are a kind of block that waits for user input. Typically we'd see this
+Blocks can be made to wait for user or program input. Typically we'd see this
 in a GUI (which we'll get to later).

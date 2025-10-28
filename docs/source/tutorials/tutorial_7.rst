@@ -1,7 +1,7 @@
 Tutorial part 7 - exporting blocks and dags
 ===========================================
 
-In the previous couple of tutorials, we used blocks adags that are provided
+In the previous couple of tutorials, we used blocks and dags that are provided
 by the ``sier2_tutorial`` package. How does that work?
 
 The ``sier2`` library uses the Python plugin mechanism described at

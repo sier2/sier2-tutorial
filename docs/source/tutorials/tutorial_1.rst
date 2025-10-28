@@ -8,7 +8,7 @@ a more complex application.
 A "dag" is a `directed acyclic graph <https://en.wikipedia.org/wiki/Directed_acyclic_graph>`_. Each connection in the graph has a direction,
 so in the graph below, node ``a`` is connected to node ``b``,
 but node ``b`` is not connected to node ``a``. In addition, starting at
-any given node and following connections will never lead back to that node.
+any given node and following connections will never lead back to the starting node.
 
 .. image:: Tred-G.svg.png
     :align: center
@@ -18,7 +18,7 @@ blocks are connected by connecting output params to input params.
 Rather than invent a name, we call a dag made up of connected blocks
 a "dag".
 
-The dag will contain three blocks.
+Out example dag will contain three blocks.
 
 * An "external input" block to provide data to the dag;
 * A text inverter block, that converts text to upper or lower case;
@@ -32,52 +32,117 @@ directory.
 As we saw in the previous tutorial, a block is an instance of a class that
 subclasses ``Block``, and uses at least one ``param`` for input and/or output.
 
-First we'll look at the ``ExternalInput`` class. There are two parameters,
+First we'll look at the ExternalInput class. There are two parameters, defined using the param library. 
+How do we know which are inputs and which are outputs? Inputs start with in_, outputs start with out_.
+
+ExternalInput two outputs: a text parameter containing text to be transformed, and a flag that changes the transformation.
+
+.. code-block:: python
+
+    from sier2 import Block, Dag, Connection
+    import param
+    import sys
+
+    class ExternalInput(Block):
+        """A block that provides data to the dag."""
+        
+        out_text = param.String(label='Output text', doc='Output text')
+        out_flag = param.Boolean(label='Transform flag', doc='How text is transformed')
+
+
+(Below we'll set the values of the outputs manually from Python. In later tutorials, we'll see how to accept user input via a GUI.)
+
+Next, we'll look at the ``InverLetters`` class. There are four parameters,
 defined using the ``param`` library. How do we know which are inputs and
 which are outputs? Inputs start with ``in_``, outputs start with ``out_``.
 
-``ExternalInput`` has no inputs, and two outputs: a text parameter
-containing text to be transformed, and a flag that changes the transformation.
+.. code-block:: python
 
-(Below we'll set the values of the outputs manually from Python.
-In later tutorials, we'll see how to accept user input via a GUI.)
+    class InvertLetters(Block):
+        """A block that transforms text.
 
-Note that a ``Block`` class does not ask for user input.
-This is because blocks do not take user input or produce user
-output; it is up to the application using a block to get input from, and present
-output to, users. The only input and output mechanism that blocks use is their
-parameters.
+        The text is converted to upper or lower case, depending on the flag.
+        """
 
-The ``InvertLetters`` class has two input params (that correspond to
-``ExternalInput``'s output params) and two output params. It also has an
-``execute()`` method.
-This method is called automatically by the dag after the input values have been set.
-(For convenience, ``execute()`` prints its input params so we can see what the input
-param values are.)
+        # Inputs.
+        #
+        in_text = param.String(label='Input text', doc='Text to be transformed')
+        in_flag = param.Boolean(label='Transform flag', doc='Upper case if True, else lower case.')
+
+        # Outputs.
+        #
+        out_text = param.String(label='Output text', doc='Transformed text')
+        out_flag = param.Boolean(label='Inverse transform flag', doc='The opposite of the input flag')
+
+        def execute(self):
+            print(f'in execute: {self.in_flag=} {self.in_text=}')
+            text = self.in_text.upper() if self.in_flag else self.in_text.lower()
+
+            self.out_text = text
+            self.out_flag = not self.in_flag
+
+``InvertLetters`` has two inputs, and two outputs: a ``in_text`` parameter
+containing text to be transformed, a ``in_flag`` parameter that changes the transformation, 
+a ``out_text`` parameter that stores the converted text, and a ``out_flag`` that stores the inverse 
+of the ``in_flag``.
+
+.. note:: 
+    (For convenience, ``execute()`` prints its input params so we can see what the input
+    param values are.)
 
 The ``InvertVowels`` class also has two input params, but only one output param.
 It also has an ``execute()`` method.
 
-The ``main()`` function creates an instance of each blocks, then creates a ``Dag`` and
-connects the three blocks. The ``Dag.connect()`` method connects source blocks
+.. code-block:: python
+
+    class InvertVowels(Block):
+        """A block that inverts the case of vowels."""
+
+        in_text = param.String(label='Input text', doc='Text that will have its vowels mangled')
+        in_flag = param.Boolean(label='Transform flag', doc='Upper case if True, else lower case.')
+        out_text = param.String(label='Output text', doc='Transformed text')
+
+        def execute(self):
+            t = UPPER_VOWELS if self.in_flag else LOWER_VOWELS
+            self.out_text = self.in_text.translate(t)
+
+
+The ``main()`` function creates an instance of each block, then creates a ``Dag`` and
+connects the two blocks. The ``Dag.connect()`` method connects source blocks
 to destination blocks. The ``Connection()`` arguments indicate
 how the blocks are connected.
 
-* ``out_text`` (in the ``ei`` block) is connected to ``in_text`` (in the ``il`` block)
-* ``out_flag`` (in the ``ei`` block) is connected to ``in_flag`` (in the ``il`` block)
+.. code-block:: python
 
-Similar connections are used to connect the ``il`` and ``iv`` blocks.
+    external_input = ExternalInput()
+    invert_letters = InvertLetters()
+    invert_vowels = InvertVowels()
+
+    dag = Dag(doc='Transform', title='tutorial_1a')
+    dag.connect(external_input, invert_letters, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
+    dag.connect(invert_letters, invert_vowels, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
+
+
+Similar connections are used to connect the ``invert_letters`` and ``invert_vowels`` blocks.
 
 Now we can try running the dag. This where we find out why we need an
 external input block.
 
-For a dag to execute, at least one output param must be set in a block. If you comment
-out setting ``ei.out_text`` and ``ei.out_flag`` before executing the dag,
-an execption will be raised: ``sier2._block.BlockError: Nothing to execute``.
+For a dag to execute, at least one output param must be set in a block. Our ExternalInput block
+will take the inputs to ``out_text`` and ``out_flag``. 
+
+.. code-block:: python
+
+    external_input.out_text = 'Hello world.'
+    external_input.out_flag = flag
+
+    dag.execute()
+
+    print(f'{invert_vowels.out_text=}')
 
 We need to prime the dag with some data (hence we can call "``ExternalInput``
-a "primer" block). To do this, we assign values to the output params of ``ei``,
-and call ``dag.execute()``. Finally, we print the output param of ``iv``.
+a "primer" block). To do this, we assign values to the output params of ``external_input``. 
+Finally, we call ``dag.execute()`` to run the rest of the dag and see the outputs.
 
 To run ``tutorial_1a.py``, provide an extra argument, either ``L`` or ``U``,
 to demonstrate what effect tha flag has.
@@ -86,8 +151,7 @@ The output resulting from this dag when ``L`` is passed is:
 
 .. code-block:: text
 
-    in execute: self.in_flag=False self.in_text='Hello world.'
-    iv.out_text='hEllo worlD.'
+    invert_vowels.out_text='hEllo worlD.'
 
 .. note::
 

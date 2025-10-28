@@ -11,9 +11,10 @@ LOWER_VOWELS = str.maketrans('ABCDE', 'abcde')
 
 class ExternalInput(Block):
     """A block that provides data to the dag."""
-
+    
     out_text = param.String(label='Output text', doc='Output text')
     out_flag = param.Boolean(label='Transform flag', doc='How text is transformed')
+
 
 class InvertLetters(Block):
     """A block that transforms text.
@@ -49,23 +50,24 @@ class InvertVowels(Block):
         t = UPPER_VOWELS if self.in_flag else LOWER_VOWELS
         self.out_text = self.in_text.translate(t)
 
+input
 def main(flag: bool):
-    ei = ExternalInput()
-    il = InvertLetters()
-    iv = InvertVowels()
+    external_input = ExternalInput()
+    invert_letters = InvertLetters()
+    invert_vowels = InvertVowels()
 
     dag = Dag(doc='Transform', title='tutorial_1a')
-    dag.connect(ei, il, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
-    dag.connect(il, iv, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
+    dag.connect(external_input, invert_letters, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
+    dag.connect(invert_letters, invert_vowels, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
 
     # Set output params of the Primer block.
     #
-    ei.out_text = 'Hello world.'
-    ei.out_flag = flag
+    external_input.out_text = 'Hello world.'
+    external_input.out_flag = flag
 
     dag.execute()
 
-    print(f'{iv.out_text=}')
+    print(f'{invert_vowels.out_text=}')
 
 if __name__=='__main__':
     if len(sys.argv)>1:

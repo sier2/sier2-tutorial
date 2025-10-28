@@ -67,4 +67,4 @@ and without having to be in any specific directory. We can just use
 
     To see this dag in action, run ``tutorials/tutorial_5b.py``.
 
-That was nice, but we still had to build the dag manually. Fortunately, we can alsouse the library to retrieve dags.
+That was nice, but we still had to build the dag manually. Fortunately, we can also use the library to retrieve dags.

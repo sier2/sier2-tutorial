@@ -1,7 +1,7 @@
 Tutorial part 3 - GUI
 =====================
 
-In this tutorial, we'll build on the dag we build previously to provide
+In this tutorial, we'll extend the dag we built previously to provide
 a GUI interface. We'll be using ``panel``, an open-source Python library
 designed to streamline the development of robust tools, dashboards,
 and complex applications entirely within Python.
@@ -15,6 +15,7 @@ acceptable for your application.
 
 You can override the default widgets by providing your own ``Panel`` user interface.
 There are a couple of ways of doing this.
+
 One is to subclass ``UserInput`` and add the ``panel`` code in the subclass.
 This has the advantage of keeping the functionality and the user interface
 separated from each other, and makes unit testing of the functionality simpler.
