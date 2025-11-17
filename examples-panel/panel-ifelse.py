@@ -9,7 +9,7 @@
 #
 # This works by only setting the out params connected to the appropriate block.
 #
-# However, what is actually happening is that all of the blocks are being executed,
+# However, what is actually happening is that all of the "next" blocks are being executed,
 # no matter what. This appears to be caused in
 # _panel.py line 396 (inside def on_continue(_event)):
 #
@@ -18,9 +18,10 @@
 # Because all of the out params are being triggered, both sets of connections are being
 # triggered, so both block paths are being executed.
 #
-# Commenting that line out seems to fix the problem, but who knows what else that changes?
+# Removing that line seems to fix the problem, but who knows what else that changes?
 # The comment above that line indicates that we want to do this, but this may be a hangover
-# from an earlier version that worked differently. I feel we *don't* want to do this.
+# from an earlier version that worked differently. I feel we *don't* want to do this,
+# because it breaks this block.
 #
 
 from sier2 import Block, Dag, Connection
