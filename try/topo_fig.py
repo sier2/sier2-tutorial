@@ -21,12 +21,13 @@
 # To draw your own dag, add a `make_my_dag` function that returns a dag,
 # then update the plots list at the end.
 #
-# Since this in done using bokeh, it should be possible to update the block
+# Since this is done using bokeh, it should be possible to update the block
 # colors as the dag executes.
 #
 
 from bokeh.plotting import figure, output_file, show, curdoc
 from bokeh.core.enums import RenderLevel
+from bokeh.models import HoverTool
 from bokeh.models.annotations.arrows import ArrowHead
 from bokeh.layouts import column
 import bokeh.palettes as pals
@@ -60,8 +61,32 @@ def make_boring_dag():
 
     return dag
 
-def make_if_else_dag():
+def make_so_dag():
+    """https://stackoverflow.com/questions/39644616/is-there-a-2d-layout-algorithm-for-dags-that-allows-the-positions-on-one-axis-to"""
 
+    blocks = [PassBlock(name=f'Block{i}') for i in range(9)]
+    c = Connection('out_b', 'in_b')
+    dag = Dag(title='Example', doc='from SO')
+    dag.connect(blocks[0], blocks[1], c)
+    dag.connect(blocks[0], blocks[3], c)
+
+    dag.connect(blocks[1], blocks[2], c)
+    dag.connect(blocks[1], blocks[6], c)
+
+    dag.connect(blocks[3], blocks[4], c)
+    dag.connect(blocks[3], blocks[5], c)
+    dag.connect(blocks[3], blocks[8], c)
+
+    dag.connect(blocks[4], blocks[7], c)
+    dag.connect(blocks[4], blocks[8], c)
+
+    dag.connect(blocks[5], blocks[6], c)
+
+    dag.connect(blocks[6], blocks[7], c)
+
+    return dag
+
+def make_if_else_dag():
     # Create a starting (head) block, and a list of successive blocks.
     # The last one in the list is the tail block.
     #
@@ -93,8 +118,8 @@ def make_multi_tail_dag():
 
     return dag
 
-def make_tree_dag():
-    dag = Dag(title='binary tree', doc='doc')
+def make_binary_tree_dag(title):
+    dag = Dag(title=title, doc='doc')
     head = PassBlock(name='head')
     l2 = PassBlock(name='L2')
     r2 = PassBlock(name='R2')
@@ -112,9 +137,9 @@ def make_tree_dag():
 
     return dag
 
-def make_tree_root_dag():
+def make_tree_tail_dag():
     tail = PassBlock(name='binary tree to a single block')
-    dag = make_tree_dag()
+    dag = make_binary_tree_dag('binary tree to tail')
     dag.connect(dag.block_by_name('LL3'), tail, Connection('out_b', 'in_b'))
     dag.connect(dag.block_by_name('LR3'), tail, Connection('out_b', 'in_b'))
     dag.connect(dag.block_by_name('RL3'), tail, Connection('out_b', 'in_b'))
@@ -137,49 +162,60 @@ def make_long_dag():
 # The plotting code.
 ##########
 
+def count_param(block, prefix):
+    return sum(1 for p in block.param if p.startswith(prefix))
+
 def draw_dag(dag, title):
     topo_blocks = dag.get_sorted()
+    n = len(topo_blocks)
 
-    p = figure(width=400, height=400, title=title, #toolbar_location=None,
-        tooltips='@name',
+    fig = figure(width=400, height=400, title=title, #toolbar_location=None,
+        # tooltips=[('Name', '@name'), ('In', '@icount'), ('Out', '@ocount')],
         aspect_ratio=1,
         # Ranges must be equal.
-        x_range=(-1, len(topo_blocks)), y_range=(-1, len(topo_blocks))
+        x_range=(-1, n), y_range=(-1, n)
         #, tools='hover'
     )
     curdoc().theme = 'dark_minimal'
 
-    n = len(topo_blocks)
+    hover = HoverTool(tooltips=[('Name', '@name'), ('In', '@icount'), ('Out', '@ocount')])
+    fig.add_tools(hover)
+
     data = {
         'name': [block.name for block in topo_blocks],
         'x': list(range(n)),
         'y': list(range(n-1, -1, -1)),
-        'color': random.choices(pals.DarkText, k=n)
+        'color': random.choices(pals.DarkText, k=n),
+        'icount': [count_param(block, 'in_') for block in topo_blocks],
+        'ocount': [count_param(block, 'out_') for block in topo_blocks],
     }
     xys = {name: (x,y) for name, x, y in zip(data['name'], data['x'], data['y'])}
 
     SIZE = 0.25
 
-    c = p.circle(
+    circle = fig.circle(
         source=data,
         x='x', y='y',
         radius=SIZE,
         # alpha=0,
         # line_alpha=1,
-        color='color',
+        color='grey',
         # line_color='line_color',
         radius_units='data'
     )
 
     def next_to_topo(topo_blocks, b1, b2):
+        """Are blocks b1 and b2 next to each other in the topological sort?"""
         ix = topo_blocks.index(b1)
 
-        return ix<len(topo_blocks) and  topo_blocks[ix+1]==b2
+        return ix<len(topo_blocks) and topo_blocks[ix+1]==b2
 
     lc = 'steelblue'
     lw = 2
-    side = 1
-    h = math.sin(math.pi/4)*SIZE
+    side = True
+    heads = []
+    OFFSET = 1.5 * SIZE
+    h = math.sin(math.pi/4) * OFFSET
     for b1, b2 in dag._block_pairs:
         x0, y0 = xys[b1.name]
         x1, y1 = xys[b2.name]
@@ -188,37 +224,61 @@ def draw_dag(dag, title):
             #
             x0 += h
             y0 -= h
-            x1 -= h
-            y1 += h
-            p.line([x0, x1], [y0, y1], line_color=lc, line_width=lw)
+            x1 -= h + h*OFFSET
+            y1 += h + h*OFFSET
+            angle = -math.pi/12
+            fig.line([x0, x1], [y0, y1], line_color=lc, line_width=lw)
         else:
-            # Bezier curve - width dependent on the distance between blocks.
+            # Define how far out the Bezier curve control points are.
             #
-            delta = (x1-x0)*0.5
-            x0 += h*side
-            y0 += h*side
-            x1 += h*side
-            y1 += h*side
-            cx0, cy0 = x0 + side*delta, y0 + side*delta
-            cx1, cy1 = x1 + side*delta, y1 + side*delta
+            c = (x1-x0) * 0.75
 
-            # Draw a background line so overlapping curves look nice.
+            if side:
+                # Below.
+                cx0, cy0 = x0, y0-c
+                cx1, cy1 = x1-c, y1
+                x0, y0 = x0, y0 - OFFSET
+                x1, y1 = x1 - OFFSET*1.5, y1
+                angle = -math.pi/2
+            else:
+                # Above.
+                cx0, cy0 = x0+c, y0
+                cx1, cy1 = x1, y1+c
+                x0, y0 = x0 + OFFSET, y0
+                x1, y1 = x1, y1 + OFFSET*1.5
+                angle = -math.pi/3
+
+            # # Plot the Bezier control points for debugging.
+            # #
+            # p.circle([cx0, cx1], [cy0, cy1], radius=0.05, color='red')
+
+            # Draw a background line under the actual line so overlapping curves look nice.
             #
-            p.bezier([x0], [y0], [x1], [y1], [cx0], [cy0], [cx1], [cy1], line_color='#2b3035', line_width=lw+5)
-            p.bezier([x0], [y0], [x1], [y1], [cx0], [cy0], [cx1], [cy1], line_color=lc, line_width=lw)
+            fig.bezier([x0], [y0], [x1], [y1], [cx0], [cy0], [cx1], [cy1], line_color='#2b3035', line_width=lw+5)
+            fig.bezier([x0], [y0], [x1], [y1], [cx0], [cy0], [cx1], [cy1], line_color=lc, line_width=lw)
 
-            side = -side
-    text = p.text(source=data, x='x', y='y', text='name', anchor='center', color='white', alpha=0.5, level=RenderLevel.annotation)
+        heads.append((x1, y1, angle))
+        side = not side
 
-    return p
+    # text = p.text(source=data, x='x', y='y', text='name', anchor='center', color='white', alpha=0.5, level=RenderLevel.annotation)
+
+    # Draw the triangles to look like arrowheads.
+    #
+    xtri, ytri, atri = list(zip(*heads))
+    fig.scatter(xtri, ytri, marker='triangle', angle=atri, color=lc, size=10)
+
+    hover.renderers = [circle]
+
+    return fig
 
 dagb = make_boring_dag()
+dagso = make_so_dag()
 dagl = make_long_dag()
 dag1 = make_if_else_dag()
 dag2 = make_multi_tail_dag()
-dag3 = make_tree_dag()
-dag4 = make_tree_root_dag()
+dag3 = make_binary_tree_dag('binary tree')
+dag4 = make_tree_tail_dag()
 
-plots = [draw_dag(dag, dag.title) for dag in [dagb, dagl, dag1, dag2, dag3, dag4]]
+plots = [draw_dag(dag, dag.title) for dag in [dagb, dagso, dagl, dag1, dag2, dag3, dag4]]
 
 show(column(*plots))
