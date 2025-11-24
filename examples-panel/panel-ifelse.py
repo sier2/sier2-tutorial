@@ -89,7 +89,7 @@ def main():
     blocks = [IfElseBlock(name=name) for name in names]
 
     if use_panel:
-        dag = PanelDag(doc='a dag', site='My site', title='Lights')
+        dag = PanelDag(doc='a dag', site='My site', title='if-else')
     else:
         dag = Dag(title='If-Else', doc='If-Else demo')
 

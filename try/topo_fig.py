@@ -39,7 +39,6 @@ from sier2 import Block, Dag, Connection
 import param
 
 import tempfile
-output_file(f'{tempfile.gettempdir()}/sier2_plot.html', mode='inline')
 
 ##########
 # Example dags.
@@ -165,7 +164,7 @@ def make_long_dag():
 def count_param(block, prefix):
     return sum(1 for p in block.param if p.startswith(prefix))
 
-def draw_dag(dag, title):
+def draw_dag(dag, title, ix):
     topo_blocks = dag.get_sorted()
     n = len(topo_blocks)
 
@@ -185,7 +184,7 @@ def draw_dag(dag, title):
         'name': [block.name for block in topo_blocks],
         'x': list(range(n)),
         'y': list(range(n-1, -1, -1)),
-        'color': random.choices(pals.DarkText, k=n),
+        'state': random.choices(pals.DarkText, k=n),
         'icount': [count_param(block, 'in_') for block in topo_blocks],
         'ocount': [count_param(block, 'out_') for block in topo_blocks],
     }
@@ -194,12 +193,13 @@ def draw_dag(dag, title):
     SIZE = 0.25
 
     circle = fig.circle(
+        name=f'circles_{ix}',
         source=data,
         x='x', y='y',
         radius=SIZE,
         # alpha=0,
         # line_alpha=1,
-        color='grey',
+        color='state',
         # line_color='line_color',
         radius_units='data'
     )
@@ -271,14 +271,20 @@ def draw_dag(dag, title):
 
     return fig
 
-dagb = make_boring_dag()
-dagso = make_so_dag()
-dagl = make_long_dag()
-dag1 = make_if_else_dag()
-dag2 = make_multi_tail_dag()
-dag3 = make_binary_tree_dag('binary tree')
-dag4 = make_tree_tail_dag()
+def plot_dags():
+    dagb = make_boring_dag()
+    dagso = make_so_dag()
+    dagl = make_long_dag()
+    dag1 = make_if_else_dag()
+    dag2 = make_multi_tail_dag()
+    dag3 = make_binary_tree_dag('binary tree')
+    dag4 = make_tree_tail_dag()
 
-plots = [draw_dag(dag, dag.title) for dag in [dagb, dagso, dagl, dag1, dag2, dag3, dag4]]
+    plots = [draw_dag(dag, dag.title, i) for i, dag in enumerate([dagb, dagso, dagl, dag1, dag2, dag3, dag4])]
 
-show(column(*plots))
+    return plots
+
+if __name__=='__main__':
+    output_file(f'{tempfile.gettempdir()}/sier2_plot.html', mode='inline')
+    plots = plot_dags()
+    show(column(*[plot for plot in plots]))
