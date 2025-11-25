@@ -23,7 +23,7 @@ class Query(Block):
     """A plain Python block that accepts a "query" (a maximum count value) and outputs a dataframe."""
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, block_pause_execution=True, **kwargs)
+        super().__init__(*args, wait_for_input=True, **kwargs)
 
     out_max_height = param.Number(doc='The maximum value. All values are less than this')
     out_df = param.DataFrame(default=None, doc='A dataframe with columns `Colors` and `Counts`. The counts are a random number between 0 and the slider value.')

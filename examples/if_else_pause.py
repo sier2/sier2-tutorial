@@ -24,7 +24,7 @@ class IfEvenElseOdd(Block):
     out_false = param.Boolean(False, constant=True)
 
     def __init__(self):
-        super().__init__(block_pause_execution=True)
+        super().__init__(wait_for_input=True)
 
     def prepare(self):
         """Use prepare to emulate an input widget."""

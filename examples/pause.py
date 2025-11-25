@@ -21,7 +21,7 @@ class Pause(Block):
     out_string = param.String(label='Output string (pause)', doc='out (pause)')
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, block_pause_execution=True, **kwargs)
+        super().__init__(*args, wait_for_input=True, **kwargs)
 
     def prepare(self):
         print(f'In prepare {self.name=}, {self.in_string=}')

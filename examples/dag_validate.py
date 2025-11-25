@@ -16,7 +16,7 @@ class Validate(Block):
     in_p = param.Number()
 
     def __init__(self):
-        super().__init__(block_pause_execution=True)
+        super().__init__(wait_for_input=True)
 
     def prepare(self):
         if self.in_p<1:

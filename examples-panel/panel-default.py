@@ -11,8 +11,8 @@ import param
 class Data(Block):
     """input values."""
 
-    def __init__(self, name, block_pause_execution):
-        super().__init__(name=name, block_pause_execution=block_pause_execution)
+    def __init__(self, name, wait_for_input):
+        super().__init__(name=name, wait_for_input=wait_for_input)
 
     in_nick = param.String(label='NickName')
     in_age = param.Integer(label='Age')

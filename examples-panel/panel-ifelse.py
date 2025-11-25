@@ -49,7 +49,7 @@ class IfElseBlock(Block):
     out_tail_dt = param.Date(label='Out DT Tail', doc='Out Datetime Tail thing')
 
     def __init__(self, name, pause=False):
-        super().__init__(name=name, block_pause_execution=pause)
+        super().__init__(name=name, wait_for_input=pause)
 
     def prepare(self):
         if not self.in_dt:

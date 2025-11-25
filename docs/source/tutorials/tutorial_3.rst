@@ -29,7 +29,7 @@ here, see the `panel web site <https://panel.holoviz.org>`_ for more information
 The ``__panel__()`` method creates a text area and a checkbox.
 
 We've made another change to the ``UserInput`` block. Because this block will
-be waiting for user input, we pass ``block_pause_execution=True`` to ``super().__init__()``.
+be waiting for user input, we pass ``wait_for_input=True`` to ``super().__init__()``.
 This won't have any effect in this tutorial, but it will in the next one.
 
 We can test this panel by displaying it. In the directory above the ``tutorials``

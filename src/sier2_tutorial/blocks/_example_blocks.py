@@ -91,7 +91,7 @@ class ConfigurableBlock(Block):
     out_output = param.String(label='Output', doc='Output from config file', allow_None=True)
 
     def __init__(self):
-        super().__init__(block_pause_execution=True)
+        super().__init__(wait_for_input=True)
 
     def execute(self):
         self.out_output = self.get_config_value('output')

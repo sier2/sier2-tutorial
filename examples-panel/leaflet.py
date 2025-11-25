@@ -38,7 +38,7 @@ class Inputs(Block):
     out_lat = param.Number(doc='Latitude', bounds=(-90, 90))
 
     def __init__(self):
-        super().__init__(block_pause_execution=True)
+        super().__init__(wait_for_input=True)
 
     def execute(self):
         loc = self.in_loc

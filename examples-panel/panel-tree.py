@@ -17,7 +17,7 @@ class PassBlock(Block):
 
 def make_binary_tree_dag(title):
     dag = PanelDag(title=title, doc='doc')
-    head = PassBlock(name='head', block_pause_execution=True)
+    head = PassBlock(name='head', wait_for_input=True)
     l2 = PassBlock(name='L2')
     r2 = PassBlock(name='R2')
     ll3 = PassBlock(name='LL3')

@@ -22,7 +22,7 @@ class UserInput(Block):
     out_flag = param.Boolean(label='Upper case', doc='Changes how text is transformed')
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, block_pause_execution=True, **kwargs)
+        super().__init__(*args, wait_for_input=True, **kwargs)
         self.out_text = 'The quick brown fox jumps over the lazy dog.'
 
     def __panel__(self):

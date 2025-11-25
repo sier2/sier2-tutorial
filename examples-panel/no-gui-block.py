@@ -18,7 +18,7 @@ class Input(Block):
     out_number = param.Integer(doc='An integer')
 
     def __init__(self, *args, **kwargs):
-        super().__init__(block_pause_execution=True, *args, **kwargs)
+        super().__init__(wait_for_input=True, *args, **kwargs)
 
     def execute(self):
         self.out_number = self.in_number
@@ -55,7 +55,7 @@ class Chart(Block):
         return self.hv_pane
 
 if __name__=='__main__':
-    input_block = Input(name='Max bar height', continue_label='Draw chart', block_doc='Maximum bar height')
+    input_block = Input(name='Max bar height', continue_label='Draw chart', doc='Maximum bar height')
     modify_block = Modify(name='Negate', block_visible=False)
     chart_block = Chart(name='Draw modified numbers')
 
