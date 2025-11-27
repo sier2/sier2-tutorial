@@ -32,7 +32,7 @@ def main():
     b = BarchartWidget(name='Results bars', doc=CHART_DOC)
     bi = BarchartWidget(inverted=True, name='Results bars (inverted)', doc=CHARTI_DOC)
 
-    dag = PanelDag(doc=DOC, site='Example', title='Bars')
+    dag = PanelDag(doc=DOC, site='Example', title='Bars', logo='https://docs.python.org/3/_static/py.svg')
     dag.connect(q, b,
         Connection('out_df', 'in_df'),
         Connection('out_max_height', 'in_max_height')
