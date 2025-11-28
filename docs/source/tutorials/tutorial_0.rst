@@ -17,18 +17,20 @@ adding two numbers, querying a database, or displaying a bar chart.
 Blocks pass input and output values using a Python library called ``param``
 (see `the param web site <https://param.holoviz.org>`_). You don't need to
 know the details of how to use params - blocks take care of the complexity.
-You just need to know how to declare params as inputs or outputs.
+You just need to know how to declare params as inputs or outputs. In particular,
+see `the available parameter types <https://param.holoviz.org/en/docs/latest/user_guide/Parameter_Types.html>`_.
 
 Blocks are implemented as Python classes. A block:
 
 * must be a subclass of ``Block``;
 * must have at least one input or output param - input param names must start with ``in_``, output param names must start with ``out_``;
+* may have a ``prepare()`` method.
 * may have an ``execute()`` method.
 
 The module ``tutorial_0a.py`` contains a simple block that adds one to its input.
 
 .. code-block:: python
-    
+
     from sier2 import Block
     import param
 
@@ -57,7 +59,7 @@ the output param.
 
     a1_block = AddOne()
 
-    # Prime the block with some input, then execute it.
+    # Give the input parameter a value, then execute the block.
     #
     a1_block.in_a = 3
     a1_block.execute()

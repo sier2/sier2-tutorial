@@ -18,7 +18,7 @@ blocks are connected by connecting output params to input params.
 Rather than invent a name, we call a dag made up of connected blocks
 a "dag".
 
-Out example dag will contain three blocks.
+Our example dag will contain three blocks.
 
 * An "external input" block to provide data to the dag;
 * A text inverter block, that converts text to upper or lower case;
@@ -32,7 +32,7 @@ directory.
 As we saw in the previous tutorial, a block is an instance of a class that
 subclasses ``Block``, and uses at least one ``param`` for input and/or output.
 
-First we'll look at the ExternalInput class. There are two parameters, defined using the param library. 
+First we'll look at the ExternalInput class. There are two parameters, defined using the param library.
 How do we know which are inputs and which are outputs? Inputs start with in_, outputs start with out_.
 
 ExternalInput two outputs: a text parameter containing text to be transformed, and a flag that changes the transformation.
@@ -45,7 +45,7 @@ ExternalInput two outputs: a text parameter containing text to be transformed, a
 
     class ExternalInput(Block):
         """A block that provides data to the dag."""
-        
+
         out_text = param.String(label='Output text', doc='Output text')
         out_flag = param.Boolean(label='Transform flag', doc='How text is transformed')
 
@@ -82,11 +82,11 @@ which are outputs? Inputs start with ``in_``, outputs start with ``out_``.
             self.out_flag = not self.in_flag
 
 ``InvertLetters`` has two inputs, and two outputs: a ``in_text`` parameter
-containing text to be transformed, a ``in_flag`` parameter that changes the transformation, 
-a ``out_text`` parameter that stores the converted text, and a ``out_flag`` that stores the inverse 
+containing text to be transformed, a ``in_flag`` parameter that changes the transformation,
+a ``out_text`` parameter that stores the converted text, and a ``out_flag`` that stores the inverse
 of the ``in_flag``.
 
-.. note:: 
+.. note::
     (For convenience, ``execute()`` prints its input params so we can see what the input
     param values are.)
 
@@ -129,7 +129,7 @@ Now we can try running the dag. This where we find out why we need an
 external input block.
 
 For a dag to execute, at least one output param must be set in a block. Our ExternalInput block
-will take the inputs to ``out_text`` and ``out_flag``. 
+will take the inputs to ``out_text`` and ``out_flag``.
 
 .. code-block:: python
 
@@ -141,7 +141,7 @@ will take the inputs to ``out_text`` and ``out_flag``.
     print(f'{invert_vowels.out_text=}')
 
 We need to prime the dag with some data (hence we can call "``ExternalInput``
-a "primer" block). To do this, we assign values to the output params of ``external_input``. 
+a "primer" block). To do this, we assign values to the output params of ``external_input``.
 Finally, we call ``dag.execute()`` to run the rest of the dag and see the outputs.
 
 To run ``tutorial_1a.py``, provide an extra argument, either ``L`` or ``U``,
