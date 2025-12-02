@@ -33,6 +33,7 @@ import holoviews as hv
 
 from datetime import datetime
 import sys
+import time
 
 hv.extension('bokeh', inline=True)
 
@@ -56,6 +57,10 @@ class IfElseBlock(Block):
             self.in_dt = datetime.now()
 
     def execute(self):
+        # Sleep so we can see the lights doing their thing.
+        #
+        time.sleep(1)
+
         print(f'{self.name=} {self.in_dt=} {self.in_if=}')
         if self.in_if:
             print('to tail')
@@ -69,16 +74,10 @@ class IfElseBlock(Block):
         if self.name=='tail':
             print('----')
 
-    # def __panel__(self):
-    #     return pn.Param(self, widgets={'in_i': pn.widgets.BooleanStatus})
-    #     # return pn.Column(
-    #     #       pn.Param.widget('in_i', self)
-    #     #  )
-
 def main():
     # Run with "python panel-ifelse.py p" to use panel, without "p" to use CLI.
     #
-    use_panel = len(sys.argv)>1 and sys.argv[1]=='p'
+    use_panel = True # len(sys.argv)>1 and sys.argv[1]=='p'
 
     # Create a starting (head) block, and a list of successive blocks.
     # The last one in the list is the tail block.
