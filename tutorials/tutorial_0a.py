@@ -16,7 +16,7 @@ if __name__=='__main__':
     # Test the block.
     #
 
-    # Prime the block with some input, then execute it.
+    # Set the input value, then execute it.
     #
     a1_block.in_a = 3
     a1_block.execute()

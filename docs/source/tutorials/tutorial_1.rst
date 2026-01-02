@@ -35,7 +35,7 @@ subclasses ``Block``, and uses at least one ``param`` for input and/or output.
 First we'll look at the ExternalInput class. There are two parameters, defined using the param library.
 How do we know which are inputs and which are outputs? Inputs start with in_, outputs start with out_.
 
-ExternalInput two outputs: a text parameter containing text to be transformed, and a flag that changes the transformation.
+ExternalInput has two outputs: a text parameter containing text to be transformed, and a flag that changes the transformation.
 
 .. code-block:: python
 

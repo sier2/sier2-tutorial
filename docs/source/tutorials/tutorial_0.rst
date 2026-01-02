@@ -22,7 +22,7 @@ see `the available parameter types <https://param.holoviz.org/en/docs/latest/use
 
 Blocks are implemented as Python classes. A block:
 
-* must be a subclass of ``Block``;
+* must be a subclass of ``sier2.Block``;
 * must have at least one input or output param - input param names must start with ``in_``, output param names must start with ``out_``;
 * may have a ``prepare()`` method.
 * may have an ``execute()`` method.
