@@ -1,5 +1,5 @@
 #
-#
+
 # Demonstrate that the dag chart has a consistent ordering.
 #
 
@@ -14,16 +14,12 @@ class PassBlock(Block):
     in_b = param.Boolean(label='inb')
     out_b = param.Boolean(label='outb')
 
-    # def prepare(self):
-    #     print(f'prepare {self=}')
-
     def execute(self):
-        # print(f'execute {self=}')
         print(f'Execute in block {self.name}')
 
         # Simulate some work.
         #
-        time.sleep(0.5)
+        time.sleep(1.0)
 
         self.out_b = self.in_b
 

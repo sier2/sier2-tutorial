@@ -1,5 +1,5 @@
 # Demonstrate that a default __panel__() method is provided
-# that only displays the in_ params.
+# that only displays the non-"out_" params.
 #
 # Also, that a single block can be used as an input block and not an input block.
 #
@@ -19,23 +19,35 @@ class Data(Block):
     in_age = param.Integer(label='Age', default=21)
     in_birth = param.Selector(objects=['', 'ACT', 'NSW', 'NT', 'Qld', 'SA', 'Tas', 'Vic', 'WA'])
 
+    extra = param.String(doc='An extra varaible only used by this block')
+
     out_nick = param.String()
     out_age = param.Integer()
     out_birth = param.Selector(objects=['', 'ACT', 'NSW', 'NT', 'Qld', 'SA', 'Tas', 'Vic', 'WA'])
 
-    def prepare(self):
+    def execute(self):
+        print(f'{self.in_nick=} {self.in_age=} {self.in_birth=}')
         self.out_nick = self.in_nick
         self.out_age = self.in_age
         self.out_birth = self.in_birth
 
     def __panel__(self):
-        return pn.Row(
-            self.panel(),
-            pn.widgets.StaticText(
-                name='Instructions',
-                value='Please fill in the fields.'
+        """Use the default implementation in super().__panel__().
+
+        If this is an input block, add instructions.
+        """
+
+        p = super().__panel__()
+        if self._wait_for_input:
+            p = pn.Row(
+                p,
+                pn.widgets.StaticText(
+                    name='Instructions',
+                    value='Please fill in the fields.'
+                )
             )
-        )
+
+        return p
 
 def make_dag():
     data1 = Data('First', True)

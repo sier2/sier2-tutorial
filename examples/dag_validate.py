@@ -20,7 +20,7 @@ class Validate(Block):
 
     def prepare(self):
         if self.in_p<1:
-            raise BlockValidateError(block_name=self.name, error='Input must be >= 1')
+            raise BlockValidateError(block_name=self.name, message='Input must be >= 1')
 
 def main():
     p = Prime()

@@ -47,7 +47,7 @@ class QueryWidget(Query):
 
         print(f'execute() in {self}')
         if self.max_height==self.MIN:
-            raise BlockValidateError(self.name, f'Min height must be > {self.MIN}')
+            raise BlockValidateError(block_name=self.name, message=f'Min height must be > {self.MIN}')
 
         self.out_max_height = self.max_height
         self.out_df = self.df
@@ -100,7 +100,7 @@ class BarchartWidget(Block):
     def execute(self):
         print(f'{self.in_max_height=}')
         if self.in_max_height>MAX_HEIGHT:
-            raise BlockValidateError(self.name, f'Max height must be <= than {MAX_HEIGHT}')
+            raise BlockValidateError(block_name=self.name, message=f'Max height must be <= than {MAX_HEIGHT}')
 
         if self.in_df is not None:
             df = self.in_df

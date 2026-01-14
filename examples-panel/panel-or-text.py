@@ -1,6 +1,6 @@
 #
 
-# This example deemonstrates that a dag can be run in textual context
+# This example demonstrates that a dag can be run in textual context
 # and panel context.
 #
 # The Calc block just sets its output from its inputs via a lengthy
@@ -20,16 +20,22 @@ import time
 class In(Block):
     """input values."""
 
+    in_a = param.Number(label='a')
+    in_b = param.Number(label='b')
     out_a = param.Number(label='a')
     out_b = param.Number(label='b')
 
+    def execute(self):
+        self.out_a = self.in_a
+        self.out_b = self.in_b
+
     def __panel__(self):
         aw = pn.widgets.FloatInput.from_param(
-            self.param.out_a,
+            self.param.in_a,
             name='input a'
         )
         bw = pn.widgets.FloatInput.from_param(
-            self.param.out_b,
+            self.param.in_b,
             name='input b'
         )
 
@@ -38,7 +44,7 @@ class In(Block):
 class Calc(Block):
     """Calculate values.
 
-    This block delberately does not implement a __panel__() method.
+    This block deliberately does not implement a __panel__() method.
 
     The print calls in execute() are purely for indicative purposes.
     """
@@ -51,7 +57,7 @@ class Calc(Block):
         print(f'calc {self.in_a=} {self.in_b=}')
 
         delay = 2
-        print(f'sleep({delay})')
+        print(f'Pretend to work ... sleep({delay})')
         time.sleep(delay)
 
         self.out_result = self.in_a + self.in_b
@@ -60,18 +66,18 @@ class Calc(Block):
 class Out(Block):
     """Display result."""
 
-    in_r = param.Number(label='result')
+    in_result = param.Number(label='result')
 
     def __panel__(self):
         rw = pn.widgets.FloatInput.from_param(
-            self.param.in_r,
-            name='result.'
+            self.param.in_result,
+            name='Result'
         )
 
         return pn.Row(rw)
 
 def make_dag(DagType):
-    in_block = In(name='do inputs', user_input=True)
+    in_block = In(name='do inputs', wait_for_input=True)
     calc_block = Calc(name='do calc')
     out_block = Out(name='do result')
 
@@ -83,7 +89,7 @@ def make_dag(DagType):
     )
     dag.connect(
         calc_block, out_block,
-        Connection('out_result', 'in_r')
+        Connection('out_result', 'in_result')
     )
 
     return dag
@@ -93,13 +99,13 @@ def main(context):
 
     dag = make_dag(Dag if is_text else PanelDag)
     inb = dag.block_by_name('do inputs')
-    inb.out_a = 8
-    inb.out_b = 9
+    inb.in_a = 8
+    inb.in_b = 9
 
     if is_text:
         dag.execute()
         r = dag.block_by_name('do calc').out_result
-        print(f'{r=}')
+        print(f'Result: {r}')
     else:
         dag.show()
 

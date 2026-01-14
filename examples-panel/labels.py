@@ -17,6 +17,10 @@ class Inputs(Block):
     in_favourite_country = param.Selector(objects=['Australia', 'Canada', 'Great Britain', 'New Zealand', 'United States of America'], doc='Pick a country')
     in_favourite_color = param.Color(doc='Your favourite color')
 
+    # Override the default label with an explicit label.
+    #
+    in_fave_color = param.Color(label='Your absolute favourite hue', doc='Your favourite color')
+
     out_string = param.String(doc='Output')
 
     def __init__(self):
@@ -32,7 +36,7 @@ class Null(Block):
     in_dummy = param.String(doc='Nothing')
 
     def __init__(self):
-        super().__init__(block_visible=False)
+        super().__init__(visible=False)
 
 if __name__=='__main__':
 
