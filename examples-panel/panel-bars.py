@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 import tempfile
 
-from sier2 import Dag, Connection
-from sier2.panel import PanelDag
+from sr2 import Dag, Connection
+from sr2.panel import PanelDag
 
 from _panel_widgets import QueryWidget, BarchartWidget
 
@@ -44,19 +44,16 @@ def main():
 
     title = 'Random weighted barcharts'
 
-    # Dump the dag and add panel information.
-    #
-    dump = dag.dump()
-    # dump['panel'] = {
-    #     'title': title
-    # }
+    # # Dump the dag and add panel information.
+    # #
+    # dump = dag.dump()
 
-    # Save the dump.
-    #
-    p = Path(tempfile.gettempdir()) / 'dag.json'
-    print(f'Saving dag to {p} ...')
-    with open(p, 'w', encoding='utf-8') as f:
-        json.dump(dump, f, indent=2)
+    # # Save the dump.
+    # #
+    # p = Path(tempfile.gettempdir()) / 'dag.json'
+    # print(f'Saving dag to {p} ...')
+    # with open(p, 'w', encoding='utf-8') as f:
+    #     json.dump(dump, f, indent=2)
 
     dag.show()
 

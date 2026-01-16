@@ -1,12 +1,13 @@
 [project]
 name = "sier2-tutorial"
-version = "0.7.0"
+version = "0.8.0"
 description = "Block and dag examples"
 authors = [
-    {name="Algol60", email="algol60 <algol60@users.noreply.github.com>"}
+    {name="Sier2", email="sier2 <sier2@users.noreply.github.com>"}
 ]
 readme = "README.rst"
-packages = [{include = "sier2_tutorial", from = "src"}]
+requires-python = ">=3.11"
+#packages = [{include = "sier2_tutorial", from = "src"}]
 classifiers = [
     "Programming Language :: Python :: 3.11",
     "Operating System :: OS Independent",
@@ -15,6 +16,9 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Topic :: Software Development :: Libraries"
 ]
+
+[tool.poetry]
+packages = [{include = "sier2_tutorial", from = "src"}]
 
 [dependencies]
 python = "^3.11"

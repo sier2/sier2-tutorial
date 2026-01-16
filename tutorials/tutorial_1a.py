@@ -2,79 +2,63 @@
 
 # Tutorial that builds a translation dag.
 #
-from sier2 import Block, Dag, Connection
+from sr2 import Block, Dag, Connection
 import param
 import sys
+from collections import Counter
 
 UPPER_VOWELS = str.maketrans('abcde', 'ABCDE')
 LOWER_VOWELS = str.maketrans('ABCDE', 'abcde')
 
 class ExternalInput(Block):
     """A block that provides data to the dag."""
-    
+
+    in_text = param.String(label='Input text', doc='Input text')
     out_text = param.String(label='Output text', doc='Output text')
-    out_flag = param.Boolean(label='Transform flag', doc='How text is transformed')
 
+    def execute(self):
+        self.out_text = self.in_text
 
-class InvertLetters(Block):
-    """A block that transforms text.
-
-    The text is converted to upper or lower case, depending on the flag.
-    """
+class LowerCase(Block):
+    """A block that lowercases an input string."""
 
     # Inputs.
     #
-    in_text = param.String(label='Input text', doc='Text to be transformed')
-    in_flag = param.Boolean(label='Transform flag', doc='Upper case if True, else lower case.')
-
-    # Outputs.
-    #
-    out_text = param.String(label='Output text', doc='Transformed text')
-    out_flag = param.Boolean(label='Inverse transform flag', doc='The opposite of the input flag')
+    in_text = param.String(label='Input text', doc='Text to be lowercased')
+    out_text = param.String(label='Output text', doc='Lowercase text')
 
     def execute(self):
-        print(f'in execute: {self.in_flag=} {self.in_text=}')
-        text = self.in_text.upper() if self.in_flag else self.in_text.lower()
+        self.out_text = self.in_text.lower()
 
-        self.out_text = text
-        self.out_flag = not self.in_flag
+class CharDistribution(Block):
+    """A block that counts the number of times each character occurs in a string."""
 
-class InvertVowels(Block):
-    """A block that inverts the case of vowels."""
-
-    in_text = param.String(label='Input text', doc='Text that will have its vowels mangled')
-    in_flag = param.Boolean(label='Transform flag', doc='Upper case if True, else lower case.')
-    out_text = param.String(label='Output text', doc='Transformed text')
+    in_text = param.String(label='Input text', doc='Input text')
+    out_text = param.String(label='Output text', doc='A bar chart')
+    out_len = param.Integer(label='Length', doc='The number of characters in the text')
 
     def execute(self):
-        t = UPPER_VOWELS if self.in_flag else LOWER_VOWELS
-        self.out_text = self.in_text.translate(t)
+        self.out_len = len(self.in_text)
 
-input
-def main(flag: bool):
+        counter = Counter(self.in_text)
+        data = sorted(counter.items(), key=lambda item:(-item[1], item[0]))
+        lines = '\n'.join(f'{k} {v:3} {"*"*v}' for k,v in data)
+        self.out_text = lines
+
+def main():
     external_input = ExternalInput()
-    invert_letters = InvertLetters()
-    invert_vowels = InvertVowels()
+    lc = LowerCase()
+    ld = CharDistribution()
 
-    dag = Dag(doc='Transform', title='tutorial_1a')
-    dag.connect(external_input, invert_letters, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
-    dag.connect(invert_letters, invert_vowels, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
+    dag = Dag(doc='Count character distribution', title='tutorial_1a')
+    dag.connect(external_input, lc, Connection('out_text', 'in_text'))
+    dag.connect(lc, ld, Connection('out_text', 'in_text'))
 
-    # Set output params of the Primer block.
-    #
-    external_input.out_text = 'Hello world.'
-    external_input.out_flag = flag
-
+    external_input.in_text = 'The CAT sat on the MAT.'
     dag.execute()
 
-    print(f'{invert_vowels.out_text=}')
+    print(f'Input length: {ld.out_len}')
+    print(ld.out_text)
 
 if __name__=='__main__':
-    if len(sys.argv)>1:
-        if (arg:=sys.argv[1].upper()[:1]) not in 'UL':
-            print('Command line argument must be U or L')
-        else:
-            flag = arg=='U'
-            main(flag)
-    else:
-        print('Specify U or L as a command line argument')
+    main()

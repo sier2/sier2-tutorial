@@ -1,5 +1,5 @@
-Tutorial part 0 - Introduction
-==============================
+Tutorial part 0 - Introduction to blocks
+========================================
 
 This is the first in a series of tutorials that explains blocks and dags,
 and how to use them to build applications.
@@ -8,8 +8,8 @@ The tutorial Python scripts are in the ``tutorials`` directory.
 Open each tutorial script in your favourite editor so you can refer
 to the code while reading the tutorial.
 
-Blocks
-------
+Block.execute()
+---------------
 
 A block is a unit of Python code that performs a specific action:
 adding two numbers, querying a database, or displaying a bar chart.
@@ -22,72 +22,72 @@ see `the available parameter types <https://param.holoviz.org/en/docs/latest/use
 
 Blocks are implemented as Python classes. A block:
 
-* must be a subclass of ``sier2.Block``;
+* must be a subclass of ``sr2.Block``;
 * must have at least one input or output param - input param names must start with ``in_``, output param names must start with ``out_``;
 * may have a ``prepare()`` method.
 * may have an ``execute()`` method.
 
-The module ``tutorial_0a.py`` contains a simple block that adds one to its input.
+The module ``tutorial_0a.py`` contains a block called ``AddOne`` that
+adds one to its input.
 
-.. code-block:: python
+.. literalinclude :: /../../tutorials/tutorial_0a.py
+   :language: python
+   :linenos:
+   :pyobject: AddOne
 
-    from sier2 import Block
-    import param
+.. note::
 
-    class AddOne(Block):
-        """A block that adds one to its input."""
-
-        in_a = param.Integer()
-        out_a = param.Integer()
-
-        def execute(self):
-            self.out_a = self.in_a + 1
+    Although the library that was installed by pip is called ``sier2``,
+    the package is imported using ``import sr2``.
 
 The class ``AddOne`` is a subclass of ``Block``. It has two params:
 an input param called ``in_a`` and an output param called ``out_a``.
-Both of these params are declared as type ``param.Integer``; we'll see why this
-matters below.
+Both of these params are declared as type ``param.Integer``.
 
 The ``execute()`` method defines what the block does. In this case, the output
 param (``self.out_a``) is set to the input param plus one (``self.in_a + 1``).
 
-We can test our block by creating an instance of ``AddOne``, setting the
+We can use our block by creating an instance of ``AddOne``, setting the
 value of the input param, calling ``execute()``, and printing the value of
 the output param.
 
-.. code-block:: python
+.. literalinclude :: /../../tutorials/tutorial_0a.py
+   :language: python
+   :linenos:
+   :start-after: #1
+   :end-before: #-
 
-    a1_block = AddOne()
-
-    # Give the input parameter a value, then execute the block.
-    #
-    a1_block.in_a = 3
-    a1_block.execute()
-
-The output is:
-
-.. code-block:: python
-
-    a1_block.out_a=4
-
-Blocks provide a short cut that does the same thing. A ``Block`` instance
+Blocks provide a short cut call that does the same thing. A ``Block`` instance
 is callable: calling the instance with keyword parameters corresponding
 to the input params will set the input params, call ``execute()``, and return
 a dictionary containing the output params and their values.
 
-.. code-block:: python
+.. literalinclude :: /../../tutorials/tutorial_0a.py
+   :language: python
+   :linenos:
+   :start-after: #2
+   :end-before: #-
 
-    print(f'{a1_block(in_a=3)=}')
+Block.prepare()
+---------------
 
-The output is:
+Blocks can also have a ``prepare()`` method. When using the call short cut,
+``prepare()`` is run before ``execute()``, and can be used to modify
+or validate inputs before ``execute()`` is run.
 
-.. code-block:: text
+Later, we'll see how this works with a block that has a GUI and waits
+for user input.
 
-    {'out_a': 4}
+.. literalinclude :: /../../tutorials/tutorial_0a.py
+   :language: python
+   :linenos:
+   :pyobject: UpperCase
 
-.. note::
-
-    To see this dag in action, run ``tutorials/tutorial_0a.py``.
+.. literalinclude :: /../../tutorials/tutorial_0a.py
+   :language: python
+   :linenos:
+   :start-after: #4
+   :end-before: #-
 
 Param types
 -----------
@@ -107,8 +107,8 @@ to an input parameter, ``param`` will raise an error.
 See `Parameter types <https://param.holoviz.org/user_guide/Parameter_Types.html>`_
 for a list of pre-defined parameter types.
 
-Input blocks:
---------------
+Input blocks
+------------
 
 Blocks can be made to wait for user or program input. Typically we'd see this
 in a GUI (which we'll get to later).
