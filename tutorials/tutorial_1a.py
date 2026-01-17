@@ -1,41 +1,49 @@
 #
 
-# Tutorial that builds a translation dag.
+# Tutorial that builds a character counting dag.
 #
 from sr2 import Block, Dag, Connection
 import param
-import sys
 from collections import Counter
-
-UPPER_VOWELS = str.maketrans('abcde', 'ABCDE')
-LOWER_VOWELS = str.maketrans('ABCDE', 'abcde')
 
 class ExternalInput(Block):
     """A block that provides data to the dag."""
 
     in_text = param.String(label='Input text', doc='Input text')
+    in_upper = param.Boolean(label='Upper or lower case', doc='Upper if True, lower if False')
     out_text = param.String(label='Output text', doc='Output text')
+    out_upper = param.Boolean()
 
     def execute(self):
         self.out_text = self.in_text
+        self.out_upper = self.in_upper
 
-class LowerCase(Block):
-    """A block that lowercases an input string."""
+class SingleCase(Block):
+    """A block that upper or lower- cases the input text according to the flag."""
 
     # Inputs.
     #
     in_text = param.String(label='Input text', doc='Text to be lowercased')
-    out_text = param.String(label='Output text', doc='Lowercase text')
+    in_upper = param.Boolean(label='Upper or lower case', doc='Upper if True, lower if False')
+    out_text = param.String(label='Output text', doc='Upper- or lower- case text')
 
     def execute(self):
-        self.out_text = self.in_text.lower()
+        self.out_text = self.in_text.upper() if self.in_upper else self.in_text.lower()
+        self.out_upper = self.in_upper
 
 class CharDistribution(Block):
-    """A block that counts the number of times each character occurs in a string."""
+    """A block that counts the number of times each character occurs in a string.
+
+    The results are:
+    - out_len: the length of the input text
+    - out_counter: a dictionary containing the character counts
+    - out_bars: a string representing a bar chart of the counts
+    """
 
     in_text = param.String(label='Input text', doc='Input text')
-    out_text = param.String(label='Output text', doc='A bar chart')
     out_len = param.Integer(label='Length', doc='The number of characters in the text')
+    out_counter = param.Dict(doc='A dicionary mapping characters to their counts')
+    out_bars = param.String(label='Output text', doc='A bar chart')
 
     def execute(self):
         self.out_len = len(self.in_text)
@@ -43,22 +51,22 @@ class CharDistribution(Block):
         counter = Counter(self.in_text)
         data = sorted(counter.items(), key=lambda item:(-item[1], item[0]))
         lines = '\n'.join(f'{k} {v:3} {"*"*v}' for k,v in data)
-        self.out_text = lines
+        self.out_bars = lines
+        self.out_counter = dict(counter)
 
-def main():
+if __name__=='__main__':
     external_input = ExternalInput()
-    lc = LowerCase()
+    lc = SingleCase()
     ld = CharDistribution()
 
     dag = Dag(doc='Count character distribution', title='tutorial_1a')
-    dag.connect(external_input, lc, Connection('out_text', 'in_text'))
+    dag.connect(external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper'))
     dag.connect(lc, ld, Connection('out_text', 'in_text'))
 
     external_input.in_text = 'The CAT sat on the MAT.'
+    external_input.in_upper = False
     dag.execute()
 
+    print('----')
     print(f'Input length: {ld.out_len}')
-    print(ld.out_text)
-
-if __name__=='__main__':
-    main()
+    print(ld.out_bars)

@@ -1,8 +1,8 @@
 Tutorial part 1 - Dag
 =====================
 
-In this tutorial, we'll start to build a simple application to transform text.
-We'll see that simple blocks can be joined together to build
+In this tutorial, we'll start to build a simple application to count
+characters in text. We'll see that simple blocks can be joined together to build
 a more complex application.
 
 A "dag" is a `directed acyclic graph <https://en.wikipedia.org/wiki/Directed_acyclic_graph>`_. Each connection in the graph has a direction,
@@ -21,7 +21,7 @@ a "dag".
 Our example dag will contain three blocks.
 
 * An "external input" block to provide data to the dag.
-* A lowercase block, that converts text to lower case.
+* A lower- or upper- case block, that converts text to lower case.
 * A counting block, that counts each character in the text.
 
 The module ``tutorial_1a.py`` contains the code for this example.
@@ -34,48 +34,55 @@ defined using the ``param`` library.
 How do we know which are inputs and which are outputs?
 Inputs start with in\_, outputs start with out\_.
 
-``ExternalInput`` has an input param ``in_text`` and an output param ``out_text``.
+``ExternalInput`` has two input params ``in_text`` and ``in_upper``, and two
+matching output params ``out_text`` and ``out_upper``.
 
 .. literalinclude :: /../../tutorials/tutorial_1a.py
    :language: python
    :linenos:
    :pyobject: ExternalInput
 
-Next, we'll look at the ``LowerCase`` class. It has an input string param
-and an output string param.
+The ``SingleCase`` class has an input string param (the string to be upper or
+lower cased), a boolean input param, and an output string param.
 
 .. literalinclude :: /../../tutorials/tutorial_1a.py
    :language: python
    :linenos:
-   :pyobject: LowerCase
+   :pyobject: SingleCase
 
-The third block ``CharDistribution`` has one input string param and two
-output params, a string (a representation of a bar chart) and an integer
-(the length of the input string).
+The ``CharDistribution`` block has one input string param and three
+output params:
+- out_len: the length of the input text
+- out_counter: a dictionary mapping characters to their counts
+- out_bars: a bar chart drawn using asterisks
 
 .. literalinclude :: /../../tutorials/tutorial_1a.py
    :language: python
    :linenos:
    :pyobject: CharDistribution
 
-The ``main()`` function creates an instance of each block, then creates a ``Dag`` and
-connects the two blocks. The ``Dag.connect()`` method connects source blocks
+We create an instance of each block, then create a ``Dag`` and
+connect the two blocks. The ``Dag.connect()`` method connects source blocks
 to destination blocks. The ``Connection()`` arguments indicate
-how the blocks are connected.
+how the blocks are connected; each ``Connection()`` connects an output param
+in one block to an input param in another block.
 
-For a dag to execute, at least one output param must be set in a block.
 The ``ExternalInput`` block will take the inputs to ``in_text``.
-Typically, this would take input from a user, but we'll just provide some text
-by setting the ``in_text`` param of ``external_input``.
+Typically, this would take input from a user, but for now, we'll just
+provide some text by setting the ``in_text`` param of ``external_input``
+before we exeute the dag.
 
-Finally, we call ``dag.execute()`` to run the rest of the dag and see the outputs.
+Finally, we call ``dag.execute()`` to run the dag and see the outputs.
+The dag will sort the blocks according to their connection; the ``ExternalInput``
+output params are connected to the ``SingleCase`` input params, so
+``ExternalInput`` is run before ``SingleCase``.
 
 .. literalinclude :: /../../tutorials/tutorial_1a.py
    :language: python
    :linenos:
-   :pyobject: main
+   :start-at: __main__
 
-The output resulting from this dag is:
+The ``out_len`` and ``out_bars`` values resulting from this dag are:
 
 .. code-block:: text
 

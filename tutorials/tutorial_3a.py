@@ -1,36 +1,26 @@
-#
-
-# Tutorial: UserInput block with a panel widget.
-#
-from sier2 import Block, Dag, Connection
-import param
+from tutorial_2a import ExternalInput, SingleCase, CharDistribution, Display
+from sr2 import Connection, Connections
+from sr2.panel import PanelDag
 
 import panel as pn
+
 pn.extension(inline=True)
 
-class UserInput(Block):
-    """A block that provides user input."""
+if __name__=='__main__':
+    external_input = ExternalInput()
+    lc = SingleCase()
+    ld = CharDistribution()
+    display = Display()
 
-    out_text = param.String(label='Input text', doc='Text to be transformed')
-    out_flag = param.Boolean(label='Transform flag', doc='Changes how text is transformed')
+    dag = PanelDag(doc='Count character distribution', title='tutorial_1a')
+    dag.connect(external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper'))
+    dag.connect(lc, ld, Connection('out_text', 'in_text'))
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.out_text = 'The quick brown fox jumps over the lazy dog.\n\nThe end.'
+    # Use ``Connections`` for a more succint mapping.
+    #
+    dag.connect(ld, display, Connections({
+        'out_len': 'in_len',
+        'out_counter': 'in_counter'})
+    )
 
-    def __panel__(self):
-        text_widget = pn.widgets.TextAreaInput.from_param(
-            self.param.out_text,
-            name='Input text',
-            placeholder='Enter text here',
-            auto_grow=True,
-            rows=8,
-            resizable='both',
-            sizing_mode='stretch_width'
-        )
-
-        return pn.Column(
-            text_widget,
-            pn.Row(pn.HSpacer(), self.param.out_flag, sizing_mode='stretch_width'),
-            sizing_mode='stretch_width'
-        )
+    dag.show()

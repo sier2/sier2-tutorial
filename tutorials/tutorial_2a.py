@@ -1,82 +1,105 @@
 #
 
-# Tutorial that builds a translation dag.
+# Tutorial that builds a character counting dag with user input.
 #
-from sier2 import Block, Dag, Connection
+from sr2 import Block, Dag, Connection, Connections
 import param
-import sys
-
-UPPER_VOWELS = str.maketrans('abcde', 'ABCDE')
-LOWER_VOWELS = str.maketrans('ABCDE', 'abcde')
+from collections import Counter
 
 class ExternalInput(Block):
     """A block that provides data to the dag."""
 
+    in_text = param.String(label='Input text', doc='Input text')
+    in_upper = param.Boolean(label='Upper or lower case', doc='Upper if True, lower if False', default=True)
     out_text = param.String(label='Output text', doc='Output text')
-    out_flag = param.Boolean(label='Transform flag', doc='How text is transformed')
+    out_upper = param.Boolean()
 
-class Invert(Block):
-    """A block that transforms text.
+    def __init__(self):
+        super().__init__(wait_for_input=True)
 
-    The text is converted to upper or lower case, depending on the flag.
-    Then vowels are converted to lower or upper case,depending on the flag.
-    """
+    def execute(self):
+        self.out_text = self.in_text
+        self.out_upper = self.in_upper
+
+class SingleCase(Block):
+    """A block that upper or lower- cases the input text according to the flag."""
 
     # Inputs.
     #
-    in_text = param.String(label='Input text', doc='Text to be transformed')
-    in_flag = param.Boolean(label='Transform flag', doc='Upper case if True, else lower case.')
-
-    # Outputs.
-    #
-    out_text = param.String(label='Output text', doc='Transformed text')
-    out_flag = param.Boolean(label='Inverse transform flag', doc='The opposite of the input flag')
+    in_text = param.String(label='Input text', doc='Text to be lowercased')
+    in_upper = param.Boolean(label='Upper or lower case', doc='Upper if True, lower if False')
+    out_text = param.String(label='Output text', doc='Upper- or lower- case text')
 
     def execute(self):
-        text = self.in_text.upper() if self.in_flag else self.in_text.lower()
+        self.out_text = self.in_text.upper() if self.in_upper else self.in_text.lower()
+        self.out_upper = self.in_upper
 
-        t = UPPER_VOWELS if not self.in_flag else LOWER_VOWELS
-        text = text.translate(t)
+class CharDistribution(Block):
+    """A block that counts the number of times each character occurs in a string.
 
-        self.out_text = text
-        self.out_flag = not self.in_flag
+    The results are:
+    - out_len: the length of the input text
+    - out_counter: a dictionary containing the character counts
+    - out_bars: a string representing a bar chart of the counts
+    """
+
+    in_text = param.String(label='Input text', doc='Input text')
+    out_len = param.Integer(label='Length', doc='The number of characters in the text')
+    out_counter = param.Dict(doc='A dictionary mapping characters to their counts')
+    out_bars = param.String(label='Output text', doc='A bar chart')
+
+    def execute(self):
+        self.out_len = len(self.in_text)
+
+        counter = Counter(self.in_text)
+        self.out_counter = dict(counter)
 
 class Display(Block):
-    """A block that displays text."""
+    """A block that displays a character distribution."""
 
-    in_text = param.String(label='Text', doc='Display text')
+    in_len = param.Integer(label='Length', doc='The number of characters in the text')
+    in_counter = param.Dict(doc='A dictionary mapping characters to their counts')
 
-def main(flag: bool):
-    ei = ExternalInput()
-    tr = Invert()
-    di = Display()
+    def execute(self):
+        print('----')
+        print(f'Input length: {self.in_len}')
 
-    dag = Dag(doc='Transform', title='tutorial_1a')
-    dag.connect(ei, tr, Connection('out_text', 'in_text'), Connection('out_flag', 'in_flag'))
-    dag.connect(tr, di, Connection('out_text', 'in_text'))
-
-    text = 'Hello world.'
-    print('Input text:')
-    print(text)
-    print()
-
-    # Set output params of the Primer block.
-    #
-    ei.out_text = text
-    ei.out_flag = flag
-
-    dag.execute()
-
-    print('Output text:')
-    print(di.in_text)
-    print()
+        data = sorted(self.in_counter.items(), key=lambda item:(-item[1], item[0]))
+        lines = '\n'.join(f'{k} {v:3} {"*"*v}' for k,v in data)
+        print(lines)
 
 if __name__=='__main__':
-    if len(sys.argv)>1:
-        if (arg:=sys.argv[1].upper()[:1]) not in 'UL':
-            print('Command line argument must be U or L')
-        else:
-            flag = arg=='U'
-            main(flag)
-    else:
-        print('Specify U or L as a command line argument')
+    external_input = ExternalInput()
+    lc = SingleCase()
+    ld = CharDistribution()
+    display = Display()
+
+    dag = Dag(doc='Count character distribution', title='tutorial_1a')
+    dag.connect(external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper'))
+    dag.connect(lc, ld, Connection('out_text', 'in_text'))
+
+    # Use ``Connections`` for a more succint mapping.
+    #
+    dag.connect(ld, display, Connections({
+        'out_len': 'in_len',
+        'out_counter': 'in_counter'})
+    )
+
+    # b is the block that the dag paused at.
+    #
+    b = dag.execute()
+    print(f'Input for block {b}')
+    text = input('Enter a string: ')
+    b.in_text = text
+
+    while True:
+        ul = input('(U)pper, (L)ower, (D)efault: ').upper()
+        if ul in list('ULD'):
+            if ul!='D':
+                b.in_upper = ul=='U'
+
+            break
+
+    # Resume dag execution at block b.
+    #
+    dag.execute_after_input(b)

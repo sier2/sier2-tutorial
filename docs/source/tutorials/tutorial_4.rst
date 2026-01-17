@@ -1,43 +1,39 @@
-Tutorial part 4 - themed application
-====================================
+Tutorial part 4 - custom panel
+==============================
 
-In this tutorial, we'll use the blocks we built in the previous tutorial
-to create a themed block application. We'll import them and build a dag.
+In this tutorial, we'll replace the ``Display`` in the previous tutorial
+with a more user-friendly display.
 
-Remember that in the previous tutorial, set the ``UserInput`` ``wait_for_input``
-parameter to ``True`` when we overrode the ``__init__`` function. This will mean that:
+As in the previous tutorial, we'll import the first three blocks as-is.
 
-* When the block is displayed, it has a "Continue" button added. When selected, it calls ``dag.execute()``.
-* When the dag executes, it will stop executing when it reaches another block that has ``wait_for_input`` set to ``True``. This allows the user to provide input, and continue executing the dag (by pressing the "Continue" button).
-* If the the block has pending input, the block's ``prepare()`` method will be called before stopping.
+.. literalinclude :: /../../tutorials/tutorial_4a.py
+   :language: python
+   :linenos:
+   :end-before: class
 
-Note that when a panel dag is first displayed, it is not executed, so an
-Block with ``wait_for_input`` set to ``True`` must be part of the dag.
+We create a new block called ``DisplayCountBars`` that contains a method
+called ``_panel__()``. When ``panel`` wants to display an object,
+this is the method that it calls to get something to display.
 
-This time, we'll use the :class:`sier2.panel.PanelDag` class to display the dag.
-A ``PanelDag`` is just like a normal "text-only" ``Dag``, but it adds the
-necessary plumbing to provide a graphical user interface using the ``panel``
-library.
+The ``execute()`` method builds a barchart from the inputs and inserts it
+into a HoloViews pane.
 
-``PanelDag`` first extracts the blocks from the dag in sorted order (see below);
-each block is wrapped in a ``panel`` ``Card``, and the cards are displayed in
-a column. All of this is displayed in a ``panel`` template.
+.. literalinclude :: /../../tutorials/tutorial_4a.py
+   :language: python
+   :linenos:
+   :pyobject: DisplayCountBars
 
-* The card titles display the block names and a status indicator.
-* The sidebar displays a visualisation of the dag, and a stop / unstop switch.
+As before, we create the blocks and use a ``PanelDag`` to connect them,
+then call ``dag.show()``.
 
-What does "sorted order" mean? A dag is a directed acyclic graph: a graph
-where the edges between nodes have directions, and there are no cycles
-(aka loops). A consequence of this is that a dag has at least one "start"
-block (a block with no inputs) and at least one "end" block (a block with
-no outputs). The blocks are displayed in *topological* sort order: blocks
-closer to the start are shown above blocks further from the start.
+.. literalinclude :: /../../tutorials/tutorial_3a.py
+   :language: python
+   :linenos:
+   :start-at: __main__
+
 
 .. note::
 
     To see this dag in action, run ``tutorials/tutorial_4a.py``.
 
     Click on the "Continue" button to see the dag in action.
-
-An obvious disadvantage of importing block classes from another module is
-that we have to be in the correct directory in order for the imports to work.

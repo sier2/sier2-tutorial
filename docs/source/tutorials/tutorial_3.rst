@@ -1,87 +1,52 @@
 Tutorial part 3 - GUI
 =====================
 
-In this tutorial, we'll extend the dag we built previously to provide
-a GUI interface. We'll be using ``panel``, an open-source Python library
+In this tutorial, we'll convert the dag in the previous tutorial to use a GUI.
+
+We'll be using `Panel <https://panel.holoviz.org/>`_, an open-source Python library
 designed to streamline the development of robust tools, dashboards,
 and complex applications entirely within Python.
 
+We import the blocks we created in the prevous tutorial. We'll be using them
+as-is, with no changes.
+
+.. literalinclude :: /../../tutorials/tutorial_3a.py
+   :language: python
+   :linenos:
+   :end-before: __main__
+
 To add a panel GUI to your block, you don't need to do anything.
 When you start a dag using Panel, the dag will automatically turn your
-`in_` params into Panel widgets using
-`panel.Param <https://panel.holoviz.org/reference/panes/Param.html>`_.
-However, this will be done using defaults set by Panel, which may be perfectly
-acceptable for your application.
+`in_` params into Panel widgets.
 
-You can override the default widgets by providing your own ``Panel`` user interface.
-There are a couple of ways of doing this.
+As before, we create the blocks and use a dag to connect them, except
+instead of using ``Dag``, we use ``PanelDag``. Then instead of calling
+``dag.execute()``, we call ``dag.show()``.
 
-One is to subclass ``UserInput`` and add the ``panel`` code in the subclass.
-This has the advantage of keeping the functionality and the user interface
-separated from each other, and makes unit testing of the functionality simpler.
-On the other hand, for the sake of simplicity, we'll just directly add
-the ``panel`` code to the block class.
-
-Adding a panel interface is simple: just add a ``__panel__()`` method
-that returns a ``panel`` component. We won't explain the ``panel`` code
-here, see the `panel web site <https://panel.holoviz.org>`_ for more information.
-
-The ``__panel__()`` method creates a text area and a checkbox.
-
-We've made another change to the ``UserInput`` block. Because this block will
-be waiting for user input, we pass ``wait_for_input=True`` to ``super().__init__()``.
-This won't have any effect in this tutorial, but it will in the next one.
-
-We can test this panel by displaying it. In the directory above the ``tutorials``
-directory, run python to get a REPL prompt and enter these commands.
-
-.. code-block:: python
-
-    >>> import tutorials.tutorial_3a as t3a
-    >>> ui = t3a.UserInput()
-    >>> ui
-    UserInput(_block_state=<BlockState.READY: 2>, name='UserInput00882', out_flag=False, out_text='The quick brown fox jumps over the lazy dog.\n\nThe end.')
-    >>> ui.__panel__().show(threaded=True)
-
-This instantiates a ``UserInput`` block and displays its default value,
-including the params. It then calls the ``__panel__()``
-method to get a panel component, and calls ``show()``. The input component
-is displayed in your browser. The ``panel`` library is aware of ``param`` parameters;
-we make use of this to create ``panel`` widgets that automatically update
-their corresponding params.
-
-Change the text and set the flag, then go back to the Python REPL and Ctrl-C the Panel server, and look at the value of ``ui`` again.
-
-.. code-block:: python
-
-    >>> ui
-    UserInput(_block_state=<BlockState.READY: 2>, name='UserInput00882', out_flag=True, out_text='New text.')
-
-Because the panel widgets automatically update the param values, we can see the new
-values of ``out_text`` and ``out_flag``.
-
-We've set the out params, but instead of setting them in Python like
-the previous tutorials, we've presented a UI to the user and let the UI set
-the params depending on what the user does. However, if you'd
-like to test your block in a Python script, or in a ``pytest`` unit test,
-you can still just set the out params as before.
-
-After adding ``__panel__()`` methods to the other blocks, we can
-test our dag.
-
-* The ``Invert`` block is a "work only" block - it doesn't interact with the user, so its ``__panel__()`` method returns a progress bar, which is activated and deactivated in  ``execute()``.
-* The ``Display`` block's ``__panel__()`` method returns a ``TextAreaInput`` widget, which has been disabled to make it read-only. (Some stylesheet modifications are used to make it look enabled.) Rather than use ``from_param()`` to link the widget to the param, we use the block's ``execute()`` method to set the widget's value.
-
-As before, we create instances of our blocks and build a dag.
-This time, we create a ``pn.Column()`` containing the blocks and
-``show()`` it.
+.. literalinclude :: /../../tutorials/tutorial_3a.py
+   :language: python
+   :linenos:
+   :start-at: __main__
 
 .. note::
 
-    To see this dag in action, run ``tutorials/tutorial_3b.py``.
+    To see this dag in action, run ``tutorials/tutorial_3a.py``.
 
-However, we have a problem: there's no way to execute the dag.
-We can't call ``dag.execute()`` because we're running a panel server,
-and we want to wait for the user to provide input.
+With minimal effort (``PanelDag`` instead of ``Dag``, ``show()`` instead of
+``execute()``), we have a GUI version of our dag. The GUI automatically
+displays the input params, and adds a "Continue" button where required
+(due to the ``wait_for_input`` in ``ExternalInput``).
+We could make it tidier, but it works as-is.
 
-We'll see how to fix that in the next tutorial.
+In the previous tutorial, we had to do our own input and restart the
+dag execution. The ``PanelDag`` does that for us. Enter some text and select
+upper or lower case, then click the "Continue" button; the ``Display`` block
+will display the result.
+
+How does ``panelDag`` know what order to display the blocks in?
+A dag is a directed acyclic graph: a graph
+where the edges between nodes have directions, and there are no cycles
+(aka loops). A consequence of this is that a dag has at least one "start"
+block (a block with no inputs) and at least one "end" block (a block with
+no outputs). The blocks are displayed in *topological* sort order: blocks
+closer to the start are shown above blocks further from the start.
