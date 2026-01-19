@@ -59,7 +59,7 @@ if __name__=='__main__':
     lc = SingleCase()
     ld = CharDistribution()
 
-    dag = Dag(doc='Count character distribution', title='tutorial_1a')
+    dag = Dag(title='tutorial_1a', doc='Count character distribution')
     dag.connect(external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper'))
     dag.connect(lc, ld, Connection('out_text', 'in_text'))
 

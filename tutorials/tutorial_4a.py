@@ -12,8 +12,8 @@ pn.extension(inline=True)
 class DisplayCountBars(Block):
     """A block that displays a character distribution barchart."""
 
-    in_len = param.Integer(label='Length', doc='The number of characters in the text')
-    in_counter = param.Dict(doc='A dictionary mapping characters to their counts')
+    in_len = param.Integer()
+    in_counter = param.Dict()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -33,10 +33,10 @@ class DisplayCountBars(Block):
             bars = hv.Bars(items).opts(
                 title=f'Character counts (length {self.in_len})',
                 line_color=None,
-                # invert_axes=True,
+                invert_axes=True,
                 xlabel='characters',
                 ylabel='count',
-                # xticks=list(range(max_count+1))
+                yticks=list(range(max_count+1))
             )
         else:
             bars = hv.Bars([])
@@ -63,7 +63,7 @@ if __name__=='__main__':
     ld = CharDistribution()
     display = DisplayCountBars()
 
-    dag = PanelDag(doc='Count character distribution', title='tutorial_1a')
+    dag = PanelDag(doc='Count character distribution', title='tutorial_4a')
     dag.connect(external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper'))
     dag.connect(lc, ld, Connection('out_text', 'in_text'))
 

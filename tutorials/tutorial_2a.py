@@ -9,9 +9,9 @@ from collections import Counter
 class ExternalInput(Block):
     """A block that provides data to the dag."""
 
-    in_text = param.String(label='Input text', doc='Input text')
-    in_upper = param.Boolean(label='Upper or lower case', doc='Upper if True, lower if False', default=True)
-    out_text = param.String(label='Output text', doc='Output text')
+    in_text = param.String()
+    in_upper = param.Boolean()
+    out_text = param.String()
     out_upper = param.Boolean()
 
     def __init__(self):
@@ -26,9 +26,9 @@ class SingleCase(Block):
 
     # Inputs.
     #
-    in_text = param.String(label='Input text', doc='Text to be lowercased')
-    in_upper = param.Boolean(label='Upper or lower case', doc='Upper if True, lower if False')
-    out_text = param.String(label='Output text', doc='Upper- or lower- case text')
+    in_text = param.String()
+    in_upper = param.Boolean()
+    out_text = param.String()
 
     def execute(self):
         self.out_text = self.in_text.upper() if self.in_upper else self.in_text.lower()
@@ -43,10 +43,10 @@ class CharDistribution(Block):
     - out_bars: a string representing a bar chart of the counts
     """
 
-    in_text = param.String(label='Input text', doc='Input text')
-    out_len = param.Integer(label='Length', doc='The number of characters in the text')
-    out_counter = param.Dict(doc='A dictionary mapping characters to their counts')
-    out_bars = param.String(label='Output text', doc='A bar chart')
+    in_text = param.String()
+    out_len = param.Integer()
+    out_counter = param.Dict()
+    out_bars = param.String()
 
     def execute(self):
         self.out_len = len(self.in_text)
@@ -57,8 +57,8 @@ class CharDistribution(Block):
 class Display(Block):
     """A block that displays a character distribution."""
 
-    in_len = param.Integer(label='Length', doc='The number of characters in the text')
-    in_counter = param.Dict(doc='A dictionary mapping characters to their counts')
+    in_len = param.Integer()
+    in_counter = param.Dict()
 
     def execute(self):
         print('----')
@@ -74,7 +74,7 @@ if __name__=='__main__':
     ld = CharDistribution()
     display = Display()
 
-    dag = Dag(doc='Count character distribution', title='tutorial_1a')
+    dag = Dag(title='tutorial_2a', doc='Count character distribution')
     dag.connect(external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper'))
     dag.connect(lc, ld, Connection('out_text', 'in_text'))
 

@@ -12,7 +12,7 @@ if __name__=='__main__':
     ld = CharDistribution()
     display = Display()
 
-    dag = PanelDag(doc='Count character distribution', title='tutorial_1a')
+    dag = PanelDag(doc='Count character distribution', title='tutorial_3a')
     dag.connect(external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper'))
     dag.connect(lc, ld, Connection('out_text', 'in_text'))
 
