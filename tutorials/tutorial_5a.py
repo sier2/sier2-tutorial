@@ -140,7 +140,7 @@ and counts the number of occurences of each character in the string.
 
 The result is displayed as a _HoloViews_ bar chart.'''
 
-    dag = PanelDag(title='Character counts', doc=doc)
+    dag = PanelDag(title='Character counts', doc=doc, logo='logo.png')
     dag.connect(external_input, lc, Connections({
         'out_text': 'in_text',
         'out_case': 'in_case'
