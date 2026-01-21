@@ -62,6 +62,12 @@ Override ``self.prepare()`` to call the "check validity" method. The
 and before the dag pauses waiting for user input. By default, the block's
 ``self.prepare()`` method sets ``self.is_input_valid_`` to True.
 
+Continue button
+^^^^^^^^^^^^^^^
+
+Instead of a generic "Continue" label, we change the label to "Count" to
+tell the user what will happen when the button is pressed.
+
 Case param
 ^^^^^^^^^^
 
@@ -76,3 +82,8 @@ we'll change that to a RadioBoxGroup.
     To see this dag in action, run ``tutorials/tutorial_5a.py``.
 
     Click on the "Continue" button to see the dag in action.
+
+Logo
+^^^^
+
+Add a logo to customise your app. The logo is 30 pixels high.

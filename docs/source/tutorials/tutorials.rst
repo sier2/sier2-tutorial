@@ -1,6 +1,15 @@
 Tutorials
 =========
 
+These tutorials explain blocks and dags, and how to use them to build applications.
+
+The tutorial Python scripts are in the ``tutorials`` directory.
+Open each tutorial script in your favourite editor so you can refer
+to the code while reading the tutorial.
+
+To run the tutorial scripts, open a command prompt in the ``tutorials`` directory
+and run ``python tutorial_xx.py``.
+
 .. toctree::
     :maxdepth: 1
     :caption: Block, dag, and Panel tutorials.

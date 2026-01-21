@@ -21,7 +21,12 @@ class ExternalInput(Block):
     out_case = param.Selector(objects={'Upper':'U', 'Lower':'L'}, label='Case', doc='U for upper case, L for lower case')
 
     def __init__(self):
-        super().__init__(name='User input', doc='Enter a non-blank string.', wait_for_input=True, display_options={
+        super().__init__(
+            name='User input',
+            doc='Enter a non-blank string.',
+            wait_for_input=True,
+            continue_label='Count',
+            display_options={
             'parameters': ['in_text', 'in_case'],
             'widgets': {
                 'in_case': {

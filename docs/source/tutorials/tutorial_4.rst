@@ -31,7 +31,6 @@ then call ``dag.show()``.
    :linenos:
    :start-at: __main__
 
-
 .. note::
 
     To see this dag in action, run ``tutorials/tutorial_4a.py``.

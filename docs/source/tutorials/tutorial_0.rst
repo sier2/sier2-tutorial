@@ -1,13 +1,6 @@
 Tutorial part 0 - Introduction to blocks
 ========================================
 
-This is the first in a series of tutorials that explains blocks and dags,
-and how to use them to build applications.
-
-The tutorial Python scripts are in the ``tutorials`` directory.
-Open each tutorial script in your favourite editor so you can refer
-to the code while reading the tutorial.
-
 Block.execute()
 ---------------
 
@@ -54,6 +47,7 @@ the output param.
 .. literalinclude :: /../../tutorials/tutorial_0a.py
    :language: python
    :linenos:
+   :dedent:
    :start-after: #1
    :end-before: #-
 
@@ -65,13 +59,14 @@ a dictionary containing the output params and their values.
 .. literalinclude :: /../../tutorials/tutorial_0a.py
    :language: python
    :linenos:
+   :dedent:
    :start-after: #2
    :end-before: #-
 
 Block.prepare()
 ---------------
 
-Blocks can also have a ``prepare()`` method. When using the call short cut,
+Blocks can also have a ``prepare()`` method. When using the ``call()`` short cut,
 ``prepare()`` is run before ``execute()``, and can be used to modify
 or validate inputs before ``execute()`` is run.
 
@@ -81,11 +76,12 @@ for user input.
 .. literalinclude :: /../../tutorials/tutorial_0a.py
    :language: python
    :linenos:
-   :pyobject: UpperCase
+   :pyobject: SingleCase
 
 .. literalinclude :: /../../tutorials/tutorial_0a.py
    :language: python
    :linenos:
+   :dedent:
    :start-after: #4
    :end-before: #-
 
@@ -112,3 +108,11 @@ Input blocks
 
 Blocks can be made to wait for user or program input. Typically we'd see this
 in a GUI (which we'll get to later).
+
+Testing
+-------
+
+Because blocks are easily callable, they can be easily tested.
+
+If you have ``pytest`` installed, run ``python -m pytest tests`` to run
+tests for ``tutorial_0a.py``.
