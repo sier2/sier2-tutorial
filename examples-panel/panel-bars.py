@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 import tempfile
 
-from sr2 import Dag, Connection
-from sr2.panel import PanelDag
+from sier2 import Dag, Connection
+from sier2.panel import PanelDag
 
 from _panel_widgets import QueryWidget, BarchartWidget
 

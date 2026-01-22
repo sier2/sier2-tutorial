@@ -15,7 +15,7 @@ see `the available parameter types <https://param.holoviz.org/en/docs/latest/use
 
 Blocks are implemented as Python classes. A block:
 
-* must be a subclass of ``sr2.Block``;
+* must be a subclass of ``sier2.Block``;
 * must have at least one input or output param - input param names must start with ``in_``, output param names must start with ``out_``;
 * may have a ``prepare()`` method.
 * may have an ``execute()`` method.
@@ -27,11 +27,6 @@ adds one to its input.
    :language: python
    :linenos:
    :pyobject: AddOne
-
-.. note::
-
-    Although the library that was installed by pip is called ``sier2``,
-    the package is imported using ``import sr2``.
 
 The class ``AddOne`` is a subclass of ``Block``. It has two params:
 an input param called ``in_a`` and an output param called ``out_a``.

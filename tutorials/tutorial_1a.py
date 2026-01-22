@@ -2,7 +2,7 @@
 
 # Tutorial that builds a character counting dag.
 #
-from sr2 import Block, Dag, Connection
+from sier2 import Block, Dag, Connection
 import param
 from collections import Counter
 

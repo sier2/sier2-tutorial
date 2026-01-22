@@ -1,15 +1,15 @@
 Sier2 Tutorial
 ==============
 
-This repository contains tutorials for ``sier2``.
+.. This repository contains tutorials for ``sier2``.
 
-Before running the tutorials or examples, install the ``sier2-examples``
-library by cd-ing to the root directory of the repository (containing
-the ``pyproject.toml`` file) and using the command:
+.. Before running the tutorials or examples, install the ``sier2-examples``
+.. library by cd-ing to the root directory of the repository (containing
+.. the ``pyproject.toml`` file) and using the command:
 
-.. code-block:: powershell
+.. .. code-block:: powershell
 
-    python -m pip install --user -e .
+..     python -m pip install --user -e .
 
 The ``examples`` directory contains plain-text examples of
 ``sier2`` blocks and dags.
@@ -23,7 +23,8 @@ The ``examples-library`` directory contains examples of
 Documentation
 -------------
 
-To build the tutorial documentation from the repository root directory:
+To build the tutorial documentation from the repository root directory,
+install sphinx, then:
 
 .. code-block:: powershell
 

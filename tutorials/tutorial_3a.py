@@ -1,6 +1,6 @@
 from tutorial_2a import ExternalInput, SingleCase, CharDistribution, Display
-from sr2 import Connection, Connections
-from sr2.panel import PanelDag
+from sier2 import Connection, Connections
+from sier2.panel import PanelDag
 
 import panel as pn
 

@@ -3,8 +3,8 @@
 # Demonstrate that the dag chart has a consistent ordering.
 #
 
-from sr2 import Block, Connection
-from sr2.panel import PanelDag
+from sier2 import Block, Connection
+from sier2.panel import PanelDag
 import param
 import random
 import time

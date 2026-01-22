@@ -1,6 +1,6 @@
 from tutorial_2a import ExternalInput, SingleCase, CharDistribution
-from sr2 import Block, Connection, Connections
-from sr2.panel import PanelDag
+from sier2 import Block, Connection, Connections
+from sier2.panel import PanelDag
 
 import param
 import holoviews as hv

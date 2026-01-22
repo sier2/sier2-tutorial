@@ -3,7 +3,7 @@ import panel as pn
 import pandas as pd
 import random
 
-from sr2 import Block, BlockValidateError
+from sier2 import Block, BlockValidateError
 import param
 
 MAX_HEIGHT = 10
