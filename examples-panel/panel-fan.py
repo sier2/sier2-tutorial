@@ -17,9 +17,10 @@ class PassBlock(Block):
     def execute(self):
         print(f'Execute in block {self.name}')
 
-        # Simulate some work.
-        #
-        time.sleep(1.0)
+        if not self._wait_for_input:
+            # Simulate some work.
+            #
+            time.sleep(1.0)
 
         self.out_b = self.in_b
 
