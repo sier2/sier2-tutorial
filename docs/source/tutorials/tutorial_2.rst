@@ -31,7 +31,7 @@ in the previous tutorial, but we want to keep "user input" and "user output"
 blocks separate from "work" blocks. This will become useful in the next tutorial.
 
 To add the Display block to the dag, we've used ``Connections`` and specified
-a dictionary mapping output params to imput params.
+a dictionary mapping output params to input params.
 
 .. literalinclude :: /../../tutorials/tutorial_2a.py
    :language: python

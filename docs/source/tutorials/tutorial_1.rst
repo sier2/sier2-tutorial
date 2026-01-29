@@ -70,7 +70,7 @@ in one block to an input param in another block.
 The ``ExternalInput`` block will take the inputs to ``in_text``.
 Typically, this would take input from a user, but for now, we'll just
 provide some text by setting the ``in_text`` param of ``external_input``
-before we exeute the dag.
+before we execute the dag.
 
 Finally, we call ``dag.execute()`` to run the dag and see the outputs.
 The dag will sort the blocks according to their connection; the ``ExternalInput``

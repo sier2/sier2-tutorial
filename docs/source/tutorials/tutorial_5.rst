@@ -1,4 +1,4 @@
-Tutorial part 5 - tider GUI
+Tutorial part 5 - tidier GUI
 ===========================
 
 In the previous tutorial, we completed our character count application.
@@ -49,11 +49,11 @@ By default, the "Continue" button is always enabled. We can cause it to be
 enabled only when the input values are valid. For the ``ExternalInput`` block,
 the input text in ``ExternalInput`` must be non-blank.
 
-THe "Continue" button reflects the boolean value ``self.is_input_valid_``.
+The "Continue" button reflects the boolean value ``self.is_input_valid_``.
 (Note the trailing underscore.) Setting that value will enable or disable
 the button.
 
-Create a method (the name doesn't matter) that check the validity of the inputs.
+Create a method (the name doesn't matter) that checks the validity of the inputs.
 Use the ``@param.depends(..., watch=True)`` decorator to watch for changes to
 the named variables. In the method, set ``self.is_input_valid_`` accordingly.
 
