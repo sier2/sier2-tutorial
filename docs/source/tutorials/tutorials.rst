@@ -10,9 +10,26 @@ to the code while reading the tutorial.
 To run the tutorial scripts, open a command prompt in the ``tutorials`` directory
 and run ``python tutorial_xx.py``.
 
+:doc:`Tutorial 0<tutorial_0>` introduces blocks, the basic unit of code
+that performs a specific action.
+
+:doc:`Tutorial 1<tutorial_1>` introduces the dag, allowing blocks to be combined
+to build applications.
+
+:doc:`Tutorial 2<tutorial_2>` describes input blocks, allowing the user to provide
+input to an application.
+
+:doc:`Tutorial 3<tutorial_3>` changes our text-only application to use a GUI,
+without changing the application.
+
+:doc:`Tutorial 4<tutorial_4>` demonstrates creating a custom display.
+
+:doc:`Tutorial 5<tutorial_5>` makes several tweaks to our GUI application and adds
+some finishing touches.
+
 .. toctree::
     :maxdepth: 1
-    :caption: Block, dag, and Panel tutorials.
+    :caption: Tutorials
 
     tutorial_0
     tutorial_1

@@ -17,19 +17,19 @@ import param
 class NumberBlock(Block):
     """Produce a random number."""
 
+    in_n = param.Integer(
+        label='An integer',
+        doc='An input number',
+        default=None
+    )
     out_n = param.Integer(
         label='An integer',
-        doc='What else is there to say',
+        doc='An output number',
         default=None
     )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def prime(self):
-        r = random.randint(1, 100)
-        print(f'{self.name}={r}')
-        self.out_n = r
+    def execute(self):
+        self.out_n = self.in_n
 
 class AddBlock(Block):
     """Add two numbers.
@@ -39,9 +39,7 @@ class AddBlock(Block):
 
     in_a = param.Integer(label='First integer', default=None)
     in_b = param.Integer(label='Second integer', default=None)
-
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
+    out_result = param.Integer(label='Result')
 
     def execute(self):
         print(f'Action {self.__class__.__name__} {self.in_a=} {self.in_b=}')
@@ -52,27 +50,34 @@ class AddBlock(Block):
             print('  Not all args set; ducking out.')
             return
 
-        print(f'{self.in_a} + {self.in_b} = {self.in_a+self.in_b}')
+        self.out_result = self.in_a + self.in_b
 
 def main():
     """Pretend to be a block manager."""
 
-    nga = NumberBlock(name='source-of-a')
-    ngb = NumberBlock(name='source-of-b')
-    addg = AddBlock()
+    def setup(b: Block):
+        r = random.randint(1, 100)
+        print(f'{b.name} input is {r}')
+        b.in_n = r
+
+    nba = NumberBlock(name='source-of-a')
+    nbb = NumberBlock(name='source-of-b')
+    add_block = AddBlock()
 
     dag = Dag(doc='Example: add numbers', title='add numbers')
-    dag.connect(nga, addg, Connection('out_n', 'in_a'))
-    dag.connect(ngb, addg, Connection('out_n', 'in_b'))
+    dag.connect(nba, add_block, Connection('out_n', 'in_a'))
+    dag.connect(nbb, add_block, Connection('out_n', 'in_b'))
 
-    print(f'\nSet block {nga}')
-    nga.prime()
+    print(f'\nSet block {nba}')
+    setup(nba)
 
-    print(f'\nSet block {ngb}')
-    ngb.prime()
+    print(f'\nSet block {nbb}')
+    setup(nbb)
 
     print()
     dag.execute()
+
+    print(f'Result: {add_block.out_result}')
 
 if __name__=='__main__':
     main()

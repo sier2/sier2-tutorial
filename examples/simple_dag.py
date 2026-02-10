@@ -13,7 +13,11 @@ import param
 class P(Block):
     """A block with a single output parameter."""
 
+    in_p = param.Integer(label='input P')
     out_p = param.Integer(label='output P')
+
+    def execute(self):
+        self.out_p = self.in_p
 
 class Q(Block):
     """A block with a single input and a single output."""
@@ -42,7 +46,7 @@ dag.connect(p, q, Connection('out_p', 'in_q'))
 dag.connect(q, r, Connection('out_q', 'in_r'))
 
 start_number = 1
-p.out_p = start_number
+p.in_p = start_number
 dag.execute()
 
 print(f'''

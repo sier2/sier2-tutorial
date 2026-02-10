@@ -10,6 +10,7 @@ from sier2 import Block, Dag
 import param
 
 class ThisBlock(Block):
+    """ThisBlock"""
     # Inputs.
     #
     intp = param.Integer(label='An integer')
@@ -17,6 +18,7 @@ class ThisBlock(Block):
     dfp = param.DataFrame(label='A dataframe')
 
 class Block1(Block):
+    """Block1"""
     # Outputs.
     #
     dfp = param.DataFrame(label='A dataframe')
@@ -24,6 +26,7 @@ class Block1(Block):
     strp = param.Integer(label='A string')
 
 class Block2(Block):
+    """Block2"""
     # Outputs.
     #
     dataframep = param.DataFrame(label='A dataframe')
@@ -31,12 +34,14 @@ class Block2(Block):
     boolp = param.Boolean(label='A boolean')
 
 class Block3(Block):
+    """Block3"""
     # Outputs.
     #
     nump = param.Integer(label='An integer')
     boolp = param.Boolean(label='A boolean')
 
 class Block4(Block):
+    """Block4"""
     # Outputs.
     #
     boolp = param.Boolean(label='A boolean')

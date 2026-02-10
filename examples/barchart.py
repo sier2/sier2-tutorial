@@ -10,11 +10,13 @@ import pandas as pd
 import random
 import uuid
 
-from sier2 import Block, Dag, Connection
+from sier2 import Block, Dag, Connection, Connections
 import param
 
 class QueryBlock(Block):
     """A block that performs a query and outputs a dataframe."""
+
+    in_query_value = param.String(label='Value to query on')
 
     out_df = param.DataFrame(
         label='Dataframe',
@@ -25,16 +27,13 @@ class QueryBlock(Block):
         doc='The key column'
     )
 
-    # def __init__(self, *args, **kwargs):
-    #      super().__init__(*args, **kwargs)
-
-    def query(self, sql: str):
+    def execute(self):
         """Perform a query and update the output dataframe.
 
         This would typically be called from a GUI.
         """
 
-        print(f'Running query in {self.__class__.__name__} ...')
+        print(f'Running query in {self.__class__.__name__} for value "{self.in_query_value}" ...')
 
         # Use this as the key column.
         # Change this value to see how it propagates.
@@ -49,8 +48,11 @@ class QueryBlock(Block):
 
         df = pd.DataFrame({
             col: [random.choice(['red', 'green', 'blue']) for _ in range(n)],
-            'UUID': [str(uuid.uuid4()) for _ in range(n)]
+            'UUID': [str(uuid.uuid4()) for _ in range(n)],
+            'value': self.in_query_value
         })
+
+        print(f'Results head:\n{df.head()}\n')
 
         self.param.update({
             'out_df': df,
@@ -86,9 +88,6 @@ class GroupByBlock(Block):
         doc='Count of category values (column name)'
     )
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-
     def execute(self):
         """Group the COLOR column; ignore other columns."""
 
@@ -122,11 +121,8 @@ class BarChartBlock(Block):
         doc='The column containing the count of categories'
     )
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-
     def execute(self):
-        """Draw a bar chart."""
+        """Draw a textual bar chart."""
 
         print(f'Action in {self.__class__.__name__}: {self.in_category} vs {self.in_count}')
 
@@ -154,11 +150,11 @@ dag.connect(q, g,
     Connection('out_df', 'in_df'),
     Connection('out_column', 'in_column')
 )
-dag.connect(g, b,
-    Connection('out_group_df', 'in_group_df'),
-    Connection('out_category', 'in_category'),
-    Connection('out_count', 'in_count')
-)
+dag.connect(g, b, Connections({
+    'out_group_df': 'in_group_df',
+    'out_category': 'in_category',
+    'out_count': 'in_count'
+}))
 
-q.query('SELECT color,count FROM the_table')
+q.in_query_value = 'item3'
 dag.execute()

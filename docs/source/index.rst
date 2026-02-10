@@ -10,9 +10,15 @@ See the ``examples`` directory in the source code for examples.
 
 .. toctree::
     :maxdepth: 2
-    :caption: Contents:
+    :caption: Tutorials:
 
     tutorials/tutorials
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Examples:
+
+    examples
 
 Indices and tables
 ==================

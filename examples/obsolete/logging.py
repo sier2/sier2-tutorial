@@ -3,7 +3,7 @@
 # Demonstrate how to do logging in a block.
 #
 # Blocks are provided with a logger in self.logger.
-# This is a stanndard Python logger implemented using the logger module,
+# This is a standard Python logger implemented using the logger module,
 # so read the Python documentation for details.
 #
 # All blocks use the same logger, wrapped with an adapter that provides

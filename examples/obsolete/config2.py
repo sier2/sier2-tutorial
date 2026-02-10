@@ -10,7 +10,7 @@ class PrintBlock(Block):
         print(f'Result: {self.in_string}')
 
 if __name__=='__main__':
-    # Update the config for COnfigurableBlock using ExampleConfig.
+    # Update the config for ConfigurableBlock using ExampleConfig.
     #
     Config.update(config_block='sier2_tutorial.blocks:ExampleConfig')
 
