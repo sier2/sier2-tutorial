@@ -11,7 +11,22 @@ from sier2 import Block
 import panel as pn
 import param
 
-pn.extension(inline=True, theme='dark', template='bootstrap')
+pn.extension(inline=True)
+
+DESCR = '''
+This app demonstrates using blocks without a dag.
+
+The block we use here has two inputs and two correspnding outputs.
+THe first instance of the block is displayed in a card. Cards supply
+their own "Continue" buttons which is bound with ``self.is_input_valid_``;
+the button is enabled only when ``self.is_input_valid_`` is True.
+
+The second instance is an output block ,and is used to display the values
+from the first block after the "Continue" button is selected.
+
+The "Display result" button is independent of the blocks - it is used to
+display the values in the result block.
+'''
 
 class DataBlock(Block):
     """Some data."""
@@ -23,7 +38,7 @@ class DataBlock(Block):
 
     def __init__(self, *, wait_for_input: bool, is_card: bool, doc: str):
         super().__init__(wait_for_input=wait_for_input, is_card=is_card, doc=doc)
-        self._is_input_valid = False
+        self.is_input_valid_ = False
 
         # Make sure input is valid.
         #
@@ -37,13 +52,15 @@ class DataBlock(Block):
 
         valid = valid and s is not None and len(s)>0
         print(f'"{i}" "{s}" valid: {valid}')
-        self._is_input_valid = valid
+        self.is_input_valid_ = valid
 
     def execute(self):
         self.out_str = self.in_str
         self.out_int = self.in_int
 
 def main():
+    descr = pn.pane.Markdown(DESCR)
+
     data_in = DataBlock(wait_for_input=True, is_card=True, doc='Enter some valid data (see the help)')
     data_out = DataBlock(wait_for_input=False, is_card=False, doc='Display the data')
 
@@ -60,6 +77,7 @@ def main():
     end_button.on_click(on_end)
 
     pn.Column(
+        descr,
         data_in,
         data_out,
         end_button,

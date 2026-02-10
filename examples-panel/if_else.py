@@ -53,6 +53,7 @@ class IfElseBlock(Block):
         super().__init__(name=name, wait_for_input=pause)
 
     def prepare(self):
+        self.is_input_valid_ = True
         if not self.in_dt:
             self.in_dt = datetime.now()
 
@@ -75,9 +76,9 @@ class IfElseBlock(Block):
             print('----')
 
 def main():
-    # Run with "python panel-ifelse.py p" to use panel, without "p" to use CLI.
+    # Run with "python panel-ifelse.py c" to use CLI, without "c" to use Panel
     #
-    use_panel = True # len(sys.argv)>1 and sys.argv[1]=='p'
+    use_panel = True # len(sys.argv)<1 or sys.argv[1]=='p'
 
     # Create a starting (head) block, and a list of successive blocks.
     # The last one in the list is the tail block.

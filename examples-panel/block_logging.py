@@ -6,14 +6,18 @@ import param
 class NumberBlock(Block):
     """Take user input and output it."""
 
+    in_number = param.Number(label='Input number', default=None, doc='Input number')
     out_number = param.Number(label='Output number', default=None, doc='Output number')
 
     def __init__(self, number, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.out_number = number
+        self.in_number = number
 
-    def __panel__(self):
-        return pn.widgets.FloatInput.from_param(self.param.out_number)
+    def execute(self):
+        self.out_number = self.in_number
+
+    # def __panel__(self):
+    #     return pn.widgets.FloatInput.from_param(self.param.out_number)
 
 class AddBlock(Block):
     """Add two numbers.
@@ -45,23 +49,22 @@ class AddBlock(Block):
             return
 
         self.out_result = self.in_a+self.in_b
-        # print(f'{self.in_a} + {self.in_b} = {self.out_result}')
 
-    def __panel__(self):
-        return pn.widgets.FloatInput.from_param(self.param.out_result)
+    # def __panel__(self):
+    #     return pn.widgets.FloatInput.from_param(self.param.out_result)
 
 class Display(Block):
     """Display a number."""
 
     in_result = param.Number(label='Result', default=None, doc='The result')
 
-    def __panel__(self):
-        return pn.widgets.FloatInput.from_param(self.param.in_result)
+    # def __panel__(self):
+    #     return pn.widgets.FloatInput.from_param(self.param.in_result)
 
 if __name__=='__main__':
-    n1 = NumberBlock(3, name='num1', user_input=True)
-    n2 = NumberBlock(5, name='num2', user_input=True)
-    n3 = NumberBlock(7,name='num3', user_input=True)
+    n1 = NumberBlock(3, name='num1', wait_for_input=True)
+    n2 = NumberBlock(5, name='num2', wait_for_input=True)
+    n3 = NumberBlock(7,name='num3', wait_for_input=True)
     aa = AddBlock(name='First add')
     ab = AddBlock(name='Second add')
     display = Display()

@@ -24,7 +24,7 @@ class Input(Block):
         self.out_number = self.in_number
 
 class Modify(Block):
-    """Multiply a number by pi."""
+    """Multiply a number by -1."""
 
     in_number = param.Integer(doc='Some input')
     out_number = param.Integer(doc='Negate')
@@ -56,10 +56,10 @@ class Chart(Block):
 
 if __name__=='__main__':
     input_block = Input(name='Max bar height', continue_label='Draw chart', doc='Maximum bar height')
-    modify_block = Modify(name='Negate', block_visible=False)
+    modify_block = Modify(name='Negate', visible=False)
     chart_block = Chart(name='Draw modified numbers')
 
-    dag = PanelDag(doc='## Contains a no-gui block', site='Example', title='No-GUI block')
+    dag = PanelDag(doc='Contains an invisible block', site='Example', title='Block visibility')
     dag.connect(input_block, modify_block, Connection('out_number', 'in_number'))
     dag.connect(modify_block, chart_block, Connection('out_number', 'in_number'))
 

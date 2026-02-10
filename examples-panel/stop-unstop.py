@@ -13,8 +13,15 @@ import param
 
 NTHREADS = 2
 
+DAG_DOC = '''
+Stopping and unstopping a dag in panel (`dag.stop()` and `dag.unstop()`)
+The stop switch in the app sidebar controls the ability of the dag to execute.
+When activated, execution stops with a `KeyboardInterrupt`,
+and dag execution cannot be resumed. The switch must first be deactivated.
+'''
+
 hv.extension('bokeh', inline=True)
-pn.extension(nthreads=NTHREADS, loading_spinner='bar', inline=True)
+pn.extension(nthreads=NTHREADS, loading_spinner='petal', inline=True)
 # hv.renderer('bokeh').theme = 'dark_minimal'
 
 def interrupt_thread(tid, exctype):
@@ -36,15 +43,19 @@ def interrupt_thread(tid, exctype):
 class QueryWidget(Block):
     """A plain Python block that accepts a "query" (a maximum count value) and outputs a dataframe."""
 
+    in_timer = param.Integer(default=5, bounds=(1, 10))
     out_timer = param.Integer(default=5, bounds=(1, 10))
+
+    def execute(self):
+        self.out_timer = self.in_timer
 
     def __panel__(self):
         return pn.Param(self, widgets={
-            'out_timer': {
+            'in_timer': {
                 'widget_type': pn.widgets.IntInput},
                 'name': 'Timer period'
             },
-            parameters=['out_timer'],
+            parameters=['in_timer'],
             sizing_mode='stretch_width'
         )
 
@@ -101,11 +112,11 @@ def main():
         collapsed_sidebar=True
     )
 
-    q = QueryWidget(name='Specify timer interval', user_input=True)
+    q = QueryWidget(name='Specify timer interval', wait_for_input=True)
     b1 = ProgressWidget(name='Progress1')
     b2 = ProgressWidget(name='Progress2')
 
-    dag = PanelDag(title='Stop / Unstop', doc='Example: stopping and unstopping a dag in panel')
+    dag = PanelDag(title='Stop / Unstop', doc=DAG_DOC)
     dag.connect(q, b1, Connection('out_timer', 'in_timer'))
     dag.connect(b1, b2, Connection('out_timer', 'in_timer'))
 

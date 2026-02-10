@@ -15,8 +15,7 @@ class PassBlock(Block):
     def execute(self):
         self.out_b = self.in_b
 
-def make_binary_tree_dag(title):
-    dag = PanelDag(title=title, doc='doc')
+def make_binary_tree_dag(dag):
     head = PassBlock(name='head', wait_for_input=True)
     l2 = PassBlock(name='L2')
     r2 = PassBlock(name='R2')
@@ -35,6 +34,19 @@ def make_binary_tree_dag(title):
 
     return dag
 
+def make_binary_tree_next_level(dag: PanelDag, level: list[Block]):
+    """Given a level of blocks in a list, create the next level of blocks in a binary tree."""
+
+    n2 = len(level)*2
+    c = Connection('out_b', 'in_b')
+    next_level = []
+    for i in range(n2):
+        pb = PassBlock(name=f'B{n2}/{i}')
+        dag.connect(level[i//2], pb, c)
+        next_level.append(pb)
+
+    return next_level
+
 def make_tree_tail_dag():
     tail = PassBlock(name='binary tree to a single block')
     dag = make_binary_tree_dag('binary tree to tail')
@@ -48,7 +60,19 @@ def make_tree_tail_dag():
     return dag
 
 def main():
-    dag = make_tree_tail_dag()
+    dag = PanelDag(title='Dag title', doc='doc')
+
+    # dag = make_tree_tail_dag(dag)
+
+    pb = [PassBlock(name='B1/0', wait_for_input=True)]
+    for _ in range(3):
+        pb = make_binary_tree_next_level(dag, pb)
+
+    tail = PassBlock(name='binary tree to a single block')
+    c = Connection('out_b', 'in_b')
+    for b in pb:
+        dag.connect(b, tail, c)
+
     dag.show()
 
 if __name__=='__main__':

@@ -23,7 +23,6 @@ CHARTI_DOC = """This chart is the same as the previous one, except the bars are 
 
 hv.extension('bokeh', inline=True)
 pn.extension('floatpanel', nthreads=NTHREADS, loading_spinner='bar', inline=True)
-# hv.renderer('bokeh').theme = 'dark_minimal'
 
 def main():
     # Build a dag.
@@ -32,7 +31,7 @@ def main():
     b = BarchartWidget(name='Results bars', doc=CHART_DOC)
     bi = BarchartWidget(inverted=True, name='Results bars (inverted)', doc=CHARTI_DOC)
 
-    dag = PanelDag(doc=DOC, site='Example', title='Bars', logo='https://docs.python.org/3/_static/py.svg')
+    dag = PanelDag(doc=DOC, site='Example', title='Bars', logo='py.svg')
     dag.connect(q, b,
         Connection('out_df', 'in_df'),
         Connection('out_max_height', 'in_max_height')

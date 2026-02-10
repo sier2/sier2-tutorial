@@ -40,6 +40,6 @@ class Null(Block):
 
 if __name__=='__main__':
 
-    dag = PanelDag(title='Label demo', doc='## Demonstrate Panel labels with "in_"')
+    dag = PanelDag(title='Label demo', doc='Demonstrate Panel labels with "in_"')
     dag.connect(Inputs(), Null(), Connection('out_string', 'in_dummy'))
     dag.show()

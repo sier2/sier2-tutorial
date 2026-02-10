@@ -18,7 +18,7 @@ import sys
 import time
 
 class In(Block):
-    """input values."""
+    """Input values."""
 
     in_a = param.Number(label='a')
     in_b = param.Number(label='b')
@@ -98,13 +98,25 @@ def main(context):
     is_text = context=='text'
 
     dag = make_dag(Dag if is_text else PanelDag)
+
+    # Fetch the input block by name.
+    #
     inb = dag.block_by_name('do inputs')
     inb.in_a = 8
     inb.in_b = 9
 
     if is_text:
-        dag.execute()
-        r = dag.block_by_name('do calc').out_result
+        # The first block is an input block, so we have to
+        # provide input and resume executing the dag.
+        #
+        print('Execute dag and provide input ...')
+        b = dag.execute()
+        assert b is inb # Checking that the block is what we think it is.
+        inb.in_a = 8
+        inb.in_b = 9
+        dag.execute_after_input(b)
+
+        r = dag.block_by_name('do result').in_result
         print(f'Result: {r}')
     else:
         dag.show()

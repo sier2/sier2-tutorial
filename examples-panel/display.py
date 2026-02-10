@@ -43,6 +43,8 @@ class ColumnSelector(Block):
         self.param.columns.objects = [] # Reset the selected values.
         self.param.columns.objects = cols
 
+        self.is_input_valid_ = True
+
     def execute(self):
         new_cols = self.columns # self.param.columns.objects
 
@@ -97,8 +99,11 @@ dagdoc = '''
 # Display widgets
 
 This dag demonstrates the ability to adjust the display of a block
-using the `display_options` parameter. A single `ColumnSelector` block
+using the `display_options` parameter. A `param.ListSelector`
 displays differently depending on how `display_options` is defined.
+
+Start by selecting several columns, then select fewer each time. The selected
+columns carry forward to the next block.
 '''
 dag = PanelDag(title='Display', doc=dagdoc)
 c = Connection('out_df', 'in_df')

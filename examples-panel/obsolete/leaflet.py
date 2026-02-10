@@ -13,6 +13,7 @@ from ipywidgets import HTML
 import ipyleaflet as leaflet
 
 import panel as pn
+pn.extension(inline=True)
 
 @dataclass
 class Location:
