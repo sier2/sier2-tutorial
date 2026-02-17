@@ -1,10 +1,7 @@
 import holoviews as hv
 import panel as pn
-import json
-from pathlib import Path
-import tempfile
 
-from sier2 import Dag, Connection
+from sier2 import Connection
 from sier2.panel import PanelDag
 
 from _panel_widgets import QueryWidget, BarchartWidget

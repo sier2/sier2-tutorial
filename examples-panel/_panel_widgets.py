@@ -99,19 +99,21 @@ class BarchartWidget(Block):
 
     def execute(self):
         print(f'{self.in_max_height=}')
-        if self.in_max_height>MAX_HEIGHT:
-            raise BlockValidateError(block_name=self.name, message=f'Max height must be <= than {MAX_HEIGHT}')
+        # if self.in_max_height>MAX_HEIGHT:
+        #     raise BlockValidateError(block_name=self.name, message=f'Max height must be <= than {MAX_HEIGHT}')
+
+        height = max(self.in_max_height, MAX_HEIGHT, self.in_df['Counts'].max())
 
         if self.in_df is not None:
             df = self.in_df
             if self.inverted:
                 df = df.copy()
-                df['Counts'] = MAX_HEIGHT - df['Counts']
+                df['Counts'] = height - df['Counts']
 
             bars = hv.Bars(df, 'Colors', 'Counts').opts(
                 title=f'Inverted={self.inverted}',
                 color='Colors',
-                ylim=(0, MAX_HEIGHT),
+                ylim=(0, height),
                 show_grid=True,
                 max_width=600
             )
