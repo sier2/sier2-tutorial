@@ -90,6 +90,7 @@ class BarchartWidget(Block):
 
     in_max_height = param.Number(doc='The maximum height.')
     in_df = param.DataFrame(default=None, doc='A dataframe with columns `Colors` and `Counts`.')
+    in_title = param.String(label='title', doc='Chart title')
 
     def __init__(self, inverted=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -98,7 +99,6 @@ class BarchartWidget(Block):
         self.hv_pane = pn.pane.HoloViews(sizing_mode='stretch_width')
 
     def execute(self):
-        print(f'{self.in_max_height=}')
         # if self.in_max_height>MAX_HEIGHT:
         #     raise BlockValidateError(block_name=self.name, message=f'Max height must be <= than {MAX_HEIGHT}')
 
@@ -111,11 +111,11 @@ class BarchartWidget(Block):
                 df['Counts'] = height - df['Counts']
 
             bars = hv.Bars(df, 'Colors', 'Counts').opts(
-                title=f'Inverted={self.inverted}',
+                title=f'Inverted={self.inverted} {self.in_title}',
                 color='Colors',
                 ylim=(0, height),
                 show_grid=True,
-                max_width=600
+                max_width=800
             )
         else:
             bars = hv.Bars([])

@@ -53,7 +53,7 @@ Panel examples
 banner
 ^^^^^^
 
-Demonstrate adding a top and bottom banner.
+Demonstrate adding a top and bottom banner to a block, and changing a banner.
 
 bars
 ^^^^
