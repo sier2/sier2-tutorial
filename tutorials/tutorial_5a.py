@@ -11,14 +11,19 @@ from collections import Counter
 hv.extension('bokeh', inline=True)
 pn.extension(inline=True)
 
+
 class ExternalInput(Block):
     """A block that provides data to the dag."""
 
     in_text = param.String(label='Input text', doc='Must be non-empty')
-    in_case = param.Selector(objects={'Upper':'U', 'Lower':'L'}, label='Case', doc='U for upper case, L for lower case')
+    in_case = param.Selector(
+        objects={'Upper': 'U', 'Lower': 'L'}, label='Case', doc='U for upper case, L for lower case'
+    )
     out_text = param.String(doc='Non-empty text')
     # out_upper = param.Boolean(doc='Upper if True, lower if False')
-    out_case = param.Selector(objects={'Upper':'U', 'Lower':'L'}, label='Case', doc='U for upper case, L for lower case')
+    out_case = param.Selector(
+        objects={'Upper': 'U', 'Lower': 'L'}, label='Case', doc='U for upper case, L for lower case'
+    )
 
     def __init__(self):
         super().__init__(
@@ -27,19 +32,20 @@ class ExternalInput(Block):
             wait_for_input=True,
             continue_label='Count',
             display_options={
-            'parameters': ['in_text', 'in_case'],
-            'widgets': {
-                'in_case': {
-                    'widget_type': pn.widgets.RadioBoxGroup,
-                    'inline': True,
-                    'name': 'Select a case'
-                }
-            }
-        })
+                'parameters': ['in_text', 'in_case'],
+                'widgets': {
+                    'in_case': {
+                        'widget_type': pn.widgets.RadioBoxGroup,
+                        'inline': True,
+                        'name': 'Select a case',
+                    }
+                },
+            },
+        )
 
     @param.depends('in_text', watch=True)
     def _check_valid(self):
-        self.is_input_valid_ = self.in_text!=''
+        self.is_input_valid_ = self.in_text != ''
 
     def prepare(self):
         self._check_valid()
@@ -48,20 +54,24 @@ class ExternalInput(Block):
         self.out_text = self.in_text
         self.out_case = self.in_case
 
+
 class SingleCase(Block):
     """A block that upper or lower cases the input text according to the flag."""
 
     # Inputs.
     #
     in_text = param.String(label='Input text', doc='Text to be lowercased')
-    in_case = param.Selector(objects={'Upper':'U', 'Lower':'L'}, doc='U for upper case, L for lower case')
+    in_case = param.Selector(
+        objects={'Upper': 'U', 'Lower': 'L'}, doc='U for upper case, L for lower case'
+    )
     out_text = param.String(label='Output text', doc='Upper or lower case text')
 
     def __init__(self):
         super().__init__(visible=False)
 
     def execute(self):
-        self.out_text = self.in_text.upper() if self.in_case=='U' else self.in_text.lower()
+        self.out_text = self.in_text.upper() if self.in_case == 'U' else self.in_text.lower()
+
 
 class CharDistribution(Block):
     """A block that counts the number of times each character occurs in a string.
@@ -86,6 +96,7 @@ class CharDistribution(Block):
         counter = Counter(self.in_text)
         self.out_counter = dict(counter)
 
+
 class DisplayCountBars(Block):
     """A block that displays a character distribution barchart."""
 
@@ -104,15 +115,15 @@ class DisplayCountBars(Block):
             # - Find the maximum count.
             #
             items = tuple(self.in_counter.items())
-            items = sorted(items, key=lambda item:(-item[1], item[0]))
-            max_count = max(count for char,count in items)
+            items = sorted(items, key=lambda item: (-item[1], item[0]))
+            max_count = max(count for char, count in items)
 
             bars = hv.Bars(items).opts(
                 title=f'Character counts (length {self.in_len})',
                 line_color=None,
                 xlabel='characters',
                 ylabel='count',
-                yticks=list(range(max_count+1))
+                yticks=list(range(max_count + 1)),
             )
         else:
             bars = hv.Bars([])
@@ -127,13 +138,10 @@ class DisplayCountBars(Block):
 
         panel = super().__panel__()
 
-        return pn.Column(
-            panel,
-            self.hv_pane,
-            sizing_mode='stretch_width'
-        )
+        return pn.Column(panel, self.hv_pane, sizing_mode='stretch_width')
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     external_input = ExternalInput()
     lc = SingleCase()
     ld = CharDistribution()
@@ -146,15 +154,9 @@ and counts the number of occurences of each character in the string.
 The result is displayed as a _HoloViews_ bar chart.'''
 
     dag = PanelDag(title='Character counts', doc=doc, logo='logo.png')
-    dag.connect(external_input, lc, Connections({
-        'out_text': 'in_text',
-        'out_case': 'in_case'
-    }))
+    dag.connect(external_input, lc, Connections({'out_text': 'in_text', 'out_case': 'in_case'}))
     dag.connect(lc, ld, Connection('out_text', 'in_text'))
 
-    dag.connect(ld, display, Connections({
-        'out_len': 'in_len',
-        'out_counter': 'in_counter'})
-    )
+    dag.connect(ld, display, Connections({'out_len': 'in_len', 'out_counter': 'in_counter'}))
 
     dag.show()

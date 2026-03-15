@@ -6,6 +6,7 @@ from sier2 import Block, Dag, Connection, Connections
 import param
 from collections import Counter
 
+
 class ExternalInput(Block):
     """A block that provides data to the dag."""
 
@@ -21,6 +22,7 @@ class ExternalInput(Block):
         self.out_text = self.in_text
         self.out_upper = self.in_upper
 
+
 class SingleCase(Block):
     """A block that upper or lower- cases the input text according to the flag."""
 
@@ -33,6 +35,7 @@ class SingleCase(Block):
     def execute(self):
         self.out_text = self.in_text.upper() if self.in_upper else self.in_text.lower()
         self.out_upper = self.in_upper
+
 
 class CharDistribution(Block):
     """A block that counts the number of times each character occurs in a string.
@@ -54,6 +57,7 @@ class CharDistribution(Block):
         counter = Counter(self.in_text)
         self.out_counter = dict(counter)
 
+
 class Display(Block):
     """A block that displays a character distribution."""
 
@@ -64,26 +68,26 @@ class Display(Block):
         print('----')
         print(f'Input length: {self.in_len}')
 
-        data = sorted(self.in_counter.items(), key=lambda item:(-item[1], item[0]))
-        lines = '\n'.join(f'{k} {v:3} {"*"*v}' for k,v in data)
+        data = sorted(self.in_counter.items(), key=lambda item: (-item[1], item[0]))
+        lines = '\n'.join(f'{k} {v:3} {"*" * v}' for k, v in data)
         print(lines)
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     external_input = ExternalInput()
     lc = SingleCase()
     ld = CharDistribution()
     display = Display()
 
     dag = Dag(title='tutorial_2a', doc='Count character distribution')
-    dag.connect(external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper'))
+    dag.connect(
+        external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper')
+    )
     dag.connect(lc, ld, Connection('out_text', 'in_text'))
 
     # Use ``Connections`` for a more succint mapping.
     #
-    dag.connect(ld, display, Connections({
-        'out_len': 'in_len',
-        'out_counter': 'in_counter'})
-    )
+    dag.connect(ld, display, Connections({'out_len': 'in_len', 'out_counter': 'in_counter'}))
 
     # b is the block that the dag paused at.
     #
@@ -95,8 +99,8 @@ if __name__=='__main__':
     while True:
         ul = input('(U)pper, (L)ower, (D)efault: ').upper()
         if ul in list('ULD'):
-            if ul!='D':
-                b.in_upper = ul=='U'
+            if ul != 'D':
+                b.in_upper = ul == 'U'
 
             break
 

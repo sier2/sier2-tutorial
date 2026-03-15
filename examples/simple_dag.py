@@ -10,6 +10,7 @@
 from sier2 import Block, Dag, Connection
 import param
 
+
 class P(Block):
     """A block with a single output parameter."""
 
@@ -18,6 +19,7 @@ class P(Block):
 
     def execute(self):
         self.out_p = self.in_p
+
 
 class Q(Block):
     """A block with a single input and a single output."""
@@ -29,6 +31,7 @@ class Q(Block):
         print(f'{self.name} acting {self.in_q=}')
         self.out_q = self.in_q + 1
 
+
 class R(Block):
     """A block with a single input."""
 
@@ -36,6 +39,7 @@ class R(Block):
 
     def execute(self):
         print(f'{self.name} acting {self.in_r=}')
+
 
 p = P()
 q = Q()
@@ -52,6 +56,6 @@ dag.execute()
 print(f'''
     {p.out_p= } (expecting {start_number})
     {q.in_q = } (expecting {start_number})
-    {q.out_q= } (expecting {start_number+1})
-    {r.in_r = } (expecting {start_number+1})
+    {q.out_q= } (expecting {start_number + 1})
+    {r.in_r = } (expecting {start_number + 1})
 ''')

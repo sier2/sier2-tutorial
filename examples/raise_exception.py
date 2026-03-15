@@ -1,6 +1,7 @@
 from sier2 import Block, BlockError, Dag, Connection
 import param
 
+
 class OneOut(Block):
     """One output parameter."""
 
@@ -11,6 +12,7 @@ class OneOut(Block):
         print(f'{self.in_o=}')
         self.out_o = self.in_o
 
+
 class OneIn(Block):
     """One input parameter."""
 
@@ -19,6 +21,7 @@ class OneIn(Block):
     def execute(self):
         print(f'Raise exception with "{self.in_o}"')
         raise ValueError(f'This is an exception with value {self.in_o}')
+
 
 oo = OneOut()
 oi = OneIn()

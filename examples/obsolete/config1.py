@@ -12,6 +12,7 @@ import param
 
 CONFIG_NAME = 'test.ini'
 
+
 class ConfigExample(Block):
     """Demonstrate reading a config value."""
 
@@ -34,14 +35,12 @@ class ConfigExample(Block):
         self.out_score = self.get_config_value('score')
         self.out_other = self.get_config_value('other', 'No config value')
 
+
 def config_content(name: str, score=0):
-    lines = [
-        f'[block.__main__.{ConfigExample.__name__}]',
-        f'name = "{name}"',
-        f'score={score}'
-    ]
+    lines = [f'[block.__main__.{ConfigExample.__name__}]', f'name = "{name}"', f'score={score}']
 
     return '\n'.join(lines)
+
 
 def main():
     name = 'Taylor Swift'
@@ -65,9 +64,10 @@ def main():
         tmp_config.unlink()
 
     print(f'Values read from config file:\n  {cn.out_name=}\n  {cn.out_score=}\n  {cn.out_other=}')
-    assert cn.out_name==name
-    assert cn.out_score==score
-    assert cn.out_other=='No config value'
+    assert cn.out_name == name
+    assert cn.out_score == score
+    assert cn.out_other == 'No config value'
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     main()

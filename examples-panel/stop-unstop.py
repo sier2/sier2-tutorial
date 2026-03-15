@@ -24,21 +24,20 @@ hv.extension('bokeh', inline=True)
 pn.extension(nthreads=NTHREADS, loading_spinner='petal', inline=True)
 # hv.renderer('bokeh').theme = 'dark_minimal'
 
+
 def interrupt_thread(tid, exctype):
     """Raise exception exctype in thread tid."""
 
-    r = ctypes.pythonapi.PyThreadState_SetAsyncExc(
-        ctypes.c_ulong(tid),
-        ctypes.py_object(exctype)
-    )
-    if r==0:
+    r = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_ulong(tid), ctypes.py_object(exctype))
+    if r == 0:
         raise ValueError('Invalid thread id')
-    elif r!=1:
+    elif r != 1:
         # "if it returns a number greater than one, you're in trouble,
         # and you should call it again with exc=NULL to revert the effect"
         #
         ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_ulong(tid), None)
         raise SystemError('PyThreadState_SetAsyncExc failed')
+
 
 class QueryWidget(Block):
     """A plain Python block that accepts a "query" (a maximum count value) and outputs a dataframe."""
@@ -50,14 +49,13 @@ class QueryWidget(Block):
         self.out_timer = self.in_timer
 
     def __panel__(self):
-        return pn.Param(self, widgets={
-            'in_timer': {
-                'widget_type': pn.widgets.IntInput},
-                'name': 'Timer period'
-            },
+        return pn.Param(
+            self,
+            widgets={'in_timer': {'widget_type': pn.widgets.IntInput}, 'name': 'Timer period'},
             parameters=['in_timer'],
-            sizing_mode='stretch_width'
+            sizing_mode='stretch_width',
         )
+
 
 class ProgressWidget(Block):
     """A progress widget."""
@@ -69,10 +67,10 @@ class ProgressWidget(Block):
         super().__init__(*args, **kwargs)
         self.progress = pn.indicators.Progress(name='Progress', value=0, max=self.in_timer)
 
-    def execute(self): #, stopper):
+    def execute(self):  # , stopper):
         self.progress.value = 0
         self.progress.max = self.in_timer
-        for t in range(1, self.in_timer+1):
+        for t in range(1, self.in_timer + 1):
             time.sleep(1)
             self.progress.value = t
             print(f'Progress {self.name} {self.progress.value}')
@@ -84,6 +82,7 @@ class ProgressWidget(Block):
 
     def __panel__(self):
         return self.progress
+
 
 # class StatusContext:
 #     def __init__(self, status):
@@ -101,6 +100,7 @@ class ProgressWidget(Block):
 #         else:
 #             self.status.color = 'danger'
 
+
 def main():
     title = 'Stop'
 
@@ -109,7 +109,7 @@ def main():
         theme='dark',
         site='PoC ',
         sidebar=pn.Column('## Blocks'),
-        collapsed_sidebar=True
+        collapsed_sidebar=True,
     )
 
     q = QueryWidget(name='Specify timer interval', wait_for_input=True)
@@ -175,6 +175,6 @@ def main():
     # ]
     # template.show(threaded=False)
 
-if __name__=='__main__':
-    main()
 
+if __name__ == '__main__':
+    main()

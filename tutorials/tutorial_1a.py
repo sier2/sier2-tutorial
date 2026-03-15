@@ -6,6 +6,7 @@ from sier2 import Block, Dag, Connection
 import param
 from collections import Counter
 
+
 class ExternalInput(Block):
     """A block that provides data to the dag."""
 
@@ -17,6 +18,7 @@ class ExternalInput(Block):
     def execute(self):
         self.out_text = self.in_text
         self.out_upper = self.in_upper
+
 
 class SingleCase(Block):
     """A block that upper or lower- cases the input text according to the flag."""
@@ -30,6 +32,7 @@ class SingleCase(Block):
     def execute(self):
         self.out_text = self.in_text.upper() if self.in_upper else self.in_text.lower()
         self.out_upper = self.in_upper
+
 
 class CharDistribution(Block):
     """A block that counts the number of times each character occurs in a string.
@@ -49,18 +52,21 @@ class CharDistribution(Block):
         self.out_len = len(self.in_text)
 
         counter = Counter(self.in_text)
-        data = sorted(counter.items(), key=lambda item:(-item[1], item[0]))
-        lines = '\n'.join(f'{k} {v:3} {"*"*v}' for k,v in data)
+        data = sorted(counter.items(), key=lambda item: (-item[1], item[0]))
+        lines = '\n'.join(f'{k} {v:3} {"*" * v}' for k, v in data)
         self.out_bars = lines
         self.out_counter = dict(counter)
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     external_input = ExternalInput()
     lc = SingleCase()
     ld = CharDistribution()
 
     dag = Dag(title='tutorial_1a', doc='Count character distribution')
-    dag.connect(external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper'))
+    dag.connect(
+        external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper')
+    )
     dag.connect(lc, ld, Connection('out_text', 'in_text'))
 
     external_input.in_text = 'The CAT sat on the MAT.'

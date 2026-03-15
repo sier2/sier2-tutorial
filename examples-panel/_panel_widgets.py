@@ -8,16 +8,15 @@ import param
 
 MAX_HEIGHT = 10
 
+
 def _make_df(max_height=MAX_HEIGHT) -> pd.DataFrame:
     colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet']
 
     return pd.DataFrame(
-        zip(
-            colors,
-            [random.random()*max_height for _ in range(len(colors))]
-        ),
-        columns=['Colors', 'Counts']
+        zip(colors, [random.random() * max_height for _ in range(len(colors))]),
+        columns=['Colors', 'Counts'],
     )
+
 
 class Query(Block):
     """A plain Python block that accepts a "query" (a maximum count value) and outputs a dataframe."""
@@ -26,13 +25,17 @@ class Query(Block):
         super().__init__(*args, wait_for_input=True, **kwargs)
 
     out_max_height = param.Number(doc='The maximum value. All values are less than this')
-    out_df = param.DataFrame(default=None, doc='A dataframe with columns `Colors` and `Counts`. The counts are a random number between 0 and the slider value.')
+    out_df = param.DataFrame(
+        default=None,
+        doc='A dataframe with columns `Colors` and `Counts`. The counts are a random number between 0 and the slider value.',
+    )
 
     def query(self, max_height):
         """Output a dataframe with a maximum counts value."""
 
         self.max_height = max_height
         self.df = _make_df(max_height)
+
 
 class QueryWidget(Query):
     """An example block widget.
@@ -46,8 +49,10 @@ class QueryWidget(Query):
         """This is only here to demonstrate that execute() is called."""
 
         print(f'execute() in {self}')
-        if self.max_height==self.MIN:
-            raise BlockValidateError(block_name=self.name, message=f'Min height must be > {self.MIN}')
+        if self.max_height == self.MIN:
+            raise BlockValidateError(
+                block_name=self.name, message=f'Min height must be > {self.MIN}'
+            )
 
         self.out_max_height = self.max_height
         self.out_df = self.df
@@ -67,7 +72,9 @@ class QueryWidget(Query):
             self.query(max_height)
             return self.df
 
-        height = pn.widgets.FloatSlider(value=MAX_HEIGHT, start=self.MIN, end=MAX_HEIGHT+1, name='Maximum height')
+        height = pn.widgets.FloatSlider(
+            value=MAX_HEIGHT, start=self.MIN, end=MAX_HEIGHT + 1, name='Maximum height'
+        )
         df2 = pn.bind(query_value, max_height=height)
         df_pane = pn.pane.DataFrame(df2, index=False, sizing_mode='stretch_width')
         text = '''
@@ -79,6 +86,7 @@ class QueryWidget(Query):
         '''
 
         return pn.Row(pn.Column(height, text), df_pane)
+
 
 class BarchartWidget(Block):
     """A barchart widget.
@@ -115,7 +123,7 @@ class BarchartWidget(Block):
                 color='Colors',
                 ylim=(0, height),
                 show_grid=True,
-                max_width=800
+                max_width=800,
             )
         else:
             bars = hv.Bars([])
@@ -124,4 +132,3 @@ class BarchartWidget(Block):
 
     def __panel__(self):
         return self.hv_pane
-

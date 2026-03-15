@@ -2,18 +2,18 @@
 
 # Tutorial: blocks with panel widgets.
 #
-from sier2 import Block, Dag, Connection
-import param
-
 import random
-import re
 import time
 
 import panel as pn
+import param
+from sier2 import Block, Connection, Dag
+
 pn.extension(inline=True)
 
 UPPER_VOWELS = str.maketrans('abcde', 'ABCDE')
 LOWER_VOWELS = str.maketrans('ABCDE', 'abcde')
+
 
 class UserInput(Block):
     """A block that provides user input."""
@@ -33,14 +33,15 @@ class UserInput(Block):
             auto_grow=True,
             rows=8,
             resizable='both',
-            sizing_mode='stretch_width'
+            sizing_mode='stretch_width',
         )
 
         return pn.Column(
             text_widget,
             pn.Row(pn.HSpacer(), self.param.out_flag, sizing_mode='stretch_width'),
-            sizing_mode='stretch_width'
+            sizing_mode='stretch_width',
         )
+
 
 class Invert(Block):
     """A block that transforms text.
@@ -63,10 +64,7 @@ class Invert(Block):
         super().__init__(*args, **kwargs)
 
         self.progress = pn.indicators.Progress(
-            name='Translation progress',
-            bar_color='primary',
-            active=False,
-            value=-1
+            name='Translation progress', bar_color='primary', active=False, value=-1
         )
 
     def execute(self):
@@ -89,6 +87,7 @@ class Invert(Block):
     def __panel__(self):
         return self.progress
 
+
 class Display(Block):
     """A block that displays text."""
 
@@ -105,7 +104,9 @@ class Display(Block):
             resizable='both',
             sizing_mode='stretch_width',
             disabled=True,
-            stylesheets=['.bk-input[disabled]{background-color:var(--current-background-color);color:var(--panel-on-secondary-color);opacity:1.0;cursor:text}']
+            stylesheets=[
+                '.bk-input[disabled]{background-color:var(--current-background-color);color:var(--panel-on-secondary-color);opacity:1.0;cursor:text}'
+            ],
         )
 
     def execute(self):
@@ -114,7 +115,8 @@ class Display(Block):
     def __panel__(self):
         return self.text_widget
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     ui = UserInput(name='User input')
     tr = Invert(name='Transform')
     di = Display(name='Display output')

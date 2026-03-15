@@ -13,7 +13,9 @@ from ipywidgets import HTML
 import ipyleaflet as leaflet
 
 import panel as pn
+
 pn.extension(inline=True)
+
 
 @dataclass
 class Location:
@@ -25,10 +27,12 @@ class Location:
     def latlon(self):
         return self.lat, self.lon
 
+
 cbr = Location('Canberra', 149.131393, -35.280781)
 hob = Location('Hobart', 147.325, -42.880556)
 mel = Location('Melbourne', 144.946457, -37.840935)
 syd = Location('Sydney', 151.209290, -33.868820)
+
 
 class Inputs(Block):
     """User input of location."""
@@ -46,6 +50,7 @@ class Inputs(Block):
         self.out_lon = loc.lon
         self.out_lat = loc.lat
 
+
 class MapBlock(Block):
     """Draw a map."""
 
@@ -56,8 +61,7 @@ class MapBlock(Block):
         super().__init__(name='South-east Australia')
         self.map = leaflet.Map(zoom=9, scroll_wheel_zoom=True)
         poly = leaflet.Polygon(
-            locations=[mel.latlon, hob.latlon, syd.latlon],
-            color='blue', fill_color='#00000000'
+            locations=[mel.latlon, hob.latlon, syd.latlon], color='blue', fill_color='#00000000'
         )
         self.map.add(poly)
 
@@ -73,7 +77,8 @@ class MapBlock(Block):
     def __panel__(self):
         return pn.pane.IPyLeaflet(self.map)
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     inp = Inputs()
     mapb = MapBlock()
     dag = PanelDag(title='Leaflet map', doc='Leaflet demo')

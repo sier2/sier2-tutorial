@@ -2,6 +2,7 @@ from sier2 import Block, Dag, Connection
 import param
 import random
 
+
 class PassThrough(Block):
     """Pass an in string to an out string."""
 
@@ -11,6 +12,7 @@ class PassThrough(Block):
     def execute(self):
         print(f'In execute {self.name=}, {self.in_string=}')
         self.out_string = f'{self.in_string} via {self.name}'
+
 
 class Pause(Block):
     """Ensure that prepare() can see the in_string."""
@@ -27,6 +29,7 @@ class Pause(Block):
     def execute(self):
         print(f'In execute {self.name=}, {self.in_string=}')
         self.out_string = self.in_string
+
 
 def main():
     passthru1 = PassThrough(name='PT1')
@@ -59,5 +62,6 @@ def main():
     print(f'{pause_block.out_string=}')
     print(f'Final result: {passthru2.out_string=}')
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     main()

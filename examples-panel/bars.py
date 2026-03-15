@@ -21,6 +21,7 @@ CHARTI_DOC = """This chart is the same as the previous one, except the bars are 
 hv.extension('bokeh', inline=True)
 pn.extension('floatpanel', nthreads=NTHREADS, loading_spinner='bar', inline=True)
 
+
 def main():
     # Build a dag.
     #
@@ -29,14 +30,8 @@ def main():
     bi = BarchartWidget(inverted=True, name='Results bars (inverted)', doc=CHARTI_DOC)
 
     dag = PanelDag(doc=DOC, site='Example', title='Bars', logo='py.svg')
-    dag.connect(q, b,
-        Connection('out_df', 'in_df'),
-        Connection('out_max_height', 'in_max_height')
-    )
-    dag.connect(q, bi,
-        Connection('out_df', 'in_df'),
-        Connection('out_max_height', 'in_max_height')
-    )
+    dag.connect(q, b, Connection('out_df', 'in_df'), Connection('out_max_height', 'in_max_height'))
+    dag.connect(q, bi, Connection('out_df', 'in_df'), Connection('out_max_height', 'in_max_height'))
 
     title = 'Random weighted barcharts'
 
@@ -66,5 +61,6 @@ def main():
     # template.sidebar.objects = [pn.panel(dag.hv_graph().opts(invert_yaxis=True, xaxis=None, yaxis=None))]
     # template.show(threaded=False)
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     main()

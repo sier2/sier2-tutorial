@@ -7,6 +7,7 @@ Library.add_block(UserInput, 'tutorial_3b:UserInput')
 Library.add_block(Invert, 'tutorial_3b:Translate')
 Library.add_block(Display, 'tutorial_3b:Display')
 
+
 def transform_dag():
     UiBlock = Library.get_block('tutorial_3b:UserInput')
     ui = UiBlock(name='User input')
@@ -23,6 +24,7 @@ def transform_dag():
 
     return dag
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     dag = transform_dag()
     dag.show()

@@ -9,8 +9,10 @@ import param
 import random
 import time
 
+
 class PassBlock(Block):
     """A simple block."""
+
     in_b = param.Boolean(label='inb')
     out_b = param.Boolean(label='outb')
 
@@ -23,6 +25,7 @@ class PassBlock(Block):
             time.sleep(1.0)
 
         self.out_b = self.in_b
+
 
 def make_fan_in_dag(title):
     dag = PanelDag(title=title, doc='doc')
@@ -38,9 +41,11 @@ def make_fan_in_dag(title):
 
     return dag
 
+
 def main():
     dag = make_fan_in_dag('fan in')
     dag.show()
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     main()

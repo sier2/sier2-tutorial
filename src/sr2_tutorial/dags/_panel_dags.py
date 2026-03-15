@@ -7,6 +7,7 @@ DAG_DOC = '''
 A demonstration dag that "translates" text into other text.
 '''
 
+
 def transform_dag():
     ui = UserInput(name='User input')
     tr = Invert(name='Transform')

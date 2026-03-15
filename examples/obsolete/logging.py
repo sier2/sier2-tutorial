@@ -15,6 +15,7 @@ from sier2 import Block, Dag, Connection
 import param
 import logging
 
+
 class NumberBlock(Block):
     """Take user input and output it."""
 
@@ -22,6 +23,7 @@ class NumberBlock(Block):
         super().__init__(wait_for_input=wait_for_input)
 
     out_number = param.Number(label='Output number', default=None, doc='Output number')
+
 
 class AddBlock(Block):
     """Add two numbers.
@@ -47,16 +49,18 @@ class AddBlock(Block):
         if any(arg is None for arg in (self.in_a, self.in_b)):
             return
 
-        self.out_result = self.in_a+self.in_b
+        self.out_result = self.in_a + self.in_b
         self.logger.debug('Result is %s', self.out_result)
         # print(f'{self.in_a} + {self.in_b} = {self.out_result}')
+
 
 class Display(Block):
     """Display a number."""
 
     in_result = param.Number(label='Result', default=None, doc='The result')
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     n1 = NumberBlock()
     n2 = NumberBlock()
     n3 = NumberBlock(wait_for_input=True)

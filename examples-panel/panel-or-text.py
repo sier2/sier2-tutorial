@@ -17,6 +17,7 @@ import panel as pn
 import sys
 import time
 
+
 class In(Block):
     """Input values."""
 
@@ -30,16 +31,11 @@ class In(Block):
         self.out_b = self.in_b
 
     def __panel__(self):
-        aw = pn.widgets.FloatInput.from_param(
-            self.param.in_a,
-            name='input a'
-        )
-        bw = pn.widgets.FloatInput.from_param(
-            self.param.in_b,
-            name='input b'
-        )
+        aw = pn.widgets.FloatInput.from_param(self.param.in_a, name='input a')
+        bw = pn.widgets.FloatInput.from_param(self.param.in_b, name='input b')
 
         return pn.Row(aw, bw)
+
 
 class Calc(Block):
     """Calculate values.
@@ -63,18 +59,17 @@ class Calc(Block):
         self.out_result = self.in_a + self.in_b
         print('calc end')
 
+
 class Out(Block):
     """Display result."""
 
     in_result = param.Number(label='result')
 
     def __panel__(self):
-        rw = pn.widgets.FloatInput.from_param(
-            self.param.in_result,
-            name='Result'
-        )
+        rw = pn.widgets.FloatInput.from_param(self.param.in_result, name='Result')
 
         return pn.Row(rw)
+
 
 def make_dag(DagType):
     in_block = In(name='do inputs', wait_for_input=True)
@@ -82,20 +77,14 @@ def make_dag(DagType):
     out_block = Out(name='do result')
 
     dag = DagType(title='The dag', doc='Demonstrate panel-less blocks.')
-    dag.connect(
-        in_block, calc_block,
-        Connection('out_a', 'in_a'),
-        Connection('out_b', 'in_b')
-    )
-    dag.connect(
-        calc_block, out_block,
-        Connection('out_result', 'in_result')
-    )
+    dag.connect(in_block, calc_block, Connection('out_a', 'in_a'), Connection('out_b', 'in_b'))
+    dag.connect(calc_block, out_block, Connection('out_result', 'in_result'))
 
     return dag
 
+
 def main(context):
-    is_text = context=='text'
+    is_text = context == 'text'
 
     dag = make_dag(Dag if is_text else PanelDag)
 
@@ -111,7 +100,7 @@ def main(context):
         #
         print('Execute dag and provide input ...')
         b = dag.execute()
-        assert b is inb # Checking that the block is what we think it is.
+        assert b is inb  # Checking that the block is what we think it is.
         inb.in_a = 8
         inb.in_b = 9
         dag.execute_after_input(b)
@@ -121,8 +110,9 @@ def main(context):
     else:
         dag.show()
 
-if __name__=='__main__':
-    context = sys.argv[1] if len(sys.argv)>1 else None
+
+if __name__ == '__main__':
+    context = sys.argv[1] if len(sys.argv) > 1 else None
     if context in ('text', 'panel'):
         main(context)
     else:

@@ -14,22 +14,16 @@ import random
 from sier2 import Block, Dag, Connection
 import param
 
+
 class NumberBlock(Block):
     """Produce a random number."""
 
-    in_n = param.Integer(
-        label='An integer',
-        doc='An input number',
-        default=None
-    )
-    out_n = param.Integer(
-        label='An integer',
-        doc='An output number',
-        default=None
-    )
+    in_n = param.Integer(label='An integer', doc='An input number', default=None)
+    out_n = param.Integer(label='An integer', doc='An output number', default=None)
 
     def execute(self):
         self.out_n = self.in_n
+
 
 class AddBlock(Block):
     """Add two numbers.
@@ -51,6 +45,7 @@ class AddBlock(Block):
             return
 
         self.out_result = self.in_a + self.in_b
+
 
 def main():
     """Pretend to be a block manager."""
@@ -79,5 +74,6 @@ def main():
 
     print(f'Result: {add_block.out_result}')
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     main()

@@ -44,13 +44,16 @@ import tempfile
 # Example dags.
 ##########
 
+
 class PassBlock(Block):
     """A simple block."""
+
     in_b = param.Boolean(label='inb')
     out_b = param.Boolean(label='outb')
 
     def execute(self):
         self.out_b = self.in_b
+
 
 def make_boring_dag():
     dag = Dag(title='boring', doc='boring')
@@ -59,6 +62,7 @@ def make_boring_dag():
     dag.connect(h, t, Connection('out_b', 'in_b'))
 
     return dag
+
 
 def make_so_dag():
     """https://stackoverflow.com/questions/39644616/is-there-a-2d-layout-algorithm-for-dags-that-allows-the-positions-on-one-axis-to"""
@@ -85,6 +89,7 @@ def make_so_dag():
 
     return dag
 
+
 def make_if_else_dag():
     # Create a starting (head) block, and a list of successive blocks.
     # The last one in the list is the tail block.
@@ -97,9 +102,7 @@ def make_if_else_dag():
     dag = Dag(title='If-Else', doc='If-Else demo')
 
     for b1, b2 in zip(blocks, blocks[1:]):
-        dag.connect(b1, b2,
-            Connection('out_b', 'in_b')
-        )
+        dag.connect(b1, b2, Connection('out_b', 'in_b'))
 
     # Connect the head block to the "next" block and the tail block.
     #
@@ -107,6 +110,7 @@ def make_if_else_dag():
     dag.connect(head, blocks[-1], Connection('out_b', 'in_b'))
 
     return dag
+
 
 def make_multi_tail_dag():
     dag = Dag(title='multi-tail', doc='single head, fan out tail')
@@ -116,6 +120,7 @@ def make_multi_tail_dag():
         dag.connect(head, m, Connection('out_b', 'in_b'))
 
     return dag
+
 
 def make_binary_tree_dag(title):
     dag = Dag(title=title, doc='doc')
@@ -136,6 +141,7 @@ def make_binary_tree_dag(title):
 
     return dag
 
+
 def make_tree_tail_dag():
     tail = PassBlock(name='binary tree to a single block')
     dag = make_binary_tree_dag('binary tree to tail')
@@ -145,6 +151,7 @@ def make_tree_tail_dag():
     dag.connect(dag.block_by_name('RR3'), tail, Connection('out_b', 'in_b'))
 
     return dag
+
 
 def make_long_dag():
     dag = Dag(title='long', doc='single path')
@@ -157,23 +164,30 @@ def make_long_dag():
 
     return dag
 
+
 ##########
 # The plotting code.
 ##########
 
+
 def count_param(block, prefix):
     return sum(1 for p in block.param if p.startswith(prefix))
+
 
 def draw_dag(dag, title, ix):
     topo_blocks = dag.get_sorted()
     n = len(topo_blocks)
 
-    fig = figure(width=400, height=400, title=title, #toolbar_location=None,
+    fig = figure(
+        width=400,
+        height=400,
+        title=title,  # toolbar_location=None,
         # tooltips=[('Name', '@name'), ('In', '@icount'), ('Out', '@ocount')],
         aspect_ratio=1,
         # Ranges must be equal.
-        x_range=(-1, n), y_range=(-1, n)
-        #, tools='hover'
+        x_range=(-1, n),
+        y_range=(-1, n),
+        # , tools='hover'
     )
     curdoc().theme = 'dark_minimal'
 
@@ -183,39 +197,40 @@ def draw_dag(dag, title, ix):
     data = {
         'name': [block.name for block in topo_blocks],
         'x': list(range(n)),
-        'y': list(range(n-1, -1, -1)),
+        'y': list(range(n - 1, -1, -1)),
         'state': random.choices(pals.DarkText, k=n),
         'icount': [count_param(block, 'in_') for block in topo_blocks],
         'ocount': [count_param(block, 'out_') for block in topo_blocks],
     }
-    xys = {name: (x,y) for name, x, y in zip(data['name'], data['x'], data['y'])}
+    xys = {name: (x, y) for name, x, y in zip(data['name'], data['x'], data['y'])}
 
     SIZE = 0.25
 
     circle = fig.circle(
         name=f'circles_{ix}',
         source=data,
-        x='x', y='y',
+        x='x',
+        y='y',
         radius=SIZE,
         # alpha=0,
         # line_alpha=1,
         color='state',
         # line_color='line_color',
-        radius_units='data'
+        radius_units='data',
     )
 
     def next_to_topo(topo_blocks, b1, b2):
         """Are blocks b1 and b2 next to each other in the topological sort?"""
         ix = topo_blocks.index(b1)
 
-        return ix<len(topo_blocks) and topo_blocks[ix+1]==b2
+        return ix < len(topo_blocks) and topo_blocks[ix + 1] == b2
 
     lc = 'steelblue'
     lw = 2
     side = True
     heads = []
     OFFSET = 1.5 * SIZE
-    h = math.sin(math.pi/4) * OFFSET
+    h = math.sin(math.pi / 4) * OFFSET
     for b1, b2 in dag._block_pairs:
         x0, y0 = xys[b1.name]
         x1, y1 = xys[b2.name]
@@ -224,29 +239,29 @@ def draw_dag(dag, title, ix):
             #
             x0 += h
             y0 -= h
-            x1 -= h + h*OFFSET
-            y1 += h + h*OFFSET
-            angle = -math.pi/12
+            x1 -= h + h * OFFSET
+            y1 += h + h * OFFSET
+            angle = -math.pi / 12
             fig.line([x0, x1], [y0, y1], line_color=lc, line_width=lw)
         else:
             # Define how far out the Bezier curve control points are.
             #
-            c = (x1-x0) * 0.75
+            c = (x1 - x0) * 0.75
 
             if side:
                 # Below.
-                cx0, cy0 = x0, y0-c
-                cx1, cy1 = x1-c, y1
+                cx0, cy0 = x0, y0 - c
+                cx1, cy1 = x1 - c, y1
                 x0, y0 = x0, y0 - OFFSET
-                x1, y1 = x1 - OFFSET*1.5, y1
-                angle = -math.pi/2
+                x1, y1 = x1 - OFFSET * 1.5, y1
+                angle = -math.pi / 2
             else:
                 # Above.
-                cx0, cy0 = x0+c, y0
-                cx1, cy1 = x1, y1+c
+                cx0, cy0 = x0 + c, y0
+                cx1, cy1 = x1, y1 + c
                 x0, y0 = x0 + OFFSET, y0
-                x1, y1 = x1, y1 + OFFSET*1.5
-                angle = -math.pi/3
+                x1, y1 = x1, y1 + OFFSET * 1.5
+                angle = -math.pi / 3
 
             # # Plot the Bezier control points for debugging.
             # #
@@ -254,8 +269,21 @@ def draw_dag(dag, title, ix):
 
             # Draw a background line under the actual line so overlapping curves look nice.
             #
-            fig.bezier([x0], [y0], [x1], [y1], [cx0], [cy0], [cx1], [cy1], line_color='#2b3035', line_width=lw+5)
-            fig.bezier([x0], [y0], [x1], [y1], [cx0], [cy0], [cx1], [cy1], line_color=lc, line_width=lw)
+            fig.bezier(
+                [x0],
+                [y0],
+                [x1],
+                [y1],
+                [cx0],
+                [cy0],
+                [cx1],
+                [cy1],
+                line_color='#2b3035',
+                line_width=lw + 5,
+            )
+            fig.bezier(
+                [x0], [y0], [x1], [y1], [cx0], [cy0], [cx1], [cy1], line_color=lc, line_width=lw
+            )
 
         heads.append((x1, y1, angle))
         side = not side
@@ -271,6 +299,7 @@ def draw_dag(dag, title, ix):
 
     return fig
 
+
 def plot_dags():
     dagb = make_boring_dag()
     dagso = make_so_dag()
@@ -280,11 +309,15 @@ def plot_dags():
     dag3 = make_binary_tree_dag('binary tree')
     dag4 = make_tree_tail_dag()
 
-    plots = [draw_dag(dag, dag.title, i) for i, dag in enumerate([dagb, dagso, dagl, dag1, dag2, dag3, dag4])]
+    plots = [
+        draw_dag(dag, dag.title, i)
+        for i, dag in enumerate([dagb, dagso, dagl, dag1, dag2, dag3, dag4])
+    ]
 
     return plots
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     output_file(f'{tempfile.gettempdir()}/sier2_plot.html', mode='inline')
     plots = plot_dags()
     show(column(*[plot for plot in plots]))

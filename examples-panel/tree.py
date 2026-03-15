@@ -7,13 +7,16 @@ from sier2 import Block, Connection
 from sier2.panel import PanelDag
 import param
 
+
 class PassBlock(Block):
     """A simple block."""
+
     in_b = param.Boolean(label='inb')
     out_b = param.Boolean(label='outb')
 
     def execute(self):
         self.out_b = self.in_b
+
 
 def make_binary_tree_dag(dag):
     head = PassBlock(name='head', wait_for_input=True)
@@ -34,18 +37,20 @@ def make_binary_tree_dag(dag):
 
     return dag
 
+
 def make_binary_tree_next_level(dag: PanelDag, level: list[Block]):
     """Given a level of blocks in a list, create the next level of blocks in a binary tree."""
 
-    n2 = len(level)*2
+    n2 = len(level) * 2
     c = Connection('out_b', 'in_b')
     next_level = []
     for i in range(n2):
         pb = PassBlock(name=f'B{n2}/{i}')
-        dag.connect(level[i//2], pb, c)
+        dag.connect(level[i // 2], pb, c)
         next_level.append(pb)
 
     return next_level
+
 
 def make_tree_tail_dag():
     tail = PassBlock(name='binary tree to a single block')
@@ -58,6 +63,7 @@ def make_tree_tail_dag():
     dag.connect(dag.block_by_name('RR3'), tail, c)
 
     return dag
+
 
 def main():
     dag = PanelDag(title='Dag title', doc='doc')
@@ -75,5 +81,6 @@ def main():
 
     dag.show()
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     main()

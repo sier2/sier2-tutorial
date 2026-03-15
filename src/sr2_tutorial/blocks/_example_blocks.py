@@ -8,6 +8,7 @@ from sier2 import Block
 import param
 import random
 
+
 class RandomNumberBlock(Block):
     """Produce a random number.
 
@@ -15,21 +16,17 @@ class RandomNumberBlock(Block):
     """
 
     in_upper = param.Integer(
-        label='Upper limit',
-        doc='The upper limit of the generated random number',
-        default=10
+        label='Upper limit', doc='The upper limit of the generated random number', default=10
     )
 
     out_n = param.Integer(
-        label='An integer',
-        doc='A random number between 1 and 100 inclusive',
-        default=None
+        label='An integer', doc='A random number between 1 and 100 inclusive', default=None
     )
 
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
 
-    def prime(self, limit:int = 10):
+    def prime(self, limit: int = 10):
         """A convenience method to prime the dag."""
 
         self.in_upper = limit
@@ -38,12 +35,12 @@ class RandomNumberBlock(Block):
         print(f'Random (1 .. {self.in_upper}): {n}')
         self.out_n = n
 
+
 class ConstantNumberBlock(Block):
     """Produce a constant number specified when the block is created."""
 
     out_constant = param.Number(
-        label='A constant number',
-        doc='A number determined at block creation time'
+        label='A constant number', doc='A number determined at block creation time'
     )
 
     def __init__(self, x, name=None, *args, **kwargs):
@@ -62,6 +59,7 @@ class ConstantNumberBlock(Block):
         """A convenience method to prime the dag."""
 
         self.out_constant = self.x
+
 
 class AddBlock(Block):
     """Add two numbers.
@@ -82,8 +80,9 @@ class AddBlock(Block):
         if any(arg is None for arg in (self.in_a, self.in_b)):
             return
 
-        self.out_result = self.in_a+self.in_b
+        self.out_result = self.in_a + self.in_b
         # print(f'{self.in_a} + {self.in_b} = {self.out_result}')
+
 
 class ConfigurableBlock(Block):
     """The output of this block is the value of the key ``output`` in its config."""

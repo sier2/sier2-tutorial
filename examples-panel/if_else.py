@@ -37,9 +37,9 @@ import time
 
 hv.extension('bokeh', inline=True)
 
+
 class IfElseBlock(Block):
-    """Demonstrate an if-else block.
-    """
+    """Demonstrate an if-else block."""
 
     in_if = param.Boolean(label='Go to tail?', doc='Go directly to tail?')
     out_next_if = param.Boolean(label='Out if Next', doc='If Next thing')
@@ -72,13 +72,14 @@ class IfElseBlock(Block):
             self.out_next_if = self.in_if
             self.out_next_dt = self.in_dt
 
-        if self.name=='tail':
+        if self.name == 'tail':
             print('----')
+
 
 def main():
     # Run with "python panel-ifelse.py c" to use CLI, without "c" to use Panel
     #
-    use_panel = True # len(sys.argv)<1 or sys.argv[1]=='p'
+    use_panel = True  # len(sys.argv)<1 or sys.argv[1]=='p'
 
     # Create a starting (head) block, and a list of successive blocks.
     # The last one in the list is the tail block.
@@ -94,15 +95,16 @@ def main():
         dag = Dag(title='If-Else', doc='If-Else demo')
 
     for b1, b2 in zip(blocks, blocks[1:]):
-        dag.connect(b1, b2,
-            Connection('out_next_if', 'in_if'),
-            Connection('out_next_dt', 'in_dt')
-        )
+        dag.connect(b1, b2, Connection('out_next_if', 'in_if'), Connection('out_next_dt', 'in_dt'))
 
     # Connect the head block to the "next" block and the tail block.
     #
-    dag.connect(head, blocks[0], Connection('out_next_if', 'in_if'), Connection('out_next_dt', 'in_dt'))
-    dag.connect(head, blocks[-1], Connection('out_tail_if', 'in_if'), Connection('out_tail_dt', 'in_dt'))
+    dag.connect(
+        head, blocks[0], Connection('out_next_if', 'in_if'), Connection('out_next_dt', 'in_dt')
+    )
+    dag.connect(
+        head, blocks[-1], Connection('out_tail_if', 'in_if'), Connection('out_tail_dt', 'in_dt')
+    )
 
     if use_panel:
         print('Show')
@@ -113,5 +115,6 @@ def main():
         head.in_if = True
         dag.execute_after_input(b)
 
-if __name__=='__main__':
-     main()
+
+if __name__ == '__main__':
+    main()

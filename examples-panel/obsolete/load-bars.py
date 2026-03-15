@@ -22,6 +22,7 @@ hv.extension('bokeh', inline=True)
 pn.extension(nthreads=NTHREADS, loading_spinner='bar', inline=True)
 # hv.renderer('bokeh').theme = 'dark_minimal'
 
+
 def main():
     print('Run panel-bars first.')
 
@@ -36,7 +37,8 @@ def main():
 
     dag.show()
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     # Blocks that are loaded from a dumped dag must be in the dag library.
     # Because this is a demonstration, we load the required block classes manually.
     #

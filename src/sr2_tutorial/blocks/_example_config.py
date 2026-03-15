@@ -1,6 +1,7 @@
 from sier2 import Block
 import param
 
+
 class ExampleConfig(Block):
     """A block that provides an example config.
 
@@ -14,7 +15,9 @@ class ExampleConfig(Block):
     out_config = param.String(label='new config', doc='The contents of an ini file')
 
     def execute(self):
-        arg = f'Config from in_arg is "{self.in_arg}"' if self.in_arg else 'This is a default config.'
+        arg = (
+            f'Config from in_arg is "{self.in_arg}"' if self.in_arg else 'This is a default config.'
+        )
 
         # The ini file content to be returned to the caller.
         #

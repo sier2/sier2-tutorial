@@ -9,6 +9,7 @@ import random
 from sier2 import Library, Block, Dag, Connection
 # from sier2.provided import AddBlock, ConstantNumberBlock
 
+
 def main():
     n1 = random.randint(1, 100)
     n2 = random.randint(1, 100)
@@ -46,7 +47,7 @@ def main():
     # Dumping the new dag should give us the same dump as the original dag.
     #
     dump_b = dag_b.dump()
-    print(f'\ndump_b == dump_a: {dump_b==dump_a}')
+    print(f'\ndump_b == dump_a: {dump_b == dump_a}')
 
     # We now have a new dag that is the same as the old dag.
     # If we had a GUI, the user could now provide input to run the dag.
@@ -69,5 +70,6 @@ def main():
 
     print(f'Results should be the same: {result_a=}, {result_b=}')
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     main()

@@ -28,6 +28,7 @@ The "Display result" button is independent of the blocks - it is used to
 display the values in the result block.
 '''
 
+
 class DataBlock(Block):
     """Some data."""
 
@@ -46,11 +47,11 @@ class DataBlock(Block):
 
     def check(self, i, s):
         try:
-            valid = int(i)>0
+            valid = int(i) > 0
         except ValueError:
             valid = False
 
-        valid = valid and s is not None and len(s)>0
+        valid = valid and s is not None and len(s) > 0
         print(f'"{i}" "{s}" valid: {valid}')
         self.is_input_valid_ = valid
 
@@ -58,10 +59,13 @@ class DataBlock(Block):
         self.out_str = self.in_str
         self.out_int = self.in_int
 
+
 def main():
     descr = pn.pane.Markdown(DESCR)
 
-    data_in = DataBlock(wait_for_input=True, is_card=True, doc='Enter some valid data (see the help)')
+    data_in = DataBlock(
+        wait_for_input=True, is_card=True, doc='Enter some valid data (see the help)'
+    )
     data_out = DataBlock(wait_for_input=False, is_card=False, doc='Display the data')
 
     def do_in_to_out(self, event):
@@ -72,16 +76,13 @@ def main():
 
     end_text = pn.widgets.StaticText(name='Result (from second block)', sizing_mode='stretch_width')
     end_button = pn.widgets.Button(name='Display result', button_type='warning')
+
     def on_end(event):
         end_text.value = f'"{data_out.in_str}", {data_out.in_int}'
+
     end_button.on_click(on_end)
 
-    pn.Column(
-        descr,
-        data_in,
-        data_out,
-        end_button,
-        end_text
-    ).show(title='dagless')
+    pn.Column(descr, data_in, data_out, end_button, end_text).show(title='dagless')
+
 
 main()

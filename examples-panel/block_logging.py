@@ -3,6 +3,7 @@ from sier2.panel import PanelDag
 import panel as pn
 import param
 
+
 class NumberBlock(Block):
     """Take user input and output it."""
 
@@ -18,6 +19,7 @@ class NumberBlock(Block):
 
     # def __panel__(self):
     #     return pn.widgets.FloatInput.from_param(self.param.out_number)
+
 
 class AddBlock(Block):
     """Add two numbers.
@@ -48,10 +50,11 @@ class AddBlock(Block):
             self.logger.warning('None value in a=%s b=%s', self.in_a, self.in_b)
             return
 
-        self.out_result = self.in_a+self.in_b
+        self.out_result = self.in_a + self.in_b
 
     # def __panel__(self):
     #     return pn.widgets.FloatInput.from_param(self.param.out_result)
+
 
 class Display(Block):
     """Display a number."""
@@ -61,10 +64,11 @@ class Display(Block):
     # def __panel__(self):
     #     return pn.widgets.FloatInput.from_param(self.param.in_result)
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     n1 = NumberBlock(3, name='num1', wait_for_input=True)
     n2 = NumberBlock(5, name='num2', wait_for_input=True)
-    n3 = NumberBlock(7,name='num3', wait_for_input=True)
+    n3 = NumberBlock(7, name='num3', wait_for_input=True)
     aa = AddBlock(name='First add')
     ab = AddBlock(name='Second add')
     display = Display()

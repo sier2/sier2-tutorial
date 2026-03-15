@@ -7,6 +7,7 @@ import param
 # output params. Only one of the output params is updated, so only the block
 # connected via that param will execute next.
 
+
 class IfEvenElseOdd(Block):
     """Demonstrate an if-else branch.
 
@@ -31,10 +32,11 @@ class IfEvenElseOdd(Block):
         print(f'{self.name} prepare() for input')
 
     def execute(self):
-        if self.in_value%2==0:
+        if self.in_value % 2 == 0:
             self.out_even = self.in_value
         else:
             self.out_odd = self.in_value
+
 
 class Notify(Block):
     """Display a message."""
@@ -48,17 +50,16 @@ class Notify(Block):
     def execute(self):
         print(f'In block {self.name}: value {self.in_value} is {self.msg}')
 
+
 if_else = IfEvenElseOdd('IfElse')
 is_even = Notify(name='EvenBlock', msg='even')
 is_odd = Notify(name='OddBlock', msg='odd')
 
-dag = Dag(doc='Example: run a branch depending on a value', title='run a branch depending on a value')
-dag.connect(if_else, is_even,
-    Connection('out_even', 'in_value')
+dag = Dag(
+    doc='Example: run a branch depending on a value', title='run a branch depending on a value'
 )
-dag.connect(if_else, is_odd,
-    Connection('out_odd', 'in_value')
-)
+dag.connect(if_else, is_even, Connection('out_even', 'in_value'))
+dag.connect(if_else, is_odd, Connection('out_odd', 'in_value'))
 
 input_block = dag.execute()
 assert input_block is if_else

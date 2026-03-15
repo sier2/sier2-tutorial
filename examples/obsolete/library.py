@@ -10,6 +10,7 @@ import random
 
 from sier2 import Library, Dag, Connection
 
+
 def main():
     n1 = random.randint(1, 100)
     n2 = random.randint(1, 100)
@@ -36,5 +37,6 @@ def main():
 
     print(f'{r1.out_constant} + {r2.out_constant} = {a2.out_result}')
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     main()

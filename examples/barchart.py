@@ -13,19 +13,14 @@ import uuid
 from sier2 import Block, Dag, Connection, Connections
 import param
 
+
 class QueryBlock(Block):
     """A block that performs a query and outputs a dataframe."""
 
     in_query_value = param.String(label='Value to query on')
 
-    out_df = param.DataFrame(
-        label='Dataframe',
-        doc='The result of querying a large database'
-    )
-    out_column = param.String(
-        label='Column',
-        doc='The key column'
-    )
+    out_df = param.DataFrame(label='Dataframe', doc='The result of querying a large database')
+    out_column = param.String(label='Column', doc='The key column')
 
     def execute(self):
         """Perform a query and update the output dataframe.
@@ -46,62 +41,48 @@ class QueryBlock(Block):
         n = random.randint(40, 80)
         print(f'  Rows returned by query: {n}')
 
-        df = pd.DataFrame({
-            col: [random.choice(['red', 'green', 'blue']) for _ in range(n)],
-            'UUID': [str(uuid.uuid4()) for _ in range(n)],
-            'value': self.in_query_value
-        })
+        df = pd.DataFrame(
+            {
+                col: [random.choice(['red', 'green', 'blue']) for _ in range(n)],
+                'UUID': [str(uuid.uuid4()) for _ in range(n)],
+                'value': self.in_query_value,
+            }
+        )
 
         print(f'Results head:\n{df.head()}\n')
 
-        self.param.update({
-            'out_df': df,
-            'out_column': col
-        })
+        self.param.update({'out_df': df, 'out_column': col})
+
 
 class GroupByBlock(Block):
     """A class that groups a dataframe by a specified column."""
 
     # Input params.
     #
-    in_df = param.DataFrame(
-        label='Input df',
-        doc='A dataframe from another block'
-    )
-    in_column = param.String(
-        label='Group column',
-        doc='Name of category to group by'
-    )
+    in_df = param.DataFrame(label='Input df', doc='A dataframe from another block')
+    in_column = param.String(label='Group column', doc='Name of category to group by')
 
     # Output params.
     #
-    out_group_df = param.DataFrame(
-        label='Grouped df',
-        doc='A grouped dataframe'
-    )
-    out_category = param.String(
-        label='Category',
-        doc='The group category (column name)'
-    )
-    out_count = param.String(
-        label='Count',
-        doc='Count of category values (column name)'
-    )
+    out_group_df = param.DataFrame(label='Grouped df', doc='A grouped dataframe')
+    out_category = param.String(label='Category', doc='The group category (column name)')
+    out_count = param.String(label='Count', doc='Count of category values (column name)')
 
     def execute(self):
         """Group the COLOR column; ignore other columns."""
 
         print(f'Action in {self.__class__.__name__}: group by {self.in_column}')
 
-        group_df = self.in_df.groupby(self.in_column).size().reset_index().rename(columns={0:'COUNT'})
+        group_df = (
+            self.in_df.groupby(self.in_column).size().reset_index().rename(columns={0: 'COUNT'})
+        )
 
         # Set the outputs.
         #
-        self.param.update({
-            'out_group_df': group_df,
-            'out_category': self.in_column,
-            'out_count': 'COUNT'
-        })
+        self.param.update(
+            {'out_group_df': group_df, 'out_category': self.in_column, 'out_count': 'COUNT'}
+        )
+
 
 class BarChartBlock(Block):
     """A block that draws a horizontal bar chart."""
@@ -109,17 +90,10 @@ class BarChartBlock(Block):
     # Input params.
     #
     in_group_df = param.DataFrame(
-        label='Grouped dataframe',
-        doc='A dataframe that has been grouped'
+        label='Grouped dataframe', doc='A dataframe that has been grouped'
     )
-    in_category = param.String(
-        label='Category',
-        doc='The column containing the category values'
-    )
-    in_count = param.String(
-        label='Count',
-        doc='The column containing the count of categories'
-    )
+    in_category = param.String(label='Category', doc='The column containing the category values')
+    in_count = param.String(label='Count', doc='The column containing the count of categories')
 
     def execute(self):
         """Draw a textual bar chart."""
@@ -141,20 +115,20 @@ class BarChartBlock(Block):
 
         print()
 
+
 q = QueryBlock()
 g = GroupByBlock()
 b = BarChartBlock()
 
 dag = Dag(doc='Example: bar chart', title='bar chart')
-dag.connect(q, g,
-    Connection('out_df', 'in_df'),
-    Connection('out_column', 'in_column')
+dag.connect(q, g, Connection('out_df', 'in_df'), Connection('out_column', 'in_column'))
+dag.connect(
+    g,
+    b,
+    Connections(
+        {'out_group_df': 'in_group_df', 'out_category': 'in_category', 'out_count': 'in_count'}
+    ),
 )
-dag.connect(g, b, Connections({
-    'out_group_df': 'in_group_df',
-    'out_category': 'in_category',
-    'out_count': 'in_count'
-}))
 
 q.in_query_value = 'item3'
 dag.execute()

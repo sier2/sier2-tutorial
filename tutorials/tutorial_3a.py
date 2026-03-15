@@ -6,21 +6,20 @@ import panel as pn
 
 pn.extension(inline=True)
 
-if __name__=='__main__':
+if __name__ == '__main__':
     external_input = ExternalInput()
     lc = SingleCase()
     ld = CharDistribution()
     display = Display()
 
     dag = PanelDag(doc='Count character distribution', title='tutorial_3a')
-    dag.connect(external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper'))
+    dag.connect(
+        external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper')
+    )
     dag.connect(lc, ld, Connection('out_text', 'in_text'))
 
     # Use ``Connections`` for a more succint mapping.
     #
-    dag.connect(ld, display, Connections({
-        'out_len': 'in_len',
-        'out_counter': 'in_counter'})
-    )
+    dag.connect(ld, display, Connections({'out_len': 'in_len', 'out_counter': 'in_counter'}))
 
     dag.show()
