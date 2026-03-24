@@ -1,10 +1,8 @@
 import holoviews as hv
 import panel as pn
-
+from _panel_widgets import BarchartWidget, QueryWidget
 from sier2 import Connection
 from sier2.panel import PanelDag
-
-from _panel_widgets import QueryWidget, BarchartWidget
 
 NTHREADS = 2
 DOC = """Generate barcharts
@@ -29,11 +27,17 @@ def main():
     b = BarchartWidget(name='Results bars', doc=CHART_DOC)
     bi = BarchartWidget(inverted=True, name='Results bars (inverted)', doc=CHARTI_DOC)
 
-    dag = PanelDag(doc=DOC, site='Example', title='Bars', logo='py.svg')
+    title = 'Random weighted barcharts'
+
+    dag = PanelDag(
+        doc=DOC,
+        site='Example',
+        title=title,
+        logo='py.svg',
+        author={'name': 'Arthur Author', 'email': 'arthur.author@example.com'},
+    )
     dag.connect(q, b, Connection('out_df', 'in_df'), Connection('out_max_height', 'in_max_height'))
     dag.connect(q, bi, Connection('out_df', 'in_df'), Connection('out_max_height', 'in_max_height'))
-
-    title = 'Random weighted barcharts'
 
     # # Dump the dag and add panel information.
     # #

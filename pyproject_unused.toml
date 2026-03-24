@@ -21,9 +21,7 @@ classifiers = [
 packages = [{include = "sier2_tutorial", from = "src"}]
 
 [dependencies]
-python = "^3.11"
-
-sier2 = ">=0.28"
+sier2 = ">=2.2.3"
 
 [tool.poetry.plugins."sier2.library"]
 export = "sier2_tutorial.shelf"

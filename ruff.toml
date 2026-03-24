@@ -5,3 +5,4 @@ extend-select = ["I"]
 
 [format]
 quote-style = "preserve"
+line-ending = "lf"
