@@ -1,22 +1,20 @@
-import holoviews as hv
-import panel as pn
+import random
+from pathlib import Path
 
+import holoviews as hv
+import pandas as pd
+import param
+from _panel_widgets import BarchartWidget
 from sier2 import Block, Connections
 from sier2.panel import PanelDag
-import param
 
-import pandas as pd
-import random
-
-from _panel_widgets import BarchartWidget
-
-DOC = 'This dag does nothing in particular, it just shows off banners.'
+DOC = 'This dag does nothing in particular, it just shows off banners a logo, and a favicon.'
 
 hv.extension('bokeh', inline=True)
 
 
 def color():
-    c = lambda: random.randint(1, 255)
+    c = lambda: random.randint(1, 255)  # noqa: E731
     return f'#{c():02x}{c():02x}{c():02x}'
 
 
@@ -33,9 +31,6 @@ class Choose(Block):
     out_df = param.DataFrame(label='Bar values')
 
     def __init__(self):
-        center = 'display: flex; justify-content: center;'
-        top = f'<span style="display: flex; justify-content: center;color:white;background-color:red;font-size:12pt;">The top banner</span>'
-        bot = 'The bottom banner'
         super().__init__(
             wait_for_input=True,
             banners=(_banner_text('The top banner'), _banner_text('The bottom banner')),
@@ -49,10 +44,15 @@ class Choose(Block):
 
 
 def main():
-    # center = 'display: flex; justify-content: center;'
-    # top = f'<span style="{center}color:white;background-color:red;font-size:16pt;">The top banner</span>'
-    # bot = 'The bottom banner'
-    dag = PanelDag(doc=DOC, site='Example', title='Banner')  # , banner=(top, bot))
+    logo_dir = Path(__file__).parent
+
+    dag = PanelDag(
+        doc=DOC,
+        site='Example',
+        title='Banner',
+        logo=str(logo_dir / 'logo_horizontal_dark_theme.png'),
+        favicon=str(logo_dir / 'py.svg'),
+    )
 
     c = Choose()
     b = BarchartWidget()

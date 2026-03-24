@@ -1,10 +1,10 @@
-import holoviews as hv
-import panel as pn
-import pandas as pd
 import random
 
-from sier2 import Block, BlockValidateError
+import holoviews as hv
+import pandas as pd
+import panel as pn
 import param
+from sier2 import Block, BlockValidateError
 
 MAX_HEIGHT = 10
 
@@ -46,7 +46,9 @@ class QueryWidget(Query):
     MIN = 1
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs, author={'name': 'Arthur Author', 'email': 'arthur.author@example.com'})
+        super().__init__(
+            *args, **kwargs, author={'name': 'Arthur Author', 'email': 'arthur.author@example.com'}
+        )
 
     def execute(self):
         """This is only here to demonstrate that execute() is called."""

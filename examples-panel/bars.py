@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import holoviews as hv
 import panel as pn
 from _panel_widgets import BarchartWidget, QueryWidget
@@ -29,11 +31,13 @@ def main():
 
     title = 'Random weighted barcharts'
 
+    logo_path = Path(__file__).parent / 'py.svg'
+
     dag = PanelDag(
         doc=DOC,
         site='Example',
         title=title,
-        logo='py.svg',
+        logo=str(logo_path),
         author={'name': 'Arthur Author', 'email': 'arthur.author@example.com'},
     )
     dag.connect(q, b, Connection('out_df', 'in_df'), Connection('out_max_height', 'in_max_height'))
