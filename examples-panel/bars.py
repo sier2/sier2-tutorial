@@ -12,6 +12,8 @@ DOC = """Generate barcharts
 This dag contains an input block that takes a number and generates a `pandas` dataframe containing random numbers in the range 1 .. number.
 
 The dataframe is then passed to *two* instances of a **barchart** block, one displaying the dataframe, the other displaying the "inverse" of the dataframe.
+
+This app can be started with "python bars.py" or "python -m panel serve bars.py".
 """
 
 QUERY_DOC = """Generate random numbers with maximum specified by the slider."""
@@ -22,7 +24,7 @@ hv.extension('bokeh', inline=True)
 pn.extension('floatpanel', nthreads=NTHREADS, loading_spinner='bar', inline=True)
 
 
-def main():
+def build_dag():
     # Build a dag.
     #
     q = QueryWidget(name='Run a query', continue_label='Draw chart', doc=QUERY_DOC)
@@ -54,7 +56,7 @@ def main():
     # with open(p, 'w', encoding='utf-8') as f:
     #     json.dump(dump, f, indent=2)
 
-    dag.show()
+    # dag.show()
 
     # # Build a panel app.
     # #
@@ -69,6 +71,13 @@ def main():
     # template.sidebar.objects = [pn.panel(dag.hv_graph().opts(invert_yaxis=True, xaxis=None, yaxis=None))]
     # template.show(threaded=False)
 
+    return dag
+
+
+dag = build_dag()
+print(f'{__name__=}')
 
 if __name__ == '__main__':
-    main()
+    dag.show()
+else:
+    dag.servable()
