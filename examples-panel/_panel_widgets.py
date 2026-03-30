@@ -21,8 +21,10 @@ def _make_df(max_height=MAX_HEIGHT) -> pd.DataFrame:
 class Query(Block):
     """A plain Python block that accepts a "query" (a maximum count value) and outputs a dataframe."""
 
+    wait_for_input = True
+
     def __init__(self, *args, author=None, **kwargs):
-        super().__init__(*args, wait_for_input=True, author=author, **kwargs)
+        super().__init__(*args, author=author, **kwargs)
 
     out_max_height = param.Number(doc='The maximum value. All values are less than this')
     out_df = param.DataFrame(
@@ -43,6 +45,7 @@ class QueryWidget(Query):
     Moving the slider causes `Query.query()` to be called with the value of the slider.
     """
 
+    continue_label = 'Draw chart'
     MIN = 1
 
     def __init__(self, *args, **kwargs):
@@ -51,8 +54,6 @@ class QueryWidget(Query):
         )
 
     def execute(self):
-        """This is only here to demonstrate that execute() is called."""
-
         print(f'execute() in {self}')
         if self.max_height == self.MIN:
             raise BlockValidateError(

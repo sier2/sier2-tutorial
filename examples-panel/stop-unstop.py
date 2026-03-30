@@ -112,7 +112,7 @@ def main():
         collapsed_sidebar=True,
     )
 
-    q = QueryWidget(name='Specify timer interval', wait_for_input=True)
+    q = QueryWidget(name='Specify timer interval')
     b1 = ProgressWidget(name='Progress1')
     b2 = ProgressWidget(name='Progress2')
 
