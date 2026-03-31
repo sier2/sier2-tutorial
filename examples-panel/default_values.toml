@@ -1,0 +1,11 @@
+[Demo-Values-Block]
+in_int = 86
+in_num = 2.718
+in_str = 'This is a string'
+in_bool = true
+in_list = ['red', 'green', 'blue']
+in_color = 'turquoise'
+in_tuple = [12, 'three', 4.5]
+in_dt = 2022-12-01 12:34:56
+in_dtz = 2022-12-01 12:34:56Z
+in_dtr = [2022-01-01 12:34:56Z, 2022-12-01 12:34:56Z]

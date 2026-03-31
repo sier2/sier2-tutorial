@@ -83,6 +83,11 @@ default
 Allow ``PanelDag`` to build a default panel, and incorporate it into our own
 custom panel. THe same block is used an an input block and execution block.
 
+default_values
+^^^^^^^^^^^^^^
+
+Loading default block values from a TOML file.
+
 display
 ^^^^^^^
 

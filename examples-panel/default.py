@@ -4,10 +4,10 @@
 # Also, that a single block can be used as an input block and not an input block.
 #
 
+import panel as pn
+import param
 from sier2 import Block, Connection
 from sier2.panel import PanelDag
-import param
-import panel as pn
 
 
 class Data(Block):
