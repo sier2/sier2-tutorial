@@ -1,12 +1,11 @@
-from tutorial_2a import ExternalInput, SingleCase, CharDistribution
-from sier2 import Block, Connection, Connections
-from sier2.panel import PanelDag
+from collections import Counter
 
-import param
 import holoviews as hv
 import panel as pn
-
-from collections import Counter
+import param
+from sier2 import Block, Connection, Connections
+from sier2.panel import PanelDag
+from tutorial_2a import CharDistribution, SingleCase
 
 hv.extension('bokeh', inline=True)
 pn.extension(inline=True)
