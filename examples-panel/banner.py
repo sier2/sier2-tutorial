@@ -25,7 +25,7 @@ def _banner_text(text, fgcolor='white', bgcolor='red'):
 class Choose(Block):
     """Choose the number of bars."""
 
-    in_n = param.Integer(label='Number of bars', allow_None=False, default=10)
+    in_n = param.Integer(label='Number of bars', allow_None=False, default=10, bounds=(4, None))
     in_title = param.String(label='title', default='Bar chart', allow_None=False)
     out_title = param.String(label='title')
     out_df = param.DataFrame(label='Bar values')
@@ -33,6 +33,7 @@ class Choose(Block):
     def __init__(self):
         super().__init__(
             wait_for_input=True,
+            doc='Select "Continue" to draw a bar chart with the specified number of bars',
             banners=(_banner_text('The top banner'), _banner_text('The bottom banner')),
         )
 

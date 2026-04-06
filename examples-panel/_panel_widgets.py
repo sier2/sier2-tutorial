@@ -129,6 +129,7 @@ class BarchartWidget(Block):
             bars = hv.Bars(df, 'Colors', 'Counts').opts(
                 title=f'Inverted={self.inverted} {self.in_title}',
                 color='Colors',
+                xrotation=0 if len(self.in_df)<11 else 90,
                 ylim=(0, height),
                 show_grid=True,
                 max_width=800,

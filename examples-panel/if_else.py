@@ -9,31 +9,14 @@
 #
 # This works by only setting the out params connected to the appropriate block.
 #
-# However, what is actually happening is that all of the "next" blocks are being executed,
-# no matter what. This appears to be caused in
-# _panel.py line 396 (inside def on_continue(_event)):
-#
-#   w.param.trigger(*w._block_out_params)
-#
-# Because all of the out params are being triggered, both sets of connections are being
-# triggered, so both block paths are being executed.
-#
-# Removing that line seems to fix the problem, but who knows what else that changes?
-# The comment above that line indicates that we want to do this, but this may be a hangover
-# from an earlier version that worked differently. I feel we *don't* want to do this,
-# because it breaks this block.
-#
 
-from sier2 import Block, Dag, Connection
-from sier2.panel import PanelDag
-import param
-
-import panel as pn
-import holoviews as hv
-
-from datetime import datetime
-import sys
 import time
+from datetime import datetime
+
+import holoviews as hv
+import param
+from sier2 import Block, Connection, Dag
+from sier2.panel import PanelDag
 
 hv.extension('bokeh', inline=True)
 
@@ -76,7 +59,7 @@ class IfElseBlock(Block):
             print('----')
 
 
-def main():
+def main_connect():
     # Run with "python panel-ifelse.py c" to use CLI, without "c" to use Panel
     #
     use_panel = True  # len(sys.argv)<1 or sys.argv[1]=='p'
@@ -116,5 +99,55 @@ def main():
         dag.execute_after_input(b)
 
 
+def main_cxns():
+    # Run with "python panel-ifelse.py c" to use CLI, without "c" to use Panel
+    #
+    use_panel = True  # len(sys.argv)<1 or sys.argv[1]=='p'
+
+    # Create a starting (head) block, and a list of successive blocks.
+    # The last one in the list is the tail block.
+    #
+    head = IfElseBlock(name='head', pause=True)
+    names = [f'IEB{i}' for i in range(1, 4)]
+    names[-1] = 'tail'
+    blocks = [IfElseBlock(name=name) for name in names]
+
+    cxns = []
+
+    for b1, b2 in zip(blocks, blocks[1:]):
+        # dag.connect(b1, b2, Connection('out_next_if', 'in_if'), Connection('out_next_dt', 'in_dt'))
+        cxns.append((b1.param.out_next_if, b2.param.in_if))
+        cxns.append((b1.param.out_next_dt, b2.param.in_dt))
+
+    # Connect the head block to the "next" block and the tail block.
+    #
+    # dag.connect(
+    #     head, blocks[0], Connection('out_next_if', 'in_if'), Connection('out_next_dt', 'in_dt')
+    # )
+    # dag.connect(
+    #     head, blocks[-1], Connection('out_tail_if', 'in_if'), Connection('out_tail_dt', 'in_dt')
+    # )
+    cxns.append((head.param.out_next_if, blocks[0].param.in_if))
+    cxns.append((head.param.out_next_dt, blocks[0].param.in_dt))
+    cxns.append((head.param.out_tail_if, blocks[-1].param.in_if))
+    cxns.append((head.param.out_tail_dt, blocks[-1].param.in_dt))
+
+    if use_panel:
+        dag = PanelDag(doc='a dag', site='My site', title='if-else')
+    else:
+        dag = Dag(title='If-Else', doc='If-Else demo')
+
+    dag.connections(cxns)
+
+    if use_panel:
+        print('Show')
+        dag.show()
+    else:
+        print('Execute')
+        b = dag.execute()
+        head.in_if = True
+        dag.execute_after_input(b)
+
+
 if __name__ == '__main__':
-    main()
+    main_cxns()
