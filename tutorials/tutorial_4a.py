@@ -1,10 +1,9 @@
-from tutorial_2a import ExternalInput, SingleCase, CharDistribution
-from sier2 import Block, Connection, Connections
-from sier2.panel import PanelDag
-
-import param
 import holoviews as hv
 import panel as pn
+import param
+from sier2 import Block
+from sier2.panel import PanelDag
+from tutorial_2a import CharDistribution, ExternalInput, SingleCase
 
 hv.extension('bokeh', inline=True)
 pn.extension(inline=True)
@@ -61,14 +60,16 @@ if __name__ == '__main__':
     ld = CharDistribution()
     display = DisplayCountBars()
 
-    dag = PanelDag(doc='Count character distribution', title='tutorial_4a')
-    dag.connect(
-        external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper')
+    dag = PanelDag(
+        [
+            (external_input.param.out_text, lc.param.in_text),
+            (external_input.param.out_upper, lc.param.in_upper),
+            (lc.param.out_text, ld.param.in_text),
+            (ld.param.out_len, display.param.in_len),
+            (ld.param.out_counter, display.param.in_counter),
+        ],
+        doc='Count character distribution',
+        title='tutorial_4a',
     )
-    dag.connect(lc, ld, Connection('out_text', 'in_text'))
-
-    # Use ``Connections`` for a more succint mapping.
-    #
-    dag.connect(ld, display, Connections({'out_len': 'in_len', 'out_counter': 'in_counter'}))
 
     dag.show()

@@ -4,5 +4,6 @@ line-length = 100
 extend-select = ["I"]
 
 [format]
+preview = true
 quote-style = "preserve"
 line-ending = "lf"

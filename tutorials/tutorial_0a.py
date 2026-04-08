@@ -1,5 +1,5 @@
-from sier2 import Block
 import param
+from sier2 import Block
 
 
 class AddOne(Block):

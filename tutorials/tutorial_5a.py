@@ -3,9 +3,8 @@ from collections import Counter
 import holoviews as hv
 import panel as pn
 import param
-from sier2 import Block, Connection, Connections
+from sier2 import Block
 from sier2.panel import PanelDag
-from tutorial_2a import CharDistribution, SingleCase
 
 hv.extension('bokeh', inline=True)
 pn.extension(inline=True)
@@ -19,28 +18,22 @@ class ExternalInput(Block):
         objects={'Upper': 'U', 'Lower': 'L'}, label='Case', doc='U for upper case, L for lower case'
     )
     out_text = param.String(doc='Non-empty text')
-    # out_upper = param.Boolean(doc='Upper if True, lower if False')
     out_case = param.Selector(
         objects={'Upper': 'U', 'Lower': 'L'}, label='Case', doc='U for upper case, L for lower case'
     )
 
-    def __init__(self):
-        super().__init__(
-            name='User input',
-            doc='Enter a non-blank string.',
-            wait_for_input=True,
-            continue_label='Count',
-            display_options={
-                'parameters': ['in_text', 'in_case'],
-                'widgets': {
-                    'in_case': {
-                        'widget_type': pn.widgets.RadioBoxGroup,
-                        'inline': True,
-                        'name': 'Select a case',
-                    }
-                },
-            },
-        )
+    wait_for_input = True
+    continue_label = 'Count'
+    display_options = {
+        'parameters': ['in_text', 'in_case'],
+        'widgets': {
+            'in_case': {
+                'widget_type': pn.widgets.RadioBoxGroup,
+                'inline': True,
+                'name': 'Select a case',
+            }
+        },
+    }
 
     @param.depends('in_text', watch=True)
     def _check_valid(self):
@@ -141,7 +134,7 @@ class DisplayCountBars(Block):
 
 
 if __name__ == '__main__':
-    external_input = ExternalInput()
+    external_input = ExternalInput(name='User input', doc='Enter a non-blank string.')
     lc = SingleCase()
     ld = CharDistribution()
     display = DisplayCountBars()
@@ -152,10 +145,17 @@ and counts the number of occurences of each character in the string.
 
 The result is displayed as a _HoloViews_ bar chart.'''
 
-    dag = PanelDag(title='Character counts', doc=doc, logo='logo.png')
-    dag.connect(external_input, lc, Connections({'out_text': 'in_text', 'out_case': 'in_case'}))
-    dag.connect(lc, ld, Connection('out_text', 'in_text'))
-
-    dag.connect(ld, display, Connections({'out_len': 'in_len', 'out_counter': 'in_counter'}))
+    dag = PanelDag(
+        [
+            (external_input.param.out_text, lc.param.in_text),
+            (external_input.param.out_case, lc.param.in_case),
+            (lc.param.out_text, ld.param.in_text),
+            (ld.param.out_len, display.param.in_len),
+            (ld.param.out_counter, display.param.in_counter),
+        ],
+        title='Character counts',
+        doc=doc,
+        logo='logo.png',
+    )
 
     dag.show()

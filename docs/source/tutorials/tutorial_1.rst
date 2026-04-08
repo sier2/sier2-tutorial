@@ -35,7 +35,9 @@ How do we know which are inputs and which are outputs?
 Inputs start with in\_, outputs start with out\_.
 
 ``ExternalInput`` has two input params ``in_text`` and ``in_upper``, and two
-matching output params ``out_text`` and ``out_upper``.
+matching output params ``out_text`` and ``out_upper``. This block is an input
+block, meaning that dag execution will stop to wait for input. (If the block
+has a ``prepare()`` method, that will be called before the dag stops.)
 
 .. literalinclude :: /../../tutorials/tutorial_1a.py
    :language: python
@@ -62,10 +64,9 @@ output params:
    :pyobject: CharDistribution
 
 We create an instance of each block, then create a ``Dag`` and
-connect the two blocks. The ``Dag.connect()`` method connects source blocks
-to destination blocks. The ``Connection()`` arguments indicate
-how the blocks are connected; each ``Connection()`` connects an output param
-in one block to an input param in another block.
+connect the two blocks. Connections between block params are made by passing
+a list of param pairs to the new dag; each pair of params connects an output
+param in one block to an input param in another block.
 
 The ``ExternalInput`` block will take the inputs to ``in_text``.
 Typically, this would take input from a user, but for now, we'll just
@@ -73,9 +74,17 @@ provide some text by setting the ``in_text`` param of ``external_input``
 before we execute the dag.
 
 Finally, we call ``dag.execute()`` to run the dag and see the outputs.
-The dag will sort the blocks according to their connection; the ``ExternalInput``
+The dag will order the blocks according to their connections; the ``ExternalInput``
 output params are connected to the ``SingleCase`` input params, so
 ``ExternalInput`` is run before ``SingleCase``.
+
+Because the ``ExternalInput`` block is an input block, execution will stop
+before calling ``execute()``; the block that execution stopped at is returned.
+This is where we provide external input. Typically, this would take input from a
+user, but for now, we'll just provide some text by setting the ``in_text`` param
+of ``external_input``. Then we call ``execute_after_input()`` using the
+returned input block to resume execution at the correct place.
+
 
 .. literalinclude :: /../../tutorials/tutorial_1a.py
    :language: python

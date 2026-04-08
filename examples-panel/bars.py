@@ -3,7 +3,6 @@ from pathlib import Path
 import holoviews as hv
 import panel as pn
 from _panel_widgets import BarchartWidget, QueryWidget
-from sier2 import Connection
 from sier2.panel import PanelDag
 
 NTHREADS = 2
@@ -35,15 +34,16 @@ def build_dag():
 
     logo_path = Path(__file__).parent / 'py.svg'
 
-    dag = PanelDag(
+    dag = PanelDag([
+        (q.param.out_df, b.param.in_df),
+        (q.param.out_df, bi.param.in_df),
+    ],
         doc=DOC,
         site='Example',
         title=title,
         logo=str(logo_path),
         author={'name': 'Arthur Author', 'email': 'arthur.author@example.com'},
     )
-    dag.connect(q, b, Connection('out_df', 'in_df'), Connection('out_max_height', 'in_max_height'))
-    dag.connect(q, bi, Connection('out_df', 'in_df'), Connection('out_max_height', 'in_max_height'))
 
     # # Dump the dag and add panel information.
     # #

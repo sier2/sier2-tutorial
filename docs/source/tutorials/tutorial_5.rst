@@ -29,9 +29,16 @@ parameter to ``False``.
 Block names
 ^^^^^^^^^^^
 
-Block names are derived from the name of the class. In the ``__init__()``
+By default, Block names are derived from the name of the class. In the ``__init__()``
 method of your block, call ``super().__init__()`` and set the ``name``
-parameter.
+parameter. If you don't define an ``__init__()``, you can pass the arguments
+when you create the block instance.
+
+Short cuts
+^^^^^^^^^^
+
+The ``ExternalInput`` block uses the ``wait_for_input``, ``continue_label``, and
+``display_options`` class-level names to avoid having to define an ``__init__()``.
 
 Widget labels and help
 ^^^^^^^^^^^^^^^^^^^^^^

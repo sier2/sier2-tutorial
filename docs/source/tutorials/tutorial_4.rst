@@ -12,8 +12,9 @@ As in the previous tutorial, we'll import the first three blocks as-is.
    :end-before: class
 
 We create a new block called ``DisplayCountBars`` that contains a method
-called ``_panel__()``. When ``panel`` wants to display an object,
+called ``_panel__()``. When ``Panel`` wants to display an object,
 this is the method that it calls to get something to display.
+(``PanelDag`` provides a default implementation if your block doesn't have one.)
 
 The ``execute()`` method builds a barchart from the inputs and inserts it
 into a HoloViews pane.

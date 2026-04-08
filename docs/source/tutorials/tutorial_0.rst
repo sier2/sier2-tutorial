@@ -43,8 +43,8 @@ the output param.
    :language: python
    :linenos:
    :dedent:
-   :start-after: #1
-   :end-before: #-
+   :start-after: # 1
+   :end-before: # -
 
 Blocks provide a short cut call that does the same thing. A ``Block`` instance
 is callable: calling the instance with keyword parameters corresponding
@@ -55,8 +55,8 @@ a dictionary containing the output params and their values.
    :language: python
    :linenos:
    :dedent:
-   :start-after: #2
-   :end-before: #-
+   :start-after: # 2
+   :end-before: # -
 
 Block.prepare()
 ---------------
@@ -77,8 +77,8 @@ for user input.
    :language: python
    :linenos:
    :dedent:
-   :start-after: #4
-   :end-before: #-
+   :start-after: # 4
+   :end-before: # -
 
 Param types
 -----------

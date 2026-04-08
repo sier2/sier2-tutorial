@@ -9,7 +9,7 @@ Examples
 See the ``examples`` directory in the source code for examples.
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
     :caption: Tutorials:
 
     tutorials/tutorials

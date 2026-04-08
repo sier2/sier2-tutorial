@@ -1,10 +1,9 @@
-#
-
 # Tutorial that builds a character counting dag.
 #
-from sier2 import Block, Dag, Connection
-import param
 from collections import Counter
+
+import param
+from sier2 import Block, Dag
 
 
 class ExternalInput(Block):
@@ -14,6 +13,9 @@ class ExternalInput(Block):
     in_upper = param.Boolean(label='Upper or lower case', doc='Upper if True, lower if False')
     out_text = param.String(label='Output text', doc='Output text')
     out_upper = param.Boolean()
+
+    def __init__(self):
+        super().__init__(wait_for_input=True)
 
     def execute(self):
         self.out_text = self.in_text
@@ -63,15 +65,21 @@ if __name__ == '__main__':
     lc = SingleCase()
     ld = CharDistribution()
 
-    dag = Dag(title='tutorial_1a', doc='Count character distribution')
-    dag.connect(
-        external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper')
+    dag = Dag(
+        [
+            (external_input.param.out_text, lc.param.in_text),
+            (external_input.param.out_upper, lc.param.in_upper),
+            (lc.param.out_text, ld.param.in_text),
+        ],
+        title='tutorial_1a',
+        doc='Count character distribution',
     )
-    dag.connect(lc, ld, Connection('out_text', 'in_text'))
+
+    inp = dag.execute()
 
     external_input.in_text = 'The CAT sat on the MAT.'
     external_input.in_upper = False
-    dag.execute()
+    dag.execute_after_input(inp)
 
     print('----')
     print(f'Input length: {ld.out_len}')

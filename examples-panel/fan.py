@@ -7,7 +7,7 @@ import random
 import time
 
 import param
-from sier2 import Block, Connection
+from sier2 import Block
 from sier2.panel import PanelDag
 
 
@@ -28,22 +28,7 @@ class PassBlock(Block):
         self.out_b = self.in_b
 
 
-def make_fan_in_dag(title):
-    dag = PanelDag(title=title, doc='doc')
-    c = Connection('out_b', 'in_b')
-    head = PassBlock(name='head', wait_for_input=True)
-    tail = PassBlock(name='tail')
-    names = [f'Block-{i:02}' for i in range(8)]
-    random.shuffle(names)
-    for name in names:
-        b = PassBlock(name=name)
-        dag.connect(head, b, c)
-        dag.connect(b, tail, c)
-
-    return dag
-
-
-def make_fan_in_dag_cxns(title):
+def make_fan(title):
     head = PassBlock(name='head', wait_for_input=True)
     tail = PassBlock(name='tail')
 
@@ -56,14 +41,13 @@ def make_fan_in_dag_cxns(title):
         cxns.append((head.param.out_b, b.param.in_b))
         cxns.append((b.param.out_b, tail.param.in_b))
 
-    dag = PanelDag(title=title, doc='doc')
-    dag.connections(cxns)
+    dag = PanelDag(cxns, title=title, doc='doc')
 
     return dag
 
 
 def main():
-    dag = make_fan_in_dag_cxns('fan in')
+    dag = make_fan('fan in')
     dag.show()
 
 

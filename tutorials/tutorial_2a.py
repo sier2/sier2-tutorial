@@ -1,10 +1,9 @@
-#
-
 # Tutorial that builds a character counting dag with user input.
 #
-from sier2 import Block, Dag, Connection, Connections
-import param
 from collections import Counter
+
+import param
+from sier2 import Block, Dag
 
 
 class ExternalInput(Block):
@@ -15,8 +14,7 @@ class ExternalInput(Block):
     out_text = param.String()
     out_upper = param.Boolean()
 
-    def __init__(self):
-        super().__init__(wait_for_input=True)
+    wait_for_input = True
 
     def execute(self):
         self.out_text = self.in_text
@@ -79,15 +77,17 @@ if __name__ == '__main__':
     ld = CharDistribution()
     display = Display()
 
-    dag = Dag(title='tutorial_2a', doc='Count character distribution')
-    dag.connect(
-        external_input, lc, Connection('out_text', 'in_text'), Connection('out_upper', 'in_upper')
+    dag = Dag(
+        [
+            (external_input.param.out_text, lc.param.in_text),
+            (external_input.param.out_upper, lc.param.in_upper),
+            (lc.param.out_text, ld.param.in_text),
+            (ld.param.out_len, display.param.in_len),
+            (ld.param.out_counter, display.param.in_counter),
+        ],
+        title='tutorial_2a',
+        doc='Count character distribution',
     )
-    dag.connect(lc, ld, Connection('out_text', 'in_text'))
-
-    # Use ``Connections`` for a more succint mapping.
-    #
-    dag.connect(ld, display, Connections({'out_len': 'in_len', 'out_counter': 'in_counter'}))
 
     # b is the block that the dag paused at.
     #
