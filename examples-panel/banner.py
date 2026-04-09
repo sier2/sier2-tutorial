@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import random
 from pathlib import Path
 
@@ -5,7 +7,7 @@ import holoviews as hv
 import pandas as pd
 import param
 from _panel_widgets import BarchartWidget
-from sier2 import Block, Connections
+from sier2 import Block
 from sier2.panel import PanelDag
 
 DOC = 'This dag does nothing in particular, it just shows off banners a logo, and a favicon.'
@@ -14,7 +16,7 @@ hv.extension('bokeh', inline=True)
 
 
 def color():
-    c = lambda: random.randint(1, 255)  # noqa: E731
+    c = lambda: random.randint(1, 255)
     return f'#{c():02x}{c():02x}{c():02x}'
 
 
@@ -47,7 +49,11 @@ class Choose(Block):
 def main():
     logo_dir = Path(__file__).parent
 
+    c = Choose()
+    b = BarchartWidget()
+
     dag = PanelDag(
+        [(c.param.out_df, b.param.in_df), (c.param.out_title, b.param.in_title)],
         doc=DOC,
         site='Example',
         title='Banner',
@@ -55,9 +61,6 @@ def main():
         favicon=str(logo_dir / 'py.svg'),
     )
 
-    c = Choose()
-    b = BarchartWidget()
-    dag.connect(c, b, Connections({'out_df': 'in_df', 'out_title': 'in_title'}))
     dag.show()
 
 

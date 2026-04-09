@@ -1,10 +1,11 @@
+#!/usr/bin/env python
+
 # Demonstrate that "default" labels do not have the "in_" prefix.
 #
 
-from sier2 import Block, Connection
-from sier2.panel import PanelDag
-
 import param
+from sier2 import Block
+from sier2.panel import PanelDag
 
 
 class Inputs(Block):
@@ -52,6 +53,12 @@ class Null(Block):
 
 
 if __name__ == '__main__':
-    dag = PanelDag(title='Label demo', doc='Demonstrate Panel labels with "in_"')
-    dag.connect(Inputs(), Null(), Connection('out_string', 'in_dummy'))
+    ii = Inputs()
+    nn = Null()
+    dag = PanelDag(
+        [(ii.param.out_string, nn.param.in_dummy)],
+        title='Label demo',
+        doc='Demonstrate Panel labels with "in_"',
+    )
+    # dag.connect(Inputs(), Null(), Connection('out_string', 'in_dummy'))
     dag.show()

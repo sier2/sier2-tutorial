@@ -1,5 +1,7 @@
-from sier2 import Block, Dag, Connection
+#!/usr/bin/env python
+
 import param
+from sier2 import Block, Dag
 
 # Demonstrate an if-else branch.
 #
@@ -56,10 +58,13 @@ is_even = Notify(name='EvenBlock', msg='even')
 is_odd = Notify(name='OddBlock', msg='odd')
 
 dag = Dag(
-    doc='Example: run a branch depending on a value', title='run a branch depending on a value'
+    [
+        (if_else.param.out_even, is_even.param.in_value),
+        (if_else.param.out_odd, is_odd.param.in_value),
+    ],
+    doc='Example: run a branch depending on a value',
+    title='run a branch depending on a value',
 )
-dag.connect(if_else, is_even, Connection('out_even', 'in_value'))
-dag.connect(if_else, is_odd, Connection('out_odd', 'in_value'))
 
 input_block = dag.execute()
 assert input_block is if_else

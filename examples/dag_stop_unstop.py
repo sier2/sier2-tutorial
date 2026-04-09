@@ -1,12 +1,13 @@
-#
+#!/usr/bin/env python
 
 # Demonstrate displaying a dag.
 #
 
-from sier2 import Block, Dag, Connection
-import param
 import threading
 import time
+
+import param
+from sier2 import Block, Dag
 
 
 class Sleeper(Block):
@@ -44,7 +45,7 @@ class Sleeper(Block):
 def runner(dag: Dag, sleep_time: int):
     print('Starting ...')
     s0: Sleeper = dag.block_by_name('s0')
-    s0.out_time = sleep_time
+    s0.in_time = sleep_time
     dag.execute()
 
 
@@ -62,10 +63,15 @@ def main():
     s2 = Sleeper(name='s2', event=event)
     s3 = Sleeper(name='s3')
 
-    dag = Dag(doc='Example: stopping and unstopping a dag', title='stopping and unstoppping a dag')
-    dag.connect(s0, s1, Connection('out_time', 'in_time'))
-    dag.connect(s1, s2, Connection('out_time', 'in_time'))
-    dag.connect(s2, s3, Connection('out_time', 'in_time'))
+    dag = Dag(
+        [
+            (s0.param.out_time, s1.param.in_time),
+            (s1.param.out_time, s2.param.in_time),
+            (s2.param.out_time, s3.param.in_time),
+        ],
+        doc='Example: stopping and unstopping a dag',
+        title='stopping and unstoppping a dag',
+    )
 
     print('Start the dag in its own thread.')
     t = threading.Thread(target=runner, args=(dag, 2))

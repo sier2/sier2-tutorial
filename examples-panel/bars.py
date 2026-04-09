@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from pathlib import Path
 
 import holoviews as hv
@@ -34,10 +36,11 @@ def build_dag():
 
     logo_path = Path(__file__).parent / 'py.svg'
 
-    dag = PanelDag([
-        (q.param.out_df, b.param.in_df),
-        (q.param.out_df, bi.param.in_df),
-    ],
+    dag = PanelDag(
+        [
+            (q.param.out_df, b.param.in_df),
+            (q.param.out_df, bi.param.in_df),
+        ],
         doc=DOC,
         site='Example',
         title=title,

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 from pathlib import Path
 
@@ -66,8 +68,10 @@ if __name__ == '__main__':
     r = Result()
 
     dag = PanelDag(
-        site='Defaults', title='Default Values', doc='Demonstrate loading default values'
+        [(t.param.out_str, r.param.in_str)],
+        site='Defaults',
+        title='Default Values',
+        doc='Demonstrate loading default values',
     )
-    dag.build([(t.param.out_str, r.param.in_str)])
 
     dag.show()

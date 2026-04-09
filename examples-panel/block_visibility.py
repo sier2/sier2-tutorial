@@ -1,13 +1,15 @@
+#!/usr/bin/env python
+
 # A Panel dag containing a block with no GUI.
 #
 
-from sier2 import Block, Dag, Connection
-from sier2.panel import PanelDag
-import param
+import random
 
 import holoviews as hv
 import panel as pn
-import random
+import param
+from sier2 import Block
+from sier2.panel import PanelDag
 
 hv.extension('bokeh')
 
@@ -65,8 +67,14 @@ if __name__ == '__main__':
     modify_block = Modify(name='Negate', visible=False)
     chart_block = Chart(name='Draw modified numbers')
 
-    dag = PanelDag(doc='Contains an invisible block', site='Example', title='Block visibility')
-    dag.connect(input_block, modify_block, Connection('out_number', 'in_number'))
-    dag.connect(modify_block, chart_block, Connection('out_number', 'in_number'))
+    dag = PanelDag(
+        [
+            (input_block.param.out_number, modify_block.param.in_number),
+            (modify_block.param.out_number, chart_block.param.in_number),
+        ],
+        doc='Contains an invisible block',
+        site='Example',
+        title='Block visibility',
+    )
 
     dag.show()

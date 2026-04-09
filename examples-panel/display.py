@@ -1,15 +1,15 @@
-#
+#!/usr/bin/env python
 
 # Demonstrate different display options for blocks.
 #
 
-from sier2 import Block, Dag, Connection
-from sier2.panel import PanelDag
-import param
-import panel as pn
+import random
 
 import pandas as pd
-import random
+import panel as pn
+import param
+from sier2 import Block
+from sier2.panel import PanelDag
 
 pn.extension('tabulator', inline=True)
 
@@ -56,8 +56,8 @@ class ColumnSelector(Block):
         self.is_input_valid_ = True
 
     def execute(self):
-        new_cols = self.columns  # self.param.columns.objects
-
+        # Carry forward the selected columns, or all columns if none were selcted.
+        #
         self.out_df = self.in_df[self.columns] if self.columns else self.in_df
 
 
@@ -107,7 +107,8 @@ c5 = ColumnSelector(
         'widgets': {
             'columns': {
                 'widget_type': pn.widgets.CheckButtonGroup,
-                'button_type': 'default',
+                'button_type': 'primary',
+                'button_style': 'outline',
                 'description': 'Select some columns',
             }
         }
@@ -126,14 +127,18 @@ displays differently depending on how `display_options` is defined.
 Start by selecting several columns, then select fewer each time. The selected
 columns carry forward to the next block.
 '''
-dag = PanelDag(title='Display', doc=dagdoc)
-c = Connection('out_df', 'in_df')
-dag.connect(ldf, c0, c)
-dag.connect(c0, c1, c)
-dag.connect(c1, c2, c)
-dag.connect(c2, c3, c)
-dag.connect(c3, c4, c)
-dag.connect(c4, c5, c)
-dag.connect(c5, d, c)
+dag = PanelDag(
+    [
+        (ldf.param.out_df, c0.param.in_df),
+        (c0.param.out_df, c1.param.in_df),
+        (c1.param.out_df, c2.param.in_df),
+        (c2.param.out_df, c3.param.in_df),
+        (c3.param.out_df, c4.param.in_df),
+        (c4.param.out_df, c5.param.in_df),
+        (c5.param.out_df, d.param.in_df),
+    ],
+    title='Display',
+    doc=dagdoc,
+)
 
 dag.show()

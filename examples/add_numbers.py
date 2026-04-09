@@ -1,4 +1,4 @@
-#
+#!/usr/bin/env python
 
 # This demonstrates that two blocks can provide inputs to a single block.
 #
@@ -11,8 +11,8 @@
 
 import random
 
-from sier2 import Block, Dag, Connection
 import param
+from sier2 import Block, Dag
 
 
 class NumberBlock(Block):
@@ -59,9 +59,14 @@ def main():
     nbb = NumberBlock(name='source-of-b')
     add_block = AddBlock()
 
-    dag = Dag(doc='Example: add numbers', title='add numbers')
-    dag.connect(nba, add_block, Connection('out_n', 'in_a'))
-    dag.connect(nbb, add_block, Connection('out_n', 'in_b'))
+    dag = Dag(
+        [
+            (nba.param.out_n, add_block.param.in_a),
+            (nbb.param.out_n, add_block.param.in_b),
+        ],
+        doc='Example: add numbers',
+        title='add numbers',
+    )
 
     print(f'\nSet block {nba}')
     setup(nba)

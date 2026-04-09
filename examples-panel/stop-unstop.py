@@ -1,15 +1,13 @@
+#!/usr/bin/env python
+
+import ctypes
+import time
+
 import holoviews as hv
 import panel as pn
-from panel.viewable import Viewer
-import random
-import pandas as pd
-import threading
-import time
-import ctypes
-
-from sier2 import Block, Dag, Connection
-from sier2.panel import PanelDag
 import param
+from sier2 import Block
+from sier2.panel import PanelDag
 
 NTHREADS = 2
 
@@ -44,6 +42,8 @@ class QueryWidget(Block):
 
     in_timer = param.Integer(default=5, bounds=(1, 10))
     out_timer = param.Integer(default=5, bounds=(1, 10))
+
+    wait_for_input = True
 
     def execute(self):
         self.out_timer = self.in_timer
@@ -102,23 +102,15 @@ class ProgressWidget(Block):
 
 
 def main():
-    title = 'Stop'
-
-    template = pn.template.MaterialTemplate(
-        title=title,
-        theme='dark',
-        site='PoC ',
-        sidebar=pn.Column('## Blocks'),
-        collapsed_sidebar=True,
-    )
-
     q = QueryWidget(name='Specify timer interval')
     b1 = ProgressWidget(name='Progress1')
     b2 = ProgressWidget(name='Progress2')
 
-    dag = PanelDag(title='Stop / Unstop', doc=DAG_DOC)
-    dag.connect(q, b1, Connection('out_timer', 'in_timer'))
-    dag.connect(b1, b2, Connection('out_timer', 'in_timer'))
+    dag = PanelDag(
+        [(q.param.out_timer, b1.param.in_timer), (b1.param.out_timer, b2.param.in_timer)],
+        title='Stop / Unstop',
+        doc=DAG_DOC,
+    )
 
     dag.show()
 

@@ -1,9 +1,9 @@
-#
+#!/usr/bin/env python
 
 # Demonstrate input validation in a block executing in a dag.
 #
-from sier2 import Block, BlockValidateError, Dag, Connection
 import param
+from sier2 import Block, BlockValidateError, Dag
 
 
 class Prime(Block):
@@ -35,8 +35,7 @@ class Validate(Block):
 def main():
     p = Prime()
     v = Validate()
-    dag = Dag(doc='validate-dag', title='Validate')
-    dag.connect(p, v, Connection('out_p', 'in_p'))
+    dag = Dag([(p.param.out_p, v.param.in_p)], doc='validate-dag', title='Validate')
 
     dag.execute()
 

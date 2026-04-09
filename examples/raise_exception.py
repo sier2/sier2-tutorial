@@ -1,5 +1,7 @@
-from sier2 import Block, BlockError, Dag, Connection
+#!/usr/bin/env python
+
 import param
+from sier2 import Block, BlockError, Dag
 
 
 class OneOut(Block):
@@ -25,8 +27,11 @@ class OneIn(Block):
 
 oo = OneOut()
 oi = OneIn()
-dag = Dag(doc='Example: raise an exception in execute()', title='raise an exception')
-dag.connect(oo, oi, Connection('out_o', 'in_o'))
+dag = Dag(
+    [(oo.param.out_o, oi.param.in_o)],
+    doc='Example: raise an exception in execute()',
+    title='raise an exception',
+)
 
 try:
     oo.in_o = 'plugh'
@@ -35,11 +40,12 @@ except BlockError as e:
     print(f'\nCaught expected Block exception {e}')
     print(f'Actual cause: {type(e.__cause__)} {e.__cause__}')
 except ValueError as e:
-    print(f'Caught exception {e}')
+    print(f'Caught unexpected exception {e}')
 else:
     print('Did not catch an exception.')
 
 print('\nExecute dag without try .. except')
+dag.execute()
 
 # After an exception is thrown, the dag is stopped from further execution.
 # To start again, it must be unstopped.

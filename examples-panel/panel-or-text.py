@@ -1,4 +1,4 @@
-#
+#!/usr/bin/env python
 
 # This example demonstrates that a dag can be run in textual context
 # and panel context.
@@ -10,12 +10,13 @@
 # is provided, and made active while the block is executing.
 #
 
-from sier2 import Block, Dag, Connection
-from sier2.panel import PanelDag
-import param
-import panel as pn
 import sys
 import time
+
+import panel as pn
+import param
+from sier2 import Block, Dag
+from sier2.panel import PanelDag
 
 
 class In(Block):
@@ -76,9 +77,15 @@ def make_dag(DagType):
     calc_block = Calc(name='do calc')
     out_block = Out(name='do result')
 
-    dag = DagType(title='The dag', doc='Demonstrate panel-less blocks.')
-    dag.connect(in_block, calc_block, Connection('out_a', 'in_a'), Connection('out_b', 'in_b'))
-    dag.connect(calc_block, out_block, Connection('out_result', 'in_result'))
+    dag = DagType(
+        [
+            (in_block.param.out_a, calc_block.param.in_a),
+            (in_block.param.out_b, calc_block.param.in_b),
+            (calc_block.param.out_result, out_block.param.in_result),
+        ],
+        title='The dag',
+        doc='Demonstrate panel-less blocks.',
+    )
 
     return dag
 

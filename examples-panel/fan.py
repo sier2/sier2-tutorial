@@ -1,4 +1,4 @@
-#
+#!/usr/bin/env python
 
 # Demonstrate that the dag chart has a consistent ordering.
 #

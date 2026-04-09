@@ -1,4 +1,4 @@
-#
+#!/usr/bin/env python
 
 # Demonstrate:
 # - blocks without a dag
@@ -7,16 +7,16 @@
 # - custom button
 #
 
-from sier2 import Block
 import panel as pn
 import param
+from sier2 import Block
 
 pn.extension(inline=True)
 
 DESCR = '''
 This app demonstrates using blocks without a dag.
 
-The block we use here has two inputs and two correspnding outputs.
+The block we use here has two inputs and two corresponding outputs.
 THe first instance of the block is displayed in a card. Cards supply
 their own "Continue" buttons which is bound with ``self.is_input_valid_``;
 the button is enabled only when ``self.is_input_valid_`` is True.

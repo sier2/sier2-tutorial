@@ -1,6 +1,9 @@
-from sier2 import Block, Dag, Connection
-import param
+#!/usr/bin/env python
+
 import random
+
+import param
+from sier2 import Block, Dag
 
 
 class PassThrough(Block):
@@ -36,9 +39,14 @@ def main():
     pause_block = Pause(name='PAUSE')
     passthru2 = PassThrough(name='PT2')
 
-    dag = Dag(title='Test prepare', doc='input params set before prepare()')
-    dag.connect(passthru1, pause_block, Connection('out_string', 'in_string'))
-    dag.connect(pause_block, passthru2, Connection('out_string', 'in_string'))
+    dag = Dag(
+        [
+            (passthru1.param.out_string, pause_block.param.in_string),
+            (pause_block.param.out_string, passthru2.param.in_string),
+        ],
+        title='Test prepare',
+        doc='input params set before prepare()',
+    )
 
     # Set up the dag input.
     #

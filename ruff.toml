@@ -1,6 +1,7 @@
 line-length = 100
 
 [lint]
+preview = true
 extend-select = ["I"]
 
 [format]

@@ -1,4 +1,4 @@
-#
+#!/usr/bin/env python
 
 # A basic demonstration of connecting blocks into a dag.
 #
@@ -7,8 +7,8 @@
 # The third block (R) prints its input.
 #
 
-from sier2 import Block, Dag, Connection
 import param
+from sier2 import Block, Dag
 
 
 class P(Block):
@@ -45,9 +45,14 @@ p = P()
 q = Q()
 r = R()
 
-dag = Dag(doc='Simple dag', title='simple dag')
-dag.connect(p, q, Connection('out_p', 'in_q'))
-dag.connect(q, r, Connection('out_q', 'in_r'))
+dag = Dag(
+    [
+        (p.param.out_p, q.param.in_q),
+        (q.param.out_q, r.param.in_r),
+    ],
+    doc='Simple dag',
+    title='simple dag',
+)
 
 start_number = 1
 p.in_p = start_number

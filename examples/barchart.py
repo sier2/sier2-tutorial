@@ -1,4 +1,4 @@
-#
+#!/usr/bin/env python
 
 # A demonstration of three blocks.
 # - QueryBlock emulates running a query and producing a dataframe and a column name.
@@ -6,12 +6,12 @@
 #   and outputs a dataframe, a category/column name, and a count/column name.
 # - BarChartBlock takes those params and draws a horizontal bar chart.
 
-import pandas as pd
 import random
 import uuid
 
-from sier2 import Block, Dag, Connection, Connections
+import pandas as pd
 import param
+from sier2 import Block, Dag
 
 
 class QueryBlock(Block):
@@ -41,13 +41,11 @@ class QueryBlock(Block):
         n = random.randint(40, 80)
         print(f'  Rows returned by query: {n}')
 
-        df = pd.DataFrame(
-            {
-                col: [random.choice(['red', 'green', 'blue']) for _ in range(n)],
-                'UUID': [str(uuid.uuid4()) for _ in range(n)],
-                'value': self.in_query_value,
-            }
-        )
+        df = pd.DataFrame({
+            col: [random.choice(['red', 'green', 'blue']) for _ in range(n)],
+            'UUID': [str(uuid.uuid4()) for _ in range(n)],
+            'value': self.in_query_value,
+        })
 
         print(f'Results head:\n{df.head()}\n')
 
@@ -79,9 +77,11 @@ class GroupByBlock(Block):
 
         # Set the outputs.
         #
-        self.param.update(
-            {'out_group_df': group_df, 'out_category': self.in_column, 'out_count': 'COUNT'}
-        )
+        self.param.update({
+            'out_group_df': group_df,
+            'out_category': self.in_column,
+            'out_count': 'COUNT',
+        })
 
 
 class BarChartBlock(Block):
@@ -120,15 +120,19 @@ q = QueryBlock()
 g = GroupByBlock()
 b = BarChartBlock()
 
-dag = Dag(doc='Example: bar chart', title='bar chart')
-dag.connect(q, g, Connection('out_df', 'in_df'), Connection('out_column', 'in_column'))
-dag.connect(
-    g,
-    b,
-    Connections(
-        {'out_group_df': 'in_group_df', 'out_category': 'in_category', 'out_count': 'in_count'}
-    ),
+dag = Dag(
+    [
+        (q.param.out_df, g.param.in_df),
+        (q.param.out_column, g.param.in_column),
+        (g.param.out_group_df, b.param.in_group_df),
+        (g.param.out_category, b.param.in_category),
+        (g.param.out_count, b.param.in_count),
+    ],
+    doc='Example: bar chart',
+    title='bar chart',
 )
 
 q.in_query_value = 'item3'
 dag.execute()
+
+print(f'Grouped df:\n{g.out_group_df}')
