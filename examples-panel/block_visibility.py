@@ -61,9 +61,7 @@ class Chart(Block):
 
 
 if __name__ == '__main__':
-    input_block = Input(
-        name='Max bar height', continue_label='Draw chart', doc='Maximum bar height'
-    )
+    input_block = Input(name='Max bar height', continue_label='Draw chart', doc='Maximum bar height')
     modify_block = Modify(name='Negate', visible=False)
     chart_block = Chart(name='Draw modified numbers')
 

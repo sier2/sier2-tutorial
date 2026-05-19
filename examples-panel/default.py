@@ -41,11 +41,7 @@ class Data(Block):
         """
 
         p = super().__panel__()
-        name, value = (
-            ('Instructions', 'Please fill in the fields.')
-            if self._wait_for_input
-            else ('Note', 'Display only')
-        )
+        name, value = ('Instructions', 'Please fill in the fields.') if self._wait_for_input else ('Note', 'Display only')
         p = pn.Row(p, pn.widgets.StaticText(name=name, value=value))
 
         return p

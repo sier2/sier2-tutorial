@@ -39,7 +39,7 @@ matching output params ``out_text`` and ``out_upper``. This block is an input
 block, meaning that dag execution will stop to wait for input. (If the block
 has a ``prepare()`` method, that will be called before the dag stops.)
 
-.. literalinclude :: /../../tutorials/tutorial_1a.py
+.. literalinclude:: /../../tutorials/tutorial_1a.py
    :language: python
    :linenos:
    :pyobject: ExternalInput
@@ -47,7 +47,7 @@ has a ``prepare()`` method, that will be called before the dag stops.)
 The ``SingleCase`` class has an input string param (the string to be upper or
 lower cased), a boolean input param, and an output string param.
 
-.. literalinclude :: /../../tutorials/tutorial_1a.py
+.. literalinclude:: /../../tutorials/tutorial_1a.py
    :language: python
    :linenos:
    :pyobject: SingleCase
@@ -58,7 +58,7 @@ output params:
 - out_counter: a dictionary mapping characters to their counts
 - out_bars: a bar chart drawn using asterisks
 
-.. literalinclude :: /../../tutorials/tutorial_1a.py
+.. literalinclude:: /../../tutorials/tutorial_1a.py
    :language: python
    :linenos:
    :pyobject: CharDistribution
@@ -86,7 +86,7 @@ of ``external_input``. Then we call ``execute_after_input()`` using the
 returned input block to resume execution at the correct place.
 
 
-.. literalinclude :: /../../tutorials/tutorial_1a.py
+.. literalinclude:: /../../tutorials/tutorial_1a.py
    :language: python
    :linenos:
    :start-at: __main__

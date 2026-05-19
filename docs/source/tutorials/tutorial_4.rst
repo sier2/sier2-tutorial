@@ -6,7 +6,7 @@ with a more user-friendly display.
 
 As in the previous tutorial, we'll import the first three blocks as-is.
 
-.. literalinclude :: /../../tutorials/tutorial_4a.py
+.. literalinclude:: /../../tutorials/tutorial_4a.py
    :language: python
    :linenos:
    :end-before: class
@@ -19,7 +19,7 @@ this is the method that it calls to get something to display.
 The ``execute()`` method builds a barchart from the inputs and inserts it
 into a HoloViews pane.
 
-.. literalinclude :: /../../tutorials/tutorial_4a.py
+.. literalinclude:: /../../tutorials/tutorial_4a.py
    :language: python
    :linenos:
    :pyobject: DisplayCountBars
@@ -27,7 +27,7 @@ into a HoloViews pane.
 As before, we create the blocks and use a ``PanelDag`` to connect them,
 then call ``dag.show()``.
 
-.. literalinclude :: /../../tutorials/tutorial_3a.py
+.. literalinclude:: /../../tutorials/tutorial_3a.py
    :language: python
    :linenos:
    :start-at: __main__

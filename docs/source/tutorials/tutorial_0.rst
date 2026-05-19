@@ -23,7 +23,7 @@ Blocks are implemented as Python classes. A block:
 The module ``tutorial_0a.py`` contains a block called ``AddOne`` that
 adds one to its input.
 
-.. literalinclude :: /../../tutorials/tutorial_0a.py
+.. literalinclude:: /../../tutorials/tutorial_0a.py
    :language: python
    :linenos:
    :pyobject: AddOne
@@ -39,7 +39,7 @@ We can use our block by creating an instance of ``AddOne``, setting the
 value of the input param, calling ``execute()``, and printing the value of
 the output param.
 
-.. literalinclude :: /../../tutorials/tutorial_0a.py
+.. literalinclude:: /../../tutorials/tutorial_0a.py
    :language: python
    :linenos:
    :dedent:
@@ -51,7 +51,7 @@ is callable: calling the instance with keyword parameters corresponding
 to the input params will set the input params, call ``execute()``, and return
 a dictionary containing the output params and their values.
 
-.. literalinclude :: /../../tutorials/tutorial_0a.py
+.. literalinclude:: /../../tutorials/tutorial_0a.py
    :language: python
    :linenos:
    :dedent:
@@ -68,12 +68,12 @@ or validate inputs before ``execute()`` is run.
 Later, we'll see how this works with a block that has a GUI and waits
 for user input.
 
-.. literalinclude :: /../../tutorials/tutorial_0a.py
+.. literalinclude:: /../../tutorials/tutorial_0a.py
    :language: python
    :linenos:
    :pyobject: SingleCase
 
-.. literalinclude :: /../../tutorials/tutorial_0a.py
+.. literalinclude:: /../../tutorials/tutorial_0a.py
    :language: python
    :linenos:
    :dedent:

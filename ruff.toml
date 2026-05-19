@@ -1,4 +1,4 @@
-line-length = 100
+line-length = 132
 
 [lint]
 preview = true

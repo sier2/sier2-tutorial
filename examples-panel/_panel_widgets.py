@@ -49,16 +49,12 @@ class QueryWidget(Query):
     MIN = 1
 
     def __init__(self, *args, **kwargs):
-        super().__init__(
-            *args, **kwargs, author={'name': 'Arthur Author', 'email': 'arthur.author@example.com'}
-        )
+        super().__init__(*args, **kwargs, author={'name': 'Arthur Author', 'email': 'arthur.author@example.com'})
 
     def execute(self):
         print(f'execute() in {self}')
         if self.max_height == self.MIN:
-            raise BlockValidateError(
-                block_name=self.name, message=f'Min height must be > {self.MIN}'
-            )
+            raise BlockValidateError(block_name=self.name, message=f'Min height must be > {self.MIN}')
 
         self.out_max_height = self.max_height
         self.out_df = self.df
@@ -78,9 +74,7 @@ class QueryWidget(Query):
             self.query(max_height)
             return self.df
 
-        height = pn.widgets.FloatSlider(
-            value=MAX_HEIGHT, start=self.MIN, end=MAX_HEIGHT + 1, name='Maximum height'
-        )
+        height = pn.widgets.FloatSlider(value=MAX_HEIGHT, start=self.MIN, end=MAX_HEIGHT + 1, name='Maximum height')
         df2 = pn.bind(query_value, max_height=height)
         df_pane = pn.pane.DataFrame(df2, index=False, sizing_mode='stretch_width')
         text = '''
@@ -107,9 +101,7 @@ class BarchartWidget(Block):
     in_title = param.String(label='title', doc='Chart title')
 
     def __init__(self, inverted=False, *args, **kwargs):
-        super().__init__(
-            *args, **kwargs, author={'name': 'Arthur Author', 'email': 'arthur.author@example.com'}
-        )
+        super().__init__(*args, **kwargs, author={'name': 'Arthur Author', 'email': 'arthur.author@example.com'})
 
         self.inverted = inverted
         self.hv_pane = pn.pane.HoloViews(sizing_mode='stretch_width')

@@ -14,13 +14,9 @@ class ExternalInput(Block):
     """A block that provides data to the dag."""
 
     in_text = param.String(label='Input text', doc='Must be non-empty')
-    in_case = param.Selector(
-        objects={'Upper': 'U', 'Lower': 'L'}, label='Case', doc='U for upper case, L for lower case'
-    )
+    in_case = param.Selector(objects={'Upper': 'U', 'Lower': 'L'}, label='Case', doc='U for upper case, L for lower case')
     out_text = param.String(doc='Non-empty text')
-    out_case = param.Selector(
-        objects={'Upper': 'U', 'Lower': 'L'}, label='Case', doc='U for upper case, L for lower case'
-    )
+    out_case = param.Selector(objects={'Upper': 'U', 'Lower': 'L'}, label='Case', doc='U for upper case, L for lower case')
 
     wait_for_input = True
     continue_label = 'Count'
@@ -53,9 +49,7 @@ class SingleCase(Block):
     # Inputs.
     #
     in_text = param.String(label='Input text', doc='Text to be lowercased')
-    in_case = param.Selector(
-        objects={'Upper': 'U', 'Lower': 'L'}, doc='U for upper case, L for lower case'
-    )
+    in_case = param.Selector(objects={'Upper': 'U', 'Lower': 'L'}, doc='U for upper case, L for lower case')
     out_text = param.String(label='Output text', doc='Upper or lower case text')
 
     def __init__(self):

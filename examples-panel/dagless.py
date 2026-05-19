@@ -63,9 +63,7 @@ class DataBlock(Block):
 def main():
     descr = pn.pane.Markdown(DESCR)
 
-    data_in = DataBlock(
-        wait_for_input=True, is_card=True, doc='Enter some valid data (see the help)'
-    )
+    data_in = DataBlock(wait_for_input=True, is_card=True, doc='Enter some valid data (see the help)')
     data_out = DataBlock(wait_for_input=False, is_card=False, doc='Display the data')
 
     def do_in_to_out(self, event):

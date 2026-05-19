@@ -60,9 +60,7 @@ class MapBlock(Block):
     def __init__(self):
         super().__init__(name='South-east Australia')
         self.map = leaflet.Map(zoom=9, scroll_wheel_zoom=True)
-        poly = leaflet.Polygon(
-            locations=[mel.latlon, hob.latlon, syd.latlon], color='blue', fill_color='#00000000'
-        )
+        poly = leaflet.Polygon(locations=[mel.latlon, hob.latlon, syd.latlon], color='blue', fill_color='#00000000')
         self.map.add(poly)
 
         marker = leaflet.Marker(location=cbr.latlon, draggable=False)

@@ -8,7 +8,7 @@ The ``ExternalInput`` block now uses a short cut to specify it is an input block
 Rather than having to implement a custom ``__init__()``, we can just set
 ``wait_for_input = True`` as a class variable.
 
-.. literalinclude :: /../../tutorials/tutorial_2a.py
+.. literalinclude:: /../../tutorials/tutorial_2a.py
    :language: python
    :linenos:
    :pyobject: ExternalInput
@@ -31,7 +31,7 @@ blocks separate from "work" blocks. This will become useful in the next tutorial
 
 To add the Display block to the dag, we added some more param tuples.
 
-.. literalinclude :: /../../tutorials/tutorial_2a.py
+.. literalinclude:: /../../tutorials/tutorial_2a.py
    :language: python
    :linenos:
    :start-at: __main__

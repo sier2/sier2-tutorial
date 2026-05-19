@@ -281,9 +281,7 @@ def draw_dag(dag, title, ix):
                 line_color='#2b3035',
                 line_width=lw + 5,
             )
-            fig.bezier(
-                [x0], [y0], [x1], [y1], [cx0], [cy0], [cx1], [cy1], line_color=lc, line_width=lw
-            )
+            fig.bezier([x0], [y0], [x1], [y1], [cx0], [cy0], [cx1], [cy1], line_color=lc, line_width=lw)
 
         heads.append((x1, y1, angle))
         side = not side
@@ -309,10 +307,7 @@ def plot_dags():
     dag3 = make_binary_tree_dag('binary tree')
     dag4 = make_tree_tail_dag()
 
-    plots = [
-        draw_dag(dag, dag.title, i)
-        for i, dag in enumerate([dagb, dagso, dagl, dag1, dag2, dag3, dag4])
-    ]
+    plots = [draw_dag(dag, dag.title, i) for i, dag in enumerate([dagb, dagso, dagl, dag1, dag2, dag3, dag4])]
 
     return plots
 

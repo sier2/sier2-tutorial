@@ -63,9 +63,7 @@ class Invert(Block):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.progress = pn.indicators.Progress(
-            name='Translation progress', bar_color='primary', active=False, value=-1
-        )
+        self.progress = pn.indicators.Progress(name='Translation progress', bar_color='primary', active=False, value=-1)
 
     def execute(self):
         self.progress.active = True

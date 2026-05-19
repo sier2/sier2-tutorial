@@ -20,9 +20,7 @@ class LoadDataFrame(Block):
     out_df = param.DataFrame(label='My data', doc='From somewhere')
 
     def __init__(self, name):
-        super().__init__(
-            name=name, wait_for_input=True, doc='Select "Continue" to load a (dummy) dataframe.'
-        )
+        super().__init__(name=name, wait_for_input=True, doc='Select "Continue" to load a (dummy) dataframe.')
 
     def execute(self):
         df = pd.DataFrame()

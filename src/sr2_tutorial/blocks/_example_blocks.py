@@ -15,13 +15,9 @@ class RandomNumberBlock(Block):
     Uses random.randint() to produce an integer in 1 .. 100 inclusive.
     """
 
-    in_upper = param.Integer(
-        label='Upper limit', doc='The upper limit of the generated random number', default=10
-    )
+    in_upper = param.Integer(label='Upper limit', doc='The upper limit of the generated random number', default=10)
 
-    out_n = param.Integer(
-        label='An integer', doc='A random number between 1 and 100 inclusive', default=None
-    )
+    out_n = param.Integer(label='An integer', doc='A random number between 1 and 100 inclusive', default=None)
 
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
@@ -39,9 +35,7 @@ class RandomNumberBlock(Block):
 class ConstantNumberBlock(Block):
     """Produce a constant number specified when the block is created."""
 
-    out_constant = param.Number(
-        label='A constant number', doc='A number determined at block creation time'
-    )
+    out_constant = param.Number(label='A constant number', doc='A number determined at block creation time')
 
     def __init__(self, x, name=None, *args, **kwargs):
         """Use our own name instead of one provided by param.

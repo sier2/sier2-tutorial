@@ -10,7 +10,7 @@ and complex applications entirely within Python.
 We import the blocks we created in the prevous tutorial. We'll be using them
 as-is, with no changes.
 
-.. literalinclude :: /../../tutorials/tutorial_3a.py
+.. literalinclude:: /../../tutorials/tutorial_3a.py
    :language: python
    :linenos:
    :end-before: __main__
@@ -23,7 +23,7 @@ As before, we create the blocks and use a dag to connect them, except
 instead of using ``Dag``, we use ``PanelDag``. Then instead of calling
 ``dag.execute()``, we call ``dag.show()``.
 
-.. literalinclude :: /../../tutorials/tutorial_3a.py
+.. literalinclude:: /../../tutorials/tutorial_3a.py
    :language: python
    :linenos:
    :start-at: __main__

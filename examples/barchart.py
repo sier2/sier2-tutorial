@@ -71,9 +71,7 @@ class GroupByBlock(Block):
 
         print(f'Action in {self.__class__.__name__}: group by {self.in_column}')
 
-        group_df = (
-            self.in_df.groupby(self.in_column).size().reset_index().rename(columns={0: 'COUNT'})
-        )
+        group_df = self.in_df.groupby(self.in_column).size().reset_index().rename(columns={0: 'COUNT'})
 
         # Set the outputs.
         #
@@ -89,9 +87,7 @@ class BarChartBlock(Block):
 
     # Input params.
     #
-    in_group_df = param.DataFrame(
-        label='Grouped dataframe', doc='A dataframe that has been grouped'
-    )
+    in_group_df = param.DataFrame(label='Grouped dataframe', doc='A dataframe that has been grouped')
     in_category = param.String(label='Category', doc='The column containing the category values')
     in_count = param.String(label='Count', doc='The column containing the count of categories')
 

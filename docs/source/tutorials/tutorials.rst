@@ -27,6 +27,8 @@ without changing the application.
 :doc:`Tutorial 5<tutorial_5>` makes several tweaks to our GUI application and adds
 some finishing touches.
 
+:doc:`Tutorial 6<tutorial_6>` goes into further deail about connections and execution paths.
+
 .. toctree::
     :maxdepth: 1
     :caption: Tutorials
@@ -37,6 +39,7 @@ some finishing touches.
     tutorial_3
     tutorial_4
     tutorial_5
+    tutorial_6
 
 ..
     .. toctree::
