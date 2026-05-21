@@ -27,7 +27,13 @@ without changing the application.
 :doc:`Tutorial 5<tutorial_5>` makes several tweaks to our GUI application and adds
 some finishing touches.
 
-:doc:`Tutorial 6<tutorial_6>` goes into further deail about connections and execution paths.
+:doc:`Tutorial 6<tutorial_6>` goes into further detail about connections and execution paths.
+
+:doc:`Tutorial 7<tutorial_7>` looks at a consequence of multiple connections.
+
+:doc:`Tutorial 8<tutorial_8>` shows why param connections are not always desirable, and considers a configuration pattern.
+
+:doc:`Tutorial 9<tutorial_9>` shows a solution for the previous tutorial.
 
 .. toctree::
     :maxdepth: 1
@@ -40,6 +46,9 @@ some finishing touches.
     tutorial_4
     tutorial_5
     tutorial_6
+    tutorial_7
+    tutorial_8
+    tutorial_9
 
 ..
     .. toctree::

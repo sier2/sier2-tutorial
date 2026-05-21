@@ -39,13 +39,13 @@ when the dag executes. We can see this by printing the ``in_value`` for each of 
 
 .. code-block:: text
 
-    PS tutorials> python .\tutorial_6a.py
+    $ python .\tutorial_6a.py
     Enter an integer: 1
     **** The number 1 is odd. ****
 
     note_even.in_value=None
     note_odd.in_value=1
-    PS tutorials> python .\tutorial_6a.py
+    $ python .\tutorial_6a.py
     Enter an integer: 2
     **** The number 2 is even. ****
 
@@ -60,7 +60,7 @@ has not executed. How does that work?
 The dag keeps track of the connections between ``out_`` params and ``in_`` params.
 When an ``out_`` param's value is set in ``execute()``, the dag looks up the blocks
 containing the ``in_`` params that the ``out_`` param is connected to, and adds
-those blocks to a queue.
+those blocks to an internal run queue.
 
 When ``execute()`` ends, the dag takes the first block from the queue (if there is one),
 sets the ``in_`` params to their new values, and executes that block.
@@ -68,6 +68,10 @@ sets the ``in_`` params to their new values, and executes that block.
 In the dag above, the ``ifelse`` block only sets one of the two ``out_`` params;
 therefore, only one of the ``even`` or ``odd`` blocks will execute after the ``ifelse``
 block.
+
+In particular, even though the display block has two input params, only one param
+being set is sufficient to cause the block to be executed. The block does not wait for
+all of the input params to be set.
 
 If you'd like to reinforce this concept, modify the ``Annotate`` block to print
 something when it executes, and see what prints when the dag runs.

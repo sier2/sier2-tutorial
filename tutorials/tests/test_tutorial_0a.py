@@ -1,5 +1,5 @@
-import tutorial_0a
 import pytest
+import tutorial_0a
 
 # Test different ways of running the AddOne block.
 
