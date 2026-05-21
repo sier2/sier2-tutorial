@@ -91,6 +91,9 @@ returned input block to resume execution at the correct place.
    :linenos:
    :start-at: __main__
 
+.. image:: t1a.png
+    :align: center
+
 The ``out_len`` and ``out_bars`` values resulting from this dag are:
 
 .. code-block:: text

@@ -14,6 +14,9 @@ Each block has a connection from the config block, because they each need to kno
    :language: python
    :linenos:
 
+.. image:: t8a.png
+    :align: center
+
 Running this dag:
 
 .. code-block:: text

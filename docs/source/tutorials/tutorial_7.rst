@@ -13,7 +13,10 @@ to the add block. (Some print() calls have been added to show what is happening.
    :language: python
    :linenos:
 
-(There are two "Add" blocks here. We start by using the `Add` block.)
+.. image:: t7a.png
+    :align: center
+
+(There are two "Add" blocks defined here. We start by using the `Add` block.)
 
 Running this dag:
 

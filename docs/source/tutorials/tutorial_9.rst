@@ -11,6 +11,9 @@ when we create the blocks.
    :language: python
    :linenos:
 
+.. image:: t9a.png
+    :align: center
+
 Now we have a nice linear dag where the config is being passed to each block as a
 standard Python parameter. When the dag executes:
 
@@ -32,3 +35,6 @@ you like - here we use a dictionary - and pass it to each block as it is created
 .. literalinclude:: /../../tutorials/tutorial_9b.py
    :language: python
    :linenos:
+
+.. image:: t9b.png
+    :align: center

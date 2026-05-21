@@ -33,6 +33,9 @@ Finally, we build the dag and execute it.
    :linenos:
    :start-at: __main__
 
+.. image:: t6a.png
+    :align: center
+
 The dag has a diamond shape, but only one of the paths through ``even`` or ``odd`` is taken
 when the dag executes. We can see this by printing the ``in_value`` for each of the
 ``even`` and ``odd`` blocks after the dag has executed.
