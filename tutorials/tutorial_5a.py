@@ -20,7 +20,7 @@ class ExternalInput(Block):
 
     wait_for_input = True
     continue_label = 'Count'
-    display_options = {
+    display_options = {  # noqa: RUF012
         'parameters': ['in_text', 'in_case'],
         'widgets': {
             'in_case': {
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     ld = CharDistribution()
     display = DisplayCountBars()
 
-    doc = '''Count character distribution
+    doc = '''# Count character distribution
 This app takes an input string, converts it to either upper or lower case,
 and counts the number of occurences of each character in the string.
 

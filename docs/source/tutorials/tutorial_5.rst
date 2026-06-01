@@ -8,9 +8,8 @@ that a ``PanelDag`` gives us.
 Dag documentation
 ^^^^^^^^^^^^^^^^^
 
-The card at the top of the page documents the dag. The text is specified using
-the ``doc`` parameter of ``PanelDag``. The first line is the (plain text) header;
-the remaining text is the (Markdown) description.
+The card at the top of the page documents the dag. The text is a Markdown string,
+specified using the ``doc`` parameter of ``PanelDag``.
 
 Likewise, the ``Block`` class takes a ``doc`` parameter. If specified,
 the doc text is displayed next to the "Continue" button.
