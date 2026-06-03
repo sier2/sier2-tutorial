@@ -22,8 +22,8 @@ dumped_dag = dag.dump()
 # Save the dump.
 #
 import json
-from pathlib import Path
 import tempfile
+from pathlib import Path
 
 p = Path(tempfile.gettempdir()) / 'translate.dag'
 print(f'Saving dag to {p} ...')

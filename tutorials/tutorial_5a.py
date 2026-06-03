@@ -90,7 +90,7 @@ class DisplayCountBars(Block):
     in_counter = param.Dict(doc='A dictionary mapping characters to their counts')
 
     def __init__(self, *args, **kwargs):
-        super().__init__(name='Character count results', *args, **kwargs)
+        super().__init__(*args, name='Character count results', **kwargs)
 
         self.hv_pane = pn.pane.HoloViews(sizing_mode='stretch_width')
 

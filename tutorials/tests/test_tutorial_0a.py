@@ -53,4 +53,4 @@ def test_bad_int():
     b = tutorial_0a.AddOne()
 
     with pytest.raises(ValueError):
-        r = b(in_a='three')
+        _r = b(in_a='three')

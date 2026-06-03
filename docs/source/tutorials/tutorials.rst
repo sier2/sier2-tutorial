@@ -49,6 +49,7 @@ some finishing touches.
     tutorial_7
     tutorial_8
     tutorial_9
+    tutorial_10
 
 ..
     .. toctree::

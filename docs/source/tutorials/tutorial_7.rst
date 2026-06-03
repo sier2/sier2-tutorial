@@ -16,7 +16,7 @@ to the add block. (Some print() calls have been added to show what is happening.
 .. image:: t7a.png
     :align: center
 
-(There are two "Add" blocks defined here. We start by using the `Add` block.)
+(There are two "Add" blocks defined here. We start by using the ``Add`` block.)
 
 Running this dag:
 
@@ -37,12 +37,13 @@ Running this dag:
 
     + Result is 19
 
-Random block A executes with result 9, adding the add block (using block `Add1`) and
+Random block A executes with result 9, adding the add block (using block ``Add1``) and
 random block B to the dag's internal run queue. However, the add block has
-two `in_` params, `in_a` and `in_b`, so when it runs, only `in_a` has been set,
-leaving `in_b` at its default value of 0.
+two ``in_`` params, ``in_a`` and ``in_b``, so when it runs, only ``in_a`` has been set,
+leaving ``in_b`` at its default value of 0.
 
-Regardless, the add block (using block `Add1`) causes the display block to be added to the queue.
+Regardless, the add block (using block ``Add1``) causes the display block to be
+added to the queue.
 
 Then random block B runs (adding the add block to the queue again), then the display block runs.
 FInally, the add block runs again, then the display block again.

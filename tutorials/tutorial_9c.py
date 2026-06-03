@@ -1,41 +1,27 @@
 #!/usr/bin/env python
 
 import sys
+from typing import Any
 
 import param
 from sier2 import Block, Dag
 
-# Demonstrates a "configuration" solution.
+# Demonstrates a "configuration" solution without a Config block.
 #
-
-
-class Config(Block):
-    """Configuration for this app.
-
-    Could be passed as parameters, read from a file, etc.
-    """
-
-    in_word = param.String()
-    out_word = param.String()
-
-    wait_for_input = True
-
-    def execute(self):
-        self.out_word = self.in_word
 
 
 class Note(Block):
     """Add a note to a word."""
 
-    in_word = param.String(default=None)
     out_note = param.String()
 
-    def __init__(self, config: Config, *args, **kwargs):
+    def __init__(self, config: dict[str, Any], *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.config = config
 
     def execute(self):
-        self.out_note = f'The word of the day is {self.config.out_word}.'
+        word = self.config['word']
+        self.out_note = f'The word of the day is {word}.'
 
 
 class Highlight(Block):
@@ -44,12 +30,12 @@ class Highlight(Block):
     in_string = param.String(default=None)
     out_string = param.String()
 
-    def __init__(self, config: Config, *args, **kwargs):
+    def __init__(self, config: dict[str, Any], *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.config = config
 
     def execute(self):
-        word = self.config.out_word
+        word = self.config['word']
         highlight = f'"{word.upper()}"'
         self.out_string = self.in_string.replace(word, highlight)
 
@@ -60,12 +46,13 @@ class Display(Block):
     in_word = param.String(default='NO-WORD')
     in_value = param.String(default='NO-VALUE')
 
-    def __init__(self, config: Config, *args, **kwargs):
+    def __init__(self, config: dict[str, Any], *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.config = config
 
     def execute(self):
-        print(f'DISPLAY: {self.in_value} (from {self.config.out_word})')
+        word = self.config['word']
+        print(f'DISPLAY: {self.in_value} (from {word})')
 
 
 if __name__ == '__main__':
@@ -77,7 +64,9 @@ if __name__ == '__main__':
 
     word = sys.argv[1]
 
-    config = Config()
+    # Use a dictionary to make it look more "configuration-y".
+    #
+    config = {'word': word}
 
     # Pass the config to each successive block.
     #
@@ -86,15 +75,9 @@ if __name__ == '__main__':
     display = Display(config)
 
     dag = Dag(
-        [
-            (config.param.out_word, note.param.in_word),
-            (note.param.out_note, highlight.param.in_string),
-            (highlight.param.out_string, display.param.in_value),
-        ],
+        [(note.param.out_note, highlight.param.in_string), (highlight.param.out_string, display.param.in_value)],
         title='Config',
         doc='Using a configuration block.',
     )
 
     b = dag.execute()
-    b.in_word = word
-    dag.execute_after_input(b)

@@ -1,15 +1,11 @@
-#
-
 # Tutorial: blocks with panel widgets.
 #
-from sier2 import Block, Dag, Connection
-import param
-
 import random
-import re
 import time
 
 import panel as pn
+import param
+from sier2 import Block, Connection, Dag
 
 pn.extension(inline=True)
 

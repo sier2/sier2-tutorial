@@ -1,7 +1,6 @@
 from sier2 import Connection, Library
 from sier2.panel import PanelDag
-
-from tutorial_3b import UserInput, Invert, Display
+from tutorial_3b import Display, Invert, UserInput
 
 Library.add_block(UserInput, 'tutorial_3b:UserInput')
 Library.add_block(Invert, 'tutorial_3b:Translate')
