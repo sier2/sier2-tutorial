@@ -20,7 +20,7 @@ class Sleeper(Block):
     in_time = param.Integer(label='sleep time', default=0, doc='Sleep for this many seconds')
     out_time = param.Integer(label='pass it on', default=0, doc='Pass the sleep time along')
 
-    def __init__(self, name, event: threading.Event = None):
+    def __init__(self, name, event: threading.Event | None = None):
         super().__init__(name=name)
         self.event = event
         self.marker = 0

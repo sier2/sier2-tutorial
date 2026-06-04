@@ -1,12 +1,11 @@
-#
-
 # Blocks provided by a builtin library.
 # These are here to demonstrate building a dag from a data structure.
 #
 
-from sier2 import Block
-import param
 import random
+
+import param
+from sier2 import Block
 
 
 class RandomNumberBlock(Block):
@@ -46,7 +45,7 @@ class ConstantNumberBlock(Block):
         if name is None:
             name = f'Number{x}-{id(self)}'
 
-        super().__init__(name=name, *args, **kwargs)
+        super().__init__(*args, name=name, **kwargs)
         self.x = x
 
     def prime(self):

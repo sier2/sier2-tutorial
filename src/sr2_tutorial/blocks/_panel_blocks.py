@@ -1,5 +1,3 @@
-#
-
 # Tutorial: blocks with panel widgets.
 #
 import random

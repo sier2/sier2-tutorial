@@ -21,7 +21,7 @@ class Input(Block):
     out_number = param.Integer(doc='An integer')
 
     def __init__(self, *args, **kwargs):
-        super().__init__(wait_for_input=True, *args, **kwargs)
+        super().__init__(*args, wait_for_input=True, **kwargs)
 
     def execute(self):
         self.out_number = self.in_number

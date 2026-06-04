@@ -1,5 +1,3 @@
-#
-
 # Draw the dag as a topologically sorted line of blocks,
 # with lines / curves connecting sources and destinations.
 #
@@ -25,20 +23,16 @@
 # colors as the dag executes.
 #
 
-from bokeh.plotting import figure, output_file, show, curdoc
-from bokeh.core.enums import RenderLevel
-from bokeh.models import HoverTool
-from bokeh.models.annotations.arrows import ArrowHead
-from bokeh.layouts import column
-import bokeh.palettes as pals
-
 import math
 import random
-
-from sier2 import Block, Dag, Connection
-import param
-
 import tempfile
+
+import bokeh.palettes as pals
+import param
+from bokeh.layouts import column
+from bokeh.models import HoverTool
+from bokeh.plotting import curdoc, figure, output_file, show
+from sier2 import Block, Connection, Dag
 
 ##########
 # Example dags.
@@ -252,15 +246,15 @@ def draw_dag(dag, title, ix):
                 # Below.
                 cx0, cy0 = x0, y0 - c
                 cx1, cy1 = x1 - c, y1
-                x0, y0 = x0, y0 - OFFSET
-                x1, y1 = x1 - OFFSET * 1.5, y1
+                x0, y0 = x0, y0 - OFFSET  # noqa: PLW0127
+                x1, y1 = x1 - OFFSET * 1.5, y1  # noqa: PLW0127
                 angle = -math.pi / 2
             else:
                 # Above.
                 cx0, cy0 = x0 + c, y0
                 cx1, cy1 = x1, y1 + c
-                x0, y0 = x0 + OFFSET, y0
-                x1, y1 = x1, y1 + OFFSET * 1.5
+                x0, y0 = x0 + OFFSET, y0  # noqa: PLW0127
+                x1, y1 = x1, y1 + OFFSET * 1.5  # noqa: PLW0127
                 angle = -math.pi / 3
 
             # # Plot the Bezier control points for debugging.

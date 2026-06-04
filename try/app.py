@@ -1,13 +1,12 @@
-from bokeh.plotting import curdoc
-from bokeh.layouts import column
-from bokeh.models import Button
-import bokeh.palettes as pals
-
-from threading import Thread
 import random
 import time
+from threading import Thread
 
+import bokeh.palettes as pals
 import topo_fig
+from bokeh.layouts import column
+from bokeh.models import Button
+from bokeh.plotting import curdoc
 
 plots = topo_fig.plot_dags()
 pal = pals.Category20c[20]
@@ -17,7 +16,7 @@ doc = curdoc()
 
 def on_button():
     ds = doc.get_model_by_name('circles_1').data_source
-    data = dict(ds.data)
+    # data = dict(ds.data)
     # print(ds)
     # print(data)
     n = len(ds.data['state'])
@@ -42,7 +41,7 @@ curdoc().add_root(column(button, *[plot for plot in plots]))
 def update():
     print('update')
     ds = doc.get_model_by_name('circles_1').data_source
-    data = dict(ds.data)
+    # data = dict(ds.data)
     # print(ds)
     # print(data)
     n = len(ds.data['state'])
